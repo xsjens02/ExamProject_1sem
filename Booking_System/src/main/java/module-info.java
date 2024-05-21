@@ -7,4 +7,6 @@ module com.example.booking_system {
 
     opens com.example.booking_system to javafx.fxml;
     exports com.example.booking_system;
+    exports com.example.booking_system.Controller;
+    opens com.example.booking_system.Controller to javafx.fxml;
 }
