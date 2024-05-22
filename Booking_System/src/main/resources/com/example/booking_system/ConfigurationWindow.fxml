@@ -1,15 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="VBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.ConfigurationWindowController">
    <children>
-      <Button mnemonicParsing="false" text="X" />
-      <Label text="Konfiguration" />
-      <Button mnemonicParsing="false" text="Tilføj mødelokale" />
-      <Button mnemonicParsing="false" text="Tilføj forplejning" />
-      <Button mnemonicParsing="false" text="Tilpas åbningstider og tidsintervaller" />
-      <Button mnemonicParsing="false" text="Tilbage" />
+      <Label alignment="CENTER" contentDisplay="CENTER" text="Konfiguration" textAlignment="CENTER">
+         <font>
+            <Font size="20.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin></Label>
+      <Button fx:id="newMeetingRoomButton" mnemonicParsing="false" onAction="#onNewMeetingRoomButtonClick" text="Tilføj mødelokale">
+         <VBox.margin>
+            <Insets top="30.0" />
+         </VBox.margin>
+         <font>
+            <Font size="16.0" />
+         </font></Button>
+      <Button fx:id="newCateringOptionButton" mnemonicParsing="false" onAction="#onNewCateringOptionButtonClick" text="Tilføj forplejning">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+         <font>
+            <Font size="16.0" />
+         </font></Button>
+      <Button fx:id="adjustOpeningHoursAndTimeSlotsButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onAdjustOpeningHoursAndTimeSlotsButtonClick" text="Tilpas åbningstider og tidsintervaller">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+         <font>
+            <Font size="16.0" />
+         </font></Button>
+      <Button fx:id="returnButton" mnemonicParsing="false" onAction="#onReturnButtonClick" text="Tilbage">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+         <font>
+            <Font size="16.0" />
+         </font></Button>
    </children>
 </VBox>
