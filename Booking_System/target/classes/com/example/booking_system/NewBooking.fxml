@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button mnemonicParsing="false" text="X" />
+      <CheckBox mnemonicParsing="false" text="Ad Hoc" />
+      <DatePicker promptText="Dato" />
+      <TextField promptText="Møde titel" />
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label text="Start tid" />
+            <TextField />
+            <Label text="Slut tid" />
+            <TextField />
+         </children>
+      </HBox>
+      <ComboBox prefWidth="150.0" promptText="Mødelokale" />
+      <Label text="Lokale faciliteter" />
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label text="Angiv antal deltagere:" />
+            <TextField promptText="Antal deltagere" />
+         </children>
+      </HBox>
+      <ComboBox prefWidth="150.0" promptText="Vælg forplejning" />
+      <ComboBox prefWidth="150.0" promptText="Afdeling" />
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Button mnemonicParsing="false" text="Book" />
+            <Button mnemonicParsing="false" text="Cancel" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
