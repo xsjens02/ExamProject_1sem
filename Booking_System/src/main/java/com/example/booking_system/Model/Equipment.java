@@ -22,4 +22,9 @@ public class Equipment {
     public void setEquipmentName(String equipmentName) {
         this.equipmentName = equipmentName;
     }
+
+    @Override
+    public String toString() {
+        return this.equipmentName;
+    }
 }
