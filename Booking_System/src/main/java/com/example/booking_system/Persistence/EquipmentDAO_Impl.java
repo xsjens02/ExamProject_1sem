@@ -42,22 +42,33 @@ public class EquipmentDAO_Impl implements DAO<Equipment> {
 
     @Override
     public List<Equipment> readAll() {
-        List<Equipment> equipments = new ArrayList<>();
+        List<Equipment> equipmentList = new ArrayList<>();
         try {
             PreparedStatement readAllEquipment = connection.prepareStatement("SELECT * FROM tblEquipment");
             ResultSet allEquipmentData = readAllEquipment.executeQuery();
             while (allEquipmentData.next()) {
                 int equipmentID = allEquipmentData.getInt(1);
                 String equipmentName = allEquipmentData.getString(2).trim();
-
+                equipmentList.add(new Equipment(equipmentID, equipmentName));
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if (!equipmentList.isEmpty()) {
+            return equipmentList;
         }
         return null;
     }
 
     @Override
     public boolean remove(int id) {
-        return false;
+        try {
+            PreparedStatement removeEquipment = connection.prepareStatement("DELETE FROM tblEquipment WHERE fldEquipmentID=" + id);
+            int result = removeEquipment.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

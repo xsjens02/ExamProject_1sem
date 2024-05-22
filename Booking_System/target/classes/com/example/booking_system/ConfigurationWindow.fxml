@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button mnemonicParsing="false" text="X" />
+      <Label text="Konfiguration" />
+      <Button mnemonicParsing="false" text="Tilføj mødelokale" />
+      <Button mnemonicParsing="false" text="Tilføj forplejning" />
+      <Button mnemonicParsing="false" text="Tilpas åbningstider og tidsintervaller" />
+      <Button mnemonicParsing="false" text="Tilbage" />
+   </children>
+</VBox>
