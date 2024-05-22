@@ -13,9 +13,9 @@
          <children>
             <TextField promptText="Søg" />
             <ComboBox prefHeight="26.0" prefWidth="76.0" promptText="Dato" />
-            <TextField promptText="Tidspunkt" />
+            <TextField prefHeight="26.0" prefWidth="68.0" promptText="Tidspunkt" />
             <Button mnemonicParsing="false" text="Nulstil" />
-            <Button mnemonicParsing="false" text="Administration" />
+            <ComboBox fx:id="administration" prefHeight="26.0" prefWidth="122.0" promptText="Administration" onAction="#onAdministrationDropdownChoice"/>
             <Button mnemonicParsing="false" text="Rediger booking" />
             <Button mnemonicParsing="false" text="Ny booking" />
             <Button mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" text="LoginLogo" />
