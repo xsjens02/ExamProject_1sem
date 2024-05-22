@@ -1,11 +1,13 @@
 package com.example.booking_system.Controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
@@ -22,6 +24,7 @@ import java.util.ResourceBundle;
 
 public class InfoScreenController implements Initializable {
 
+    public Button btnLogin;
     List<String> testForInfoScreen = new ArrayList<>();
     String forTest = "This is number: ";
 
@@ -67,6 +70,21 @@ public class InfoScreenController implements Initializable {
         }
         if(administration.getSelectionModel().getSelectedIndex() == 1){
             System.out.println("Åben statistik");
+        }
+    }
+
+    public void onLoginButtonClick(ActionEvent actionEvent) {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/booking_system/loginScreen.fxml"));
+            Parent root = loader.load();
+
+            Stage loginWindow = new Stage();
+            loginWindow.initModality(Modality.APPLICATION_MODAL);
+            loginWindow.setTitle("Login");
+            loginWindow.setScene(new Scene(root));
+            loginWindow.showAndWait();
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 }

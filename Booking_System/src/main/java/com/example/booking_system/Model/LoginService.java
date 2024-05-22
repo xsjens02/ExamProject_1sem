@@ -8,7 +8,7 @@ public class LoginService {
 
     private final Connection connection;
 
-    private final LoginScreenController loginScreenController = new LoginScreenController();
+    //private final LoginScreenController loginScreenController = new LoginScreenController();
 
     public LoginService(){
         connection = dbConnection.getInstance().getConnection();
@@ -30,6 +30,8 @@ public class LoginService {
 
    public boolean validateLogin(String username, String password){
 
+
+        return false;
     }
 
 

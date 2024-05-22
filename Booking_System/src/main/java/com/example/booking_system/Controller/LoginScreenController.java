@@ -7,7 +7,8 @@ import com.example.booking_system.Model.LoginService;
 
 public class LoginScreenController {
 
-    LoginService loginService = new LoginService();
+    public TextField tfUsername;
+    private final LoginService loginService = new LoginService();
 
 
     public TextField tfUserName;
@@ -19,5 +20,8 @@ public class LoginScreenController {
 
         loginService.hashPassword(tfPassword.getText());
 
+    }
+
+    public void onLoginButtonClick(ActionEvent actionEvent) {
     }
 }
