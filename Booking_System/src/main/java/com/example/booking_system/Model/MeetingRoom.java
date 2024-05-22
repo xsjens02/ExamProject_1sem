@@ -23,6 +23,13 @@ public class MeetingRoom {
         this.availableSeats = availableSeats;
     }
 
+    public MeetingRoom(String roomName, int institutionID, int availableSeats, List<Equipment> equipmentList) {
+        this.roomName = roomName;
+        this.institutionID = institutionID;
+        this.availableSeats = availableSeats;
+        this.equipmentList = equipmentList;
+    }
+
     public MeetingRoom(int roomID, String roomName, int institutionID, int availableSeats, List<Equipment> equipmentList) {
         this.roomID = roomID;
         this.roomName = roomName;

@@ -1,40 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="435.0" spacing="5.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.NewMeetingRoomController">
    <children>
-      <Button mnemonicParsing="false" text="X" />
-      <Label text="Tilføj mødelokale" />
-      <HBox prefHeight="100.0" prefWidth="200.0">
+      <Label minWidth="75.0" text="Navn:" />
+      <TextField fx:id="txtRoomName" maxWidth="250.0" promptText="lokale navn">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </TextField>
+      <Label minWidth="75.0" text="Kapacitet:" />
+      <TextField fx:id="txtRoomCapacity" maxWidth="250.0" promptText="antal personer">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </TextField>
+      <Label minWidth="75.0" text="Udstyr:" />
+      <ListView fx:id="lwRoomEquipment" prefHeight="200.0" prefWidth="200.0" />
+      <HBox alignment="CENTER_RIGHT" layoutX="25.0" layoutY="499.0" prefHeight="43.0" prefWidth="373.0">
          <children>
-            <Label text="Hvilket navn har lokalet: " />
-            <TextField />
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Button minWidth="70.0" mnemonicParsing="false" onAction="#onRemoveClick" text="Fjern" />
+               </children>
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </HBox>
          </children>
       </HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0">
+      <Label text="Tilgængelig udstyr:" />
+      <ListView fx:id="lwAllEquipment" prefHeight="200.0" prefWidth="200.0" />
+      <HBox alignment="CENTER_RIGHT" layoutX="25.0" layoutY="499.0" prefHeight="43.0" prefWidth="373.0">
          <children>
-            <Label text="Angiv hvor mange deltagere der kan være: " />
-            <TextField />
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Button minWidth="70.0" mnemonicParsing="false" onAction="#onAddClick" text="Tilføj" />
+               </children>
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </HBox>
          </children>
       </HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0">
+      <HBox alignment="CENTER_RIGHT" prefHeight="43.0" prefWidth="373.0" VBox.vgrow="NEVER">
          <children>
-            <Label text="Angiv hvilket udstyr lokalet har: " />
-            <CheckBox mnemonicParsing="false" text="Tavle" />
-            <CheckBox mnemonicParsing="false" text="Projektor" />
-            <CheckBox mnemonicParsing="false" text="Højtaler" />
-            <CheckBox mnemonicParsing="false" text="CheckBox" />
-            <CheckBox mnemonicParsing="false" text="CheckBox" />
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Button minWidth="70.0" mnemonicParsing="false" onAction="#onCancelClick" text="Annuller" />
+                  <Button minWidth="70.0" mnemonicParsing="false" onAction="#onCreateClick" text="Tilføj" />
+               </children>
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </HBox>
          </children>
-      </HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0">
-         <children>
-            <Button mnemonicParsing="false" text="Tilføj" />
-            <Button mnemonicParsing="false" text="Cancel" />
-         </children>
+         <VBox.margin>
+            <Insets top="50.0" />
+         </VBox.margin>
       </HBox>
    </children>
+   <padding>
+      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+   </padding>
 </VBox>

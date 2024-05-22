@@ -24,18 +24,18 @@ public class MeetingRoomDAO_Impl implements DAO<MeetingRoom> {
             int result = addRoom.executeUpdate();
 
             if (result > 0) {
-                try {
-                    CallableStatement getID = connection.prepareCall("{? = call get_room_id(?, ?)}");
-                    getID.registerOutParameter(1, Types.INTEGER);
-                    getID.setString(2, entity.getRoomName());
-                    getID.setInt(3, entity.getInstitutionID());
-                    getID.execute();
-
-                    entity.setRoomID(getID.getInt(1));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
                 if (entity.getEquipmentList() != null) {
+                    try {
+                        CallableStatement getID = connection.prepareCall("{? = call get_room_id(?, ?)}");
+                        getID.registerOutParameter(1, Types.INTEGER);
+                        getID.setString(2, entity.getRoomName());
+                        getID.setInt(3, entity.getInstitutionID());
+                        getID.execute();
+
+                        entity.setRoomID(getID.getInt(1));
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                     for (Equipment equipment : entity.getEquipmentList()) {
                         try {
                             PreparedStatement addRoomEquipment = connection.prepareStatement("INSERT INTO tblMeeting_Room_Equipment VALUES (?, ?)");
