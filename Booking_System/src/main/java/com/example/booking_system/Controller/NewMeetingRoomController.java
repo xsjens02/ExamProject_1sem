@@ -5,6 +5,8 @@ import com.example.booking_system.Model.MeetingRoom;
 import com.example.booking_system.Persistence.DAO;
 import com.example.booking_system.Persistence.EquipmentDAO_Impl;
 import com.example.booking_system.Persistence.MeetingRoomDAO_Impl;
+import com.example.booking_system.ControllerService.ResetService;
+import com.example.booking_system.ControllerService.ValidationService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,6 +24,8 @@ public class NewMeetingRoomController implements Initializable {
     private final DAO<MeetingRoom> meetingRoomDAO = new MeetingRoomDAO_Impl();
     private final ObservableList<Equipment> roomEquipment = FXCollections.observableArrayList();
 
+    private List<TextField> textFields;
+
     @FXML
     private ListView<Equipment> lwRoomEquipment, lwAllEquipment;
     @FXML
@@ -29,6 +33,7 @@ public class NewMeetingRoomController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        textFields = new ArrayList<>(Arrays.asList(txtRoomName, txtRoomCapacity));
         List<Equipment> equipmentList = equipmentDAO.readAll();
         lwAllEquipment.getItems().addAll(equipmentList);
         lwRoomEquipment.setItems(roomEquipment);
@@ -51,9 +56,8 @@ public class NewMeetingRoomController implements Initializable {
 
     @FXML
     private void onCreateClick() {
-        List<TextField> requiredFields = new ArrayList<>(Arrays.asList(txtRoomName, txtRoomCapacity));
-        if (fieldsNotEmpty(requiredFields) && isInteger(txtRoomCapacity.getText())) {
-            if (validInputLength(txtRoomName, 30)) {
+        if (ValidationService.validateFieldsEntered(textFields) && ValidationService.validateStringIsInt(txtRoomCapacity.getText())) {
+            if (ValidationService.validInputLength(txtRoomName, 30)) {
                 String roomName = txtRoomName.getText();
                 int availableSeats = Integer.parseInt(txtRoomCapacity.getText());
                 //institutionID
@@ -71,38 +75,6 @@ public class NewMeetingRoomController implements Initializable {
         //close window
     }
 
-    private boolean fieldsNotEmpty(List<TextField> textFields) {
-        boolean valid = true;
-        for (TextField textField : textFields) {
-            if (textField.getText().isEmpty()) {
-                textField.setText("skal udfyldes!");
-                textField.setStyle("-fx-text-fill: white; -fx-background-color: grey");
-                if (valid) {
-                    valid = false;
-                }
-                textField.setOnMouseClicked(e -> {
-                    textField.setStyle("-fx-text-fill: black; -fx-background-color: white");
-                    textField.clear();
-                });
-            }
-        }
-        return valid;
-    }
-
-    public boolean isInteger(String str) {
-        try {
-            Integer.parseInt(str);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private boolean validInputLength(TextField textField, int maxLength) {
-        String fieldValue = textField.getText();
-        return fieldValue.length() <= maxLength;
-    }
-
     private void resetAll() {
         if (!roomEquipment.isEmpty()) {
             roomEquipment.clear();
@@ -110,7 +82,6 @@ public class NewMeetingRoomController implements Initializable {
         if (lwAllEquipment.getSelectionModel().getSelectedItem() != null) {
             lwAllEquipment.getSelectionModel().clearSelection();
         }
-        txtRoomName.clear();
-        txtRoomCapacity.clear();
+        ResetService.resetFields(textFields);
     }
 }
