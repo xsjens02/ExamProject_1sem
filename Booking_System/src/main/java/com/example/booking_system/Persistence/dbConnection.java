@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class dbConnection {
-    public static dbConnection instance;
+    private static dbConnection instance;
     private Connection connection;
     private final String USERNAME = "sa";
     private final String PASSWORD = "1234";
