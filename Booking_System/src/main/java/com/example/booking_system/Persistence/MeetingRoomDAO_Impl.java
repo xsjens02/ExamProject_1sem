@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MeetingRoomDAO_Impl implements DAO<MeetingRoom> {
+public class MeetingRoomDAO_Impl implements MeetingRoomDAO {
     private final Connection connection;
     private final DAO<Equipment> equipmentDAO = new EquipmentDAO_Impl();
     public MeetingRoomDAO_Impl() {
@@ -88,6 +88,33 @@ public class MeetingRoomDAO_Impl implements DAO<MeetingRoom> {
                 int roomID = allRoomsData.getInt(1);
                 String roomName = allRoomsData.getString(2).trim();
                 int institutionID = allRoomsData.getInt(3);
+                int availableSeats = allRoomsData.getInt(4);
+
+                List<Equipment> roomEquipment = getRoomEquipment(roomID);
+                if (roomEquipment != null) {
+                    roomList.add(new MeetingRoom(roomID, roomName, institutionID, availableSeats, roomEquipment));
+                } else {
+                    roomList.add(new MeetingRoom(roomID, roomName, institutionID, availableSeats));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if (!roomList.isEmpty()) {
+            return roomList;
+        }
+        return null;
+    }
+
+    @Override
+    public List<MeetingRoom> readAllFromInstitution(int institutionID) {
+        List<MeetingRoom> roomList = new ArrayList<>();
+        try {
+            PreparedStatement readAllRooms = connection.prepareStatement("SELECT * FROM tblMeeting_Room WHERE fldInstitutionID=" + institutionID);
+            ResultSet allRoomsData = readAllRooms.executeQuery();
+            while (allRoomsData.next()) {
+                int roomID = allRoomsData.getInt(1);
+                String roomName = allRoomsData.getString(2).trim();
                 int availableSeats = allRoomsData.getInt(4);
 
                 List<Equipment> roomEquipment = getRoomEquipment(roomID);
