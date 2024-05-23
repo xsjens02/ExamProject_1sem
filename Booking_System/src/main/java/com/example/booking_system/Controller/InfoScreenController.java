@@ -6,8 +6,11 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
@@ -30,9 +33,16 @@ public class InfoScreenController implements Initializable {
     private ListView listView;
 
     @FXML
-    private HBox HBox;
+    private HBox mainHBox;
     @FXML
     public ComboBox administration;
+    @FXML
+    private HBox leftHBox;
+    @FXML
+    private HBox rightHBox;
+    @FXML
+    private Button loginButton;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -43,11 +53,22 @@ public class InfoScreenController implements Initializable {
         for (int i = 0; i < 10; i++) {
             testForInfoScreen.add(forTest+i);
         }
-        double hBoxHeight = HBox.getHeight();
+        double mainHBoxHeight = mainHBox.getHeight();
 
         listView.getItems().addAll(testForInfoScreen);
-        listView.setPrefHeight(primaryScreenBounds.getHeight()-hBoxHeight);
-        listView.setFixedCellSize(primaryScreenBounds.getHeight()/14);
+        listView.setPrefHeight(primaryScreenBounds.getHeight()-mainHBoxHeight);
+        listView.setFixedCellSize(listView.getPrefHeight()/8);
+        adjustWindowSize();
+    }
+    private void adjustWindowSize(){
+        leftHBox.minWidthProperty().bind(mainHBox.widthProperty().divide(2));
+        rightHBox.minWidthProperty().bind(mainHBox.widthProperty().divide(2));
+
+        Image loginImage = new Image(getClass().getResource("/images/login.png").toExternalForm());
+        ImageView imageView = new ImageView(loginImage);
+        imageView.setFitHeight(loginButton.getPrefHeight());
+        imageView.setFitWidth(loginButton.getPrefWidth());
+        loginButton.setGraphic(imageView);
     }
     @FXML
     private void onAdministrationDropdownChoice(){
