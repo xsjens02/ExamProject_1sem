@@ -34,10 +34,9 @@ public class InstitutionDAO_Impl implements DAO<Institution>{
     @Override
     public Institution read(int id) {
         try {
-            PreparedStatement readInstitution = connection.prepareStatement("SELECT * FROM tblInsitution WHERE fldInstitutionID=" + id);
+            PreparedStatement readInstitution = connection.prepareStatement("SELECT * FROM tblInstitution WHERE fldInstitutionID=" + id);
             ResultSet institutionData = readInstitution.executeQuery();
             while (institutionData.next()) {
-                int institutionID = institutionData.getInt(1);
                 String institutionName = institutionData.getString(2).trim();
                 double openTime = institutionData.getDouble(3);
                 double closeTime = institutionData.getDouble(4);
@@ -45,9 +44,9 @@ public class InstitutionDAO_Impl implements DAO<Institution>{
 
                 List<MeetingRoom> institutionRooms = meetingRoomDAO.readAllFromInstitution(id);
                 if (institutionRooms != null) {
-                    return new Institution(institutionID, institutionName, openTime, closeTime, bookingTimeInterval, institutionRooms);
+                    return new Institution(id, institutionName, openTime, closeTime, bookingTimeInterval, institutionRooms);
                 } else {
-                    return new Institution(institutionID, institutionName, openTime, closeTime, bookingTimeInterval);
+                    return new Institution(id, institutionName, openTime, closeTime, bookingTimeInterval);
                 }
             }
         } catch (SQLException e) {
@@ -60,7 +59,7 @@ public class InstitutionDAO_Impl implements DAO<Institution>{
     public List<Institution> readAll() {
         List<Institution> institutionList = new ArrayList<>();
         try {
-            PreparedStatement readAllInstitution = connection.prepareStatement("SELECT * FROM tblInsitution");
+            PreparedStatement readAllInstitution = connection.prepareStatement("SELECT * FROM tblInstitution");
             ResultSet allInstitutionData = readAllInstitution.executeQuery();
             while (allInstitutionData.next()) {
                 int institutionID = allInstitutionData.getInt(1);
@@ -88,7 +87,7 @@ public class InstitutionDAO_Impl implements DAO<Institution>{
     @Override
     public boolean remove(int id) {
         try {
-            PreparedStatement removeInstitution = connection.prepareStatement("DELETE FROM tblInsitution WHERE fldInstitutionID=" + id);
+            PreparedStatement removeInstitution = connection.prepareStatement("DELETE FROM tblInstitution WHERE fldInstitutionID=" + id);
             int result = removeInstitution.executeUpdate();
             return result > 0;
         } catch (SQLException e) {
