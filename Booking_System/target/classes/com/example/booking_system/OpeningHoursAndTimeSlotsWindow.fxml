@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.OpeningHoursAndTimeSlotsWindowController">
    <children>
-      <Button mnemonicParsing="false" text="X" />
       <Label text="Tilpas åbningstider og tidsintervaller" />
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
             <Label text="Angiv tidspunkt for åbning: " />
-            <TextField />
+            <TextField fx:id="startTimeField" />
             <Label text="Angiv sluttidspunkt" />
-            <TextField />
+            <TextField fx:id="endTimeField" />
          </children>
       </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
             <Label text="Angiv tidsinterval for booking: " />
-            <TextField />
+            <TextField fx:id="intervalField" />
          </children>
       </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Button mnemonicParsing="false" text="Tilpas" />
-            <Button mnemonicParsing="false" text="Cancel" />
+            <Button mnemonicParsing="false" text="Tilpas" onAction="#handleApply" />
+            <Button mnemonicParsing="false" text="Cancel" onAction="#handleCancel" />
          </children>
       </HBox>
    </children>

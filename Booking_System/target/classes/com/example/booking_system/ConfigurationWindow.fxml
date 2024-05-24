@@ -13,34 +13,39 @@
          </font>
          <VBox.margin>
             <Insets top="20.0" />
-         </VBox.margin></Label>
+         </VBox.margin>
+      </Label>
       <Button fx:id="newMeetingRoomButton" mnemonicParsing="false" onAction="#onNewMeetingRoomButtonClick" text="Tilføj mødelokale">
          <VBox.margin>
             <Insets top="30.0" />
          </VBox.margin>
          <font>
             <Font size="16.0" />
-         </font></Button>
+         </font>
+      </Button>
       <Button fx:id="newCateringOptionButton" mnemonicParsing="false" onAction="#onNewCateringOptionButtonClick" text="Tilføj forplejning">
          <VBox.margin>
             <Insets top="20.0" />
          </VBox.margin>
          <font>
             <Font size="16.0" />
-         </font></Button>
+         </font>
+      </Button>
       <Button fx:id="adjustOpeningHoursAndTimeSlotsButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onAdjustOpeningHoursAndTimeSlotsButtonClick" text="Tilpas åbningstider og tidsintervaller">
          <VBox.margin>
             <Insets top="20.0" />
          </VBox.margin>
          <font>
             <Font size="16.0" />
-         </font></Button>
+         </font>
+      </Button>
       <Button fx:id="returnButton" mnemonicParsing="false" onAction="#onReturnButtonClick" text="Tilbage">
          <VBox.margin>
             <Insets top="20.0" />
          </VBox.margin>
          <font>
             <Font size="16.0" />
-         </font></Button>
+         </font>
+      </Button>
    </children>
 </VBox>
