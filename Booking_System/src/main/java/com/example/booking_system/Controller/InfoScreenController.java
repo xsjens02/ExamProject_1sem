@@ -106,4 +106,20 @@ public class InfoScreenController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    public void onErrorReportClick() {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/booking_system/NewErrorReport.fxml"));
+            Parent root = loader.load();
+
+            Stage errorReportWindow = new Stage();
+            errorReportWindow.initModality(Modality.APPLICATION_MODAL);
+            errorReportWindow.setTitle("Fejlmelding");
+            errorReportWindow.setScene(new Scene(root));
+            errorReportWindow.showAndWait();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 }
