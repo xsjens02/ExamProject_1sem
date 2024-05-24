@@ -57,7 +57,7 @@ public class NewMeetingRoomController implements Initializable {
     @FXML
     private void onCreateClick() {
         if (ValidationService.validateFieldsEntered(textFields) && ValidationService.validateStringIsInt(txtRoomCapacity.getText())) {
-            if (ValidationService.validInputLength(txtRoomName, 30)) {
+            if (ValidationService.validFieldLength(txtRoomName, 30)) {
                 String roomName = txtRoomName.getText();
                 int availableSeats = Integer.parseInt(txtRoomCapacity.getText());
                 //institutionID
