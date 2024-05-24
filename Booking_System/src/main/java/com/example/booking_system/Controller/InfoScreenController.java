@@ -1,6 +1,7 @@
 package com.example.booking_system.Controller;
 
 import com.example.booking_system.Model.Institution;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -90,6 +91,22 @@ public class InfoScreenController implements Initializable {
         }
         if(administration.getSelectionModel().getSelectedIndex() == 1){
             System.out.println("Åben statistik");
+        }
+    }
+
+
+    public void onLoginButtonClick(ActionEvent actionEvent) {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/booking_system/loginScreen.fxml"));
+            Parent root = loader.load();
+
+            Stage loginWindow = new Stage();
+            loginWindow.initModality(Modality.APPLICATION_MODAL);
+            loginWindow.setTitle("Login");
+            loginWindow.setScene(new Scene(root));
+            loginWindow.showAndWait();
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 }
