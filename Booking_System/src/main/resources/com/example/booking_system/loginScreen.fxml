@@ -8,7 +8,7 @@
       <Button mnemonicParsing="false" text="X" />
       <Label text="Login" />
       <TextField fx:id="tfUsername" promptText="Brugernavn" />
-      <TextField fx:id="tfPassword" promptText="Password" />
+      <PasswordField fx:id="pfPassword" promptText="Password" />
       <Button mnemonicParsing="false" text="Har du glemt dit password?" />
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>

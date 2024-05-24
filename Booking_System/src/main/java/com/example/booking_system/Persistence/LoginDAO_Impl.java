@@ -20,7 +20,8 @@ public class LoginDAO_Impl implements DAO<com.example.booking_system.Model.User>
     public boolean add(User entity) {
         try(CallableStatement statement = connection.prepareCall("{CALL dbo.add_user(?,?,?,?,?,?)}")) {
             statement.setString(1,entity.getUserName());
-            statement.setString(2,entity.getPassword());
+            String hashedPassword = String.valueOf(entity.getPassword().hashCode());
+            statement.setString(2,hashedPassword);
             statement.setInt(3,entity.getInstitutionID());
             statement.setInt(4,entity.getRoleID());
             statement.setString(5,entity.getFirstName());
@@ -56,6 +57,7 @@ public class LoginDAO_Impl implements DAO<com.example.booking_system.Model.User>
         }
         return null;
     }
+
 
     @Override
     public List<User> readAll() {
