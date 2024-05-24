@@ -12,6 +12,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("InfoScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+        scene.getStylesheets().add(getClass().getResource("/Stylesheets/tableViewStyle.css").toExternalForm());
         stage.setTitle("Booking System");
         stage.setMaximized(true);
         stage.setScene(scene);

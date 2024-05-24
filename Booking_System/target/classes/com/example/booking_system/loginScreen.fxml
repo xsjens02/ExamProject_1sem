@@ -4,22 +4,22 @@
 <?import javafx.scene.layout.*?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="253.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.LoginScreenController">
-    <children>
-        <Label text="Login" />
-        <TextField fx:id="tfUsername" promptText="Brugernavn" />
-        <PasswordField fx:id="pfPassword" promptText="Password" />
-        <Button fx:id="forgotButton" mnemonicParsing="false" onAction="#onForgotButtonClick" text="Har du glemt dit password?" />
-        <HBox prefHeight="100.0" prefWidth="200.0">
-            <children>
-                <Button fx:id="loginButton" mnemonicParsing="false" onAction="#onLoginButtonClick" text="Login" />
-                <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onCancelButtonClick" text="Cancel" />
-            </children>
-        </HBox>
-        <HBox prefHeight="100.0" prefWidth="200.0">
-            <children>
-                <Label fx:id="forgotPasswordLink" prefHeight="86.0" prefWidth="612.0" text="https://moodle.easv.dk/login/forgot_password.php" />
-                <Label fx:id="failledLoginLabel" text="Invalid username or password. Please try again." textFill="RED" visible="false" />
-            </children>
-        </HBox>
-    </children>
+   <children>
+      <Label text="Login" />
+      <TextField fx:id="tfUsername" promptText="Brugernavn" />
+      <PasswordField fx:id="pfPassword" promptText="Password" />
+      <Button fx:id="forgotButton" mnemonicParsing="false" onAction="#onForgotButtonClick" text="Har du glemt dit password?" />
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="loginButton" mnemonicParsing="false" onAction="#onLoginButtonClick" text="Login" />
+            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onCancelButtonClick" text="Cancel" />
+         </children>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label fx:id="forgotPasswordLink" prefHeight="86.0" prefWidth="612.0" text="https://moodle.easv.dk/login/forgot_password.php" />
+            <Label fx:id="failledLoginLabel" text="Invalid username or password. Please try again." textFill="RED" visible="false" />
+         </children>
+      </HBox>
+   </children>
 </VBox>
