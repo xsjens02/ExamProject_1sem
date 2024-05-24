@@ -2,7 +2,6 @@ package com.example.booking_system.Persistence;
 
 import com.example.booking_system.Model.Equipment;
 import com.example.booking_system.Model.MeetingRoom;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

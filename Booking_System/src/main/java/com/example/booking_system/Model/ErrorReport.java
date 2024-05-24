@@ -2,21 +2,17 @@ package com.example.booking_system.Model;
 
 public class ErrorReport {
     private int reportID;
-    private MeetingRoom meetingRoom;
-    private Equipment equipment;
+    private int userID;
+    private int roomID;
+    private int equipmentID;
     private String description;
     private boolean resolved;
 
-    public ErrorReport(int reportID, String description, boolean resolved) {
+    public ErrorReport(int reportID, int userID, int roomID, int equipmentID, String description, boolean resolved) {
         this.reportID = reportID;
-        this.description = description;
-        this.resolved = resolved;
-    }
-
-    public ErrorReport(int reportID, MeetingRoom meetingRoom, Equipment equipment, String description, boolean resolved) {
-        this.reportID = reportID;
-        this.meetingRoom = meetingRoom;
-        this.equipment = equipment;
+        this.userID = userID;
+        this.roomID = roomID;
+        this.equipmentID = equipmentID;
         this.description = description;
         this.resolved = resolved;
     }
@@ -24,11 +20,14 @@ public class ErrorReport {
     public int getReportID() {
         return reportID;
     }
-    public MeetingRoom getMeetingRoom() {
-        return meetingRoom;
+    public int getUserID() {
+        return userID;
     }
-    public Equipment getEquipment() {
-        return equipment;
+    public int getRoomID() {
+        return roomID;
+    }
+    public int getEquipmentID() {
+        return equipmentID;
     }
     public String getDescription() {
         return description;
@@ -40,11 +39,14 @@ public class ErrorReport {
     public void setReportID(int reportID) {
         this.reportID = reportID;
     }
-    public void setMeetingRoom(MeetingRoom meetingRoom) {
-        this.meetingRoom = meetingRoom;
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
-    public void setEquipment(Equipment equipment) {
-        this.equipment = equipment;
+    public void setRoomID(int roomID) {
+        this.roomID = roomID;
+    }
+    public void setEquipmentID(int equipmentID) {
+        this.equipmentID = equipmentID;
     }
     public void setDescription(String description) {
         this.description = description;

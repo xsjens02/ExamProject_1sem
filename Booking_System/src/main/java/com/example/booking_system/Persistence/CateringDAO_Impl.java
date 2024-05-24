@@ -1,7 +1,6 @@
 package com.example.booking_system.Persistence;
 
 import com.example.booking_system.Model.Catering;
-
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -9,7 +8,8 @@ import java.util.List;
 
 public class CateringDAO_Impl implements DAO<Catering> {
     private final Connection connection;
-    public CateringDAO_Impl() {connection = dbConnection.getInstance().getConnection();
+    public CateringDAO_Impl() {
+        connection = dbConnection.getInstance().getConnection();
     }
     @Override
     public boolean add(Catering entity) {

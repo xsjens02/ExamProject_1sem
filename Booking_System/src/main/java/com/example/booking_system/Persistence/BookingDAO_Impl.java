@@ -1,8 +1,6 @@
 package com.example.booking_system.Persistence;
 
 import com.example.booking_system.Model.Booking;
-import com.example.booking_system.Model.Equipment;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -101,11 +99,6 @@ public class BookingDAO_Impl implements BookingDAO {
         if (!bookingList.isEmpty()) {
             return bookingList;
         }
-        return null;
-    }
-
-    @Override
-    public List<Booking> readALLByDate(Date searchDate) {
         return null;
     }
 

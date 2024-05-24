@@ -1,6 +1,5 @@
 package com.example.booking_system.Persistence;
 import com.example.booking_system.Model.User;
-
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;

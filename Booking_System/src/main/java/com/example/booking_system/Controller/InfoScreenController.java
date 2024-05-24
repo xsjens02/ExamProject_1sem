@@ -2,6 +2,9 @@ package com.example.booking_system.Controller;
 
 import com.example.booking_system.ControllerService.TableViewService;
 import com.example.booking_system.Model.Institution;
+import com.example.booking_system.Persistence.DAO;
+import com.example.booking_system.Persistence.InstitutionDAO_Impl;
+import com.example.booking_system.Service.InstitutionService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,6 +32,8 @@ import java.util.ResourceBundle;
 
 public class InfoScreenController implements Initializable {
 
+    DAO<Institution> institutionDAO = new InstitutionDAO_Impl();
+
     @FXML
     private TableView tableView;
     @FXML
@@ -46,7 +51,7 @@ public class InfoScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Institution.setInstance(1);
+        InstitutionService.getInstance().setInstitution(institutionDAO.read(1));
         administration.getItems().addAll("Konfiguration","Statistik");
 
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();

@@ -1,13 +1,8 @@
 package com.example.booking_system.Model;
 
-import com.example.booking_system.Persistence.DAO;
-import com.example.booking_system.Persistence.InstitutionDAO_Impl;
-
 import java.util.List;
 
 public class Institution {
-    private static Institution instance;
-    private static final DAO<Institution> institutionDAO = new InstitutionDAO_Impl();
     private int institutionID;
     private String institutionName;
     private double openTime;
@@ -32,14 +27,6 @@ public class Institution {
         this.meetingRoomList = meetingRoomList;
     }
 
-    public static Institution getInstance() {
-        return instance;
-    }
-
-    public static void setInstance(int institutionID) {
-        instance = institutionDAO.read(institutionID);
-    }
-
     public int getInstitutionID() {
         return institutionID;
     }
@@ -59,9 +46,6 @@ public class Institution {
         return meetingRoomList;
     }
 
-    public static void setInstance(Institution instance) {
-        Institution.instance = instance;
-    }
     public void setInstitutionID(int institutionID) {
         this.institutionID = institutionID;
     }
