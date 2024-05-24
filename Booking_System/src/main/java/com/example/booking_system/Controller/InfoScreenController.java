@@ -1,5 +1,7 @@
 package com.example.booking_system.Controller;
 
+import com.example.booking_system.ControllerService.ControllerKeys;
+import com.example.booking_system.ControllerService.SceneManager;
 import com.example.booking_system.ControllerService.TableViewService;
 import com.example.booking_system.Model.Institution;
 import com.example.booking_system.Persistence.DAO;
@@ -114,17 +116,6 @@ public class InfoScreenController implements Initializable {
 
     @FXML
     public void onErrorReportClick() {
-        try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/booking_system/NewErrorReport.fxml"));
-            Parent root = loader.load();
-
-            Stage errorReportWindow = new Stage();
-            errorReportWindow.initModality(Modality.APPLICATION_MODAL);
-            errorReportWindow.setTitle("Fejlmelding");
-            errorReportWindow.setScene(new Scene(root));
-            errorReportWindow.showAndWait();
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+        SceneManager.openScene(ControllerKeys.NewErrorReport, "Fejlmelding");
     }
 }

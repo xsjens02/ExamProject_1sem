@@ -1,5 +1,7 @@
 package com.example.booking_system.Controller;
 
+import com.example.booking_system.ControllerService.ControllerKeys;
+import com.example.booking_system.ControllerService.SceneManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -50,18 +52,7 @@ public class ConfigurationWindowController implements Initializable {
 
     @FXML
     private void onNewMeetingRoomButtonClick(){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/booking_system/NewMeetingRoom.fxml"));
-            Parent root = loader.load();
-
-            Stage newMeetingRoomStage = new Stage();
-            newMeetingRoomStage.initModality(Modality.APPLICATION_MODAL);
-            newMeetingRoomStage.setTitle("Tilføj mødelokale");
-            newMeetingRoomStage.setScene(new Scene(root));
-            newMeetingRoomStage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SceneManager.changeScene((Stage) VBox.getScene().getWindow(), ControllerKeys.NewMeetingRoom, "nyt mødelokale");
     }
     @FXML
     private void onNewCateringOptionButtonClick(){
