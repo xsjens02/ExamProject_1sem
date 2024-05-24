@@ -1,5 +1,6 @@
 package com.example.booking_system.Controller;
 
+import com.example.booking_system.ControllerService.TableViewService;
 import com.example.booking_system.Model.Institution;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -27,13 +29,8 @@ import java.util.ResourceBundle;
 
 public class InfoScreenController implements Initializable {
 
-    List<String> testForInfoScreen = new ArrayList<>();
-    String forTest = "This is number: ";
-
-
     @FXML
-    private ListView listView;
-
+    private TableView tableView;
     @FXML
     private HBox mainHBox;
     @FXML
@@ -44,6 +41,7 @@ public class InfoScreenController implements Initializable {
     private HBox rightHBox;
     @FXML
     private Button loginButton;
+    private TableViewService tableViewService;
 
 
     @Override
@@ -53,14 +51,13 @@ public class InfoScreenController implements Initializable {
 
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
-        for (int i = 0; i < 10; i++) {
-            testForInfoScreen.add(forTest+i);
-        }
         double mainHBoxHeight = mainHBox.getHeight();
 
-        listView.getItems().addAll(testForInfoScreen);
-        listView.setPrefHeight(primaryScreenBounds.getHeight()-mainHBoxHeight);
-        listView.setFixedCellSize(listView.getPrefHeight()/8);
+        tableView.setPrefHeight(primaryScreenBounds.getHeight()-mainHBoxHeight);
+        tableView.setFixedCellSize(tableView.getPrefHeight()/8);
+        tableViewService = new TableViewService();
+        tableViewService.populateTableView(tableView);
+
         adjustWindowSize();
     }
     private void adjustWindowSize(){
