@@ -1,4 +1,4 @@
-package com.example.booking_system.ControllerService;
+package com.example.booking_system.Service;
 import com.example.booking_system.Model.User;
 import com.example.booking_system.Persistence.UserDAO_Impl;
 import com.example.booking_system.Persistence.dbConnection;
