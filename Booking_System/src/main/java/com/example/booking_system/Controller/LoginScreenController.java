@@ -1,5 +1,7 @@
 package com.example.booking_system.Controller;
 
+import com.example.booking_system.Model.LoggedInManager;
+import com.example.booking_system.Model.User;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -7,6 +9,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import com.example.booking_system.Service.LoginService;
 import javafx.stage.Stage;
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 
 public class LoginScreenController {
@@ -31,16 +37,29 @@ public class LoginScreenController {
         if(isLoggedIn){
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.close();
+
+            User loggedInUser = LoggedInManager.getInstance().getCurrentUser();
+            System.out.println(loggedInUser.getUserID());
+
+
         }else{
+            tfUsername.clear();
+            pfPassword.clear();
             failledLoginLabel.setVisible(true);
         }
 
     }
 
     public void onForgotButtonClick(ActionEvent actionEvent) {
+        String url = "https://moodle.easv.dk/login/forgot_password.php";
 
-        if(forgotButton.isArmed()){
-            forgotPasswordLink.setVisible(true);
+        if(Desktop.isDesktopSupported()){
+            Desktop desktop = Desktop.getDesktop();
+            try{
+                desktop.browse(new URI(url));
+            }catch (IOException | URISyntaxException e){
+                e.printStackTrace();
+            }
         }
 
     }

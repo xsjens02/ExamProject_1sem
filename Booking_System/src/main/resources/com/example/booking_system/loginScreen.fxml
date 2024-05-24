@@ -17,9 +17,9 @@
       </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Label fx:id="forgotPasswordLink" prefHeight="86.0" prefWidth="612.0" text="https://moodle.easv.dk/login/forgot_password.php" />
             <Label fx:id="failledLoginLabel" text="Invalid username or password. Please try again." textFill="RED" visible="false" />
          </children>
       </HBox>
+      <Label text="https://moodle.easv.dk/login/forgot_password.php" visible="false" />
    </children>
 </VBox>

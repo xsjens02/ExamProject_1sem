@@ -1,4 +1,5 @@
 package com.example.booking_system.Service;
+import com.example.booking_system.Model.LoggedInManager;
 import com.example.booking_system.Model.User;
 import com.example.booking_system.Persistence.UserDAO_Impl;
 import com.example.booking_system.Persistence.dbConnection;
@@ -28,7 +29,8 @@ public class LoginService {
 
         if (user != null && hashedPassword.equals(user.getPassword())){
             System.out.println("True!");
-            return hashedPassword.equals(user.getPassword());
+            LoggedInManager.getInstance().setCurrentUser(user);
+            return true;
 
         }else {
             System.out.println("False!");

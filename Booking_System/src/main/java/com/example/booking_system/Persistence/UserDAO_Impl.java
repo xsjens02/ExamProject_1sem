@@ -41,13 +41,14 @@ public class UserDAO_Impl implements DAO<com.example.booking_system.Model.User>{
             statement.setString(1,username);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()){
+                int userID = resultSet.getInt("fldUserID");
                 String userName = resultSet.getString("fldUsername");
                 String password = resultSet.getString("fldPassword");
                 int institutionID = resultSet.getInt("fldInstitutionID");
                 int roleID = resultSet.getInt("fldRoleID");
                 String firstName = resultSet.getString("fldFirst_Name");
                 String lastName = resultSet.getString("fldLast_Name");
-                return new User(userName,password,institutionID,roleID,firstName,lastName);
+                return new User(userID, userName ,password,institutionID,roleID,firstName,lastName);
             }
         }catch (SQLException e){
             e.printStackTrace();

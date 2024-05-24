@@ -5,6 +5,7 @@ module com.example.booking_system {
     requires org.controlsfx.controls;
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
+    requires java.desktop;
 
     opens com.example.booking_system to javafx.fxml;
     exports com.example.booking_system;
