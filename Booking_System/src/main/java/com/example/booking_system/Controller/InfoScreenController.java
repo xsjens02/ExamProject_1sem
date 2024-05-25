@@ -6,7 +6,7 @@ import com.example.booking_system.ControllerService.TableViewService;
 import com.example.booking_system.Model.Institution;
 import com.example.booking_system.Persistence.DAO;
 import com.example.booking_system.Persistence.InstitutionDAO_Impl;
-import com.example.booking_system.Service.InstitutionService;
+import com.example.booking_system.ControllerService.InstitutionService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +16,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,12 +23,9 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class InfoScreenController implements Initializable {

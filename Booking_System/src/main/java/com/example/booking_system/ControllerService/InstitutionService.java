@@ -1,4 +1,4 @@
-package com.example.booking_system.Service;
+package com.example.booking_system.ControllerService;
 
 import com.example.booking_system.Model.Institution;
 

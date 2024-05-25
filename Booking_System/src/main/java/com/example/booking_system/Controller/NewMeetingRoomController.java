@@ -7,7 +7,7 @@ import com.example.booking_system.Persistence.EquipmentDAO_Impl;
 import com.example.booking_system.Persistence.MeetingRoomDAO_Impl;
 import com.example.booking_system.ControllerService.ResetService;
 import com.example.booking_system.ControllerService.ValidationService;
-import com.example.booking_system.Service.InstitutionService;
+import com.example.booking_system.ControllerService.InstitutionService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
