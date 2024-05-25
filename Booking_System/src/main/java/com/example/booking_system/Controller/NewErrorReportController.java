@@ -4,9 +4,9 @@ import com.example.booking_system.ControllerService.ValidationService;
 import com.example.booking_system.Model.Equipment;
 import com.example.booking_system.Model.ErrorReport;
 import com.example.booking_system.Model.MeetingRoom;
+import com.example.booking_system.Model.SystemManager;
 import com.example.booking_system.Persistence.DAO;
 import com.example.booking_system.Persistence.ErrorReportDAO_Impl;
-import com.example.booking_system.ControllerService.InstitutionService;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
@@ -28,7 +28,7 @@ public class NewErrorReportController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        List<MeetingRoom> meetingRooms = InstitutionService.getInstance().getInstitution().getMeetingRoomList();
+        List<MeetingRoom> meetingRooms = SystemManager.getInstance().getInstitution().getMeetingRoomList();
         lwMeetingRooms.getItems().addAll(meetingRooms);
 
         lwMeetingRooms.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {

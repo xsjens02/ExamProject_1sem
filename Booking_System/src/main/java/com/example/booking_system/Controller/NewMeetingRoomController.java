@@ -2,12 +2,12 @@ package com.example.booking_system.Controller;
 
 import com.example.booking_system.Model.Equipment;
 import com.example.booking_system.Model.MeetingRoom;
+import com.example.booking_system.Model.SystemManager;
 import com.example.booking_system.Persistence.DAO;
 import com.example.booking_system.Persistence.EquipmentDAO_Impl;
 import com.example.booking_system.Persistence.MeetingRoomDAO_Impl;
 import com.example.booking_system.ControllerService.ResetService;
 import com.example.booking_system.ControllerService.ValidationService;
-import com.example.booking_system.ControllerService.InstitutionService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -61,7 +61,7 @@ public class NewMeetingRoomController implements Initializable {
             if (ValidationService.validFieldLength(txtRoomName, 30)) {
                 String roomName = txtRoomName.getText();
                 int availableSeats = Integer.parseInt(txtRoomCapacity.getText());
-                int institutionID = InstitutionService.getInstance().getInstitution().getInstitutionID();
+                int institutionID = SystemManager.getInstance().getInstitution().getInstitutionID();
                 if (!roomEquipment.isEmpty()) {
                     meetingRoomDAO.add(new MeetingRoom(roomName, institutionID, availableSeats, roomEquipment));
                 } else {

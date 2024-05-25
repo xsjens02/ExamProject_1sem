@@ -1,6 +1,6 @@
 package com.example.booking_system.Controller;
 
-import com.example.booking_system.Model.LoggedInManager;
+import com.example.booking_system.Model.SystemManager;
 import com.example.booking_system.Model.User;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -38,7 +38,7 @@ public class LoginScreenController {
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.close();
 
-            User loggedInUser = LoggedInManager.getInstance().getCurrentUser();
+            User loggedInUser = SystemManager.getInstance().getUser();
             System.out.println(loggedInUser.getUserID());
 
 

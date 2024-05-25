@@ -5,7 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-public class UserDAO_Impl implements DAO<com.example.booking_system.Model.User>{
+public class UserDAO_Impl implements UserDAO {
     private final Connection connection;
 
     public UserDAO_Impl(){
@@ -35,7 +35,7 @@ public class UserDAO_Impl implements DAO<com.example.booking_system.Model.User>{
         return null;
     }
 
-    public User readUsername(String username){
+    public User readFromUsername(String username){
         try(CallableStatement statement = connection.prepareCall("{CALL dbo.read_user(?)}")){
             statement.setString(1,username);
             ResultSet resultSet = statement.executeQuery();

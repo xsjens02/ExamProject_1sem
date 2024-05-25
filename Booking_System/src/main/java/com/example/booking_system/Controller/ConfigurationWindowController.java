@@ -1,8 +1,7 @@
 package com.example.booking_system.Controller;
 
-import com.example.booking_system.ControllerService.ControllerKeys;
+import com.example.booking_system.ControllerService.Controller;
 import com.example.booking_system.ControllerService.SceneManager;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,7 +13,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.io.IOException;
 import java.net.URL;
@@ -52,7 +50,7 @@ public class ConfigurationWindowController implements Initializable {
 
     @FXML
     private void onNewMeetingRoomButtonClick(){
-        SceneManager.changeScene((Stage) VBox.getScene().getWindow(), ControllerKeys.NewMeetingRoom, "nyt mødelokale");
+        SceneManager.changeScene((Stage) VBox.getScene().getWindow(), Controller.NewMeetingRoom, "nyt mødelokale");
     }
     @FXML
     private void onNewCateringOptionButtonClick(){

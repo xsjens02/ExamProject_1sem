@@ -1,6 +1,6 @@
 package com.example.booking_system.ControllerService;
 
-public enum ControllerKeys {
+public enum Controller {
     Configuration,
     Info,
     Login,

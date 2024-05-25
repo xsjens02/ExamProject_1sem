@@ -1,12 +1,12 @@
 package com.example.booking_system.Controller;
 
-import com.example.booking_system.ControllerService.ControllerKeys;
+import com.example.booking_system.ControllerService.Controller;
 import com.example.booking_system.ControllerService.SceneManager;
 import com.example.booking_system.ControllerService.TableViewService;
 import com.example.booking_system.Model.Institution;
+import com.example.booking_system.Model.SystemManager;
 import com.example.booking_system.Persistence.DAO;
 import com.example.booking_system.Persistence.InstitutionDAO_Impl;
-import com.example.booking_system.ControllerService.InstitutionService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -49,7 +49,7 @@ public class InfoScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        InstitutionService.getInstance().setInstitution(institutionDAO.read(1));
+        SystemManager.getInstance().initManager(1);
         administration.getItems().addAll("Konfiguration","Statistik");
 
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -112,6 +112,6 @@ public class InfoScreenController implements Initializable {
 
     @FXML
     public void onErrorReportClick() {
-        SceneManager.openScene(ControllerKeys.NewErrorReport, "Fejlmelding");
+        SceneManager.openScene(Controller.NewErrorReport, "Fejlmelding");
     }
 }

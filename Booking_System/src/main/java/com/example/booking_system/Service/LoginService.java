@@ -1,9 +1,9 @@
 package com.example.booking_system.Service;
-import com.example.booking_system.Model.LoggedInManager;
+import com.example.booking_system.Model.SystemManager;
 import com.example.booking_system.Model.User;
+import com.example.booking_system.Persistence.UserDAO;
 import com.example.booking_system.Persistence.UserDAO_Impl;
 import com.example.booking_system.Persistence.dbConnection;
-import com.example.booking_system.Controller.LoginScreenController;
 
 import java.sql.Connection;
 
@@ -11,7 +11,7 @@ public class LoginService {
 
     private final Connection connection;
 
-    private final UserDAO_Impl userDAO = new UserDAO_Impl();
+    private final UserDAO userDAO = new UserDAO_Impl();
 
     //private final LoginScreenController loginScreenController = new LoginScreenController();
 
@@ -24,12 +24,12 @@ public class LoginService {
     }
 
     public boolean validateLogin(String username, String password){
-        User user = userDAO.readUsername(username);
+        User user = userDAO.readFromUsername(username);
         String hashedPassword = hashPassword(password);
 
         if (user != null && hashedPassword.equals(user.getPassword())){
             System.out.println("True!");
-            LoggedInManager.getInstance().setCurrentUser(user);
+            SystemManager.getInstance().setUser(user);
             return true;
 
         }else {

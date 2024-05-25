@@ -6,11 +6,9 @@ public class User {
     private String password;
     private int institutionID;
     private int roleID;
-    private Enum<Role> role;
+    private Role role;
     private String firstName;
     private String lastName;
-
-
 
     public User(int userID, String userName, String password, int institutionID, int roleID, String firstName, String lastName) {
         this.userID = userID;
@@ -26,81 +24,60 @@ public class User {
     public int getUserID() {
         return userID;
     }
-
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
-
     public String getUserName() {
         return userName;
     }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public String getPassword() {
         return password;
     }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public int getInstitutionID() {
         return institutionID;
     }
-
-    public void setInstitutionID(int institutionID) {
-        this.institutionID = institutionID;
-    }
-
     public int getRoleID() {
         return roleID;
     }
-
-    public void setRoleID(int roleID) {
-        this.roleID = roleID;
+    public Enum<Role> getRole() {
+        return role;
     }
-
     public String getFirstName() {
         return firstName;
     }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getLastName() {
         return lastName;
     }
 
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public void setInstitutionID(int institutionID) {
+        this.institutionID = institutionID;
+    }
+    public void setRoleID(int roleID) {
+        this.roleID = roleID;
+    }
+    public void setRole(Role role) {
+        this.role = role;
+    }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
-
-    public Enum<Role> getRole() {
-        return role;
-    }
-
-    public void setRole(Enum<Role> role) {
-        this.role = role;
-    }
-
     private void defineUserRole(int roleID){
-       if(roleID == 1){
-           this.role = Role.GUEST;
-       } else if (roleID == 2) {
-           this.role = Role.STUDENT;
-       } else if (roleID == 3) {
-           this.role = Role.TEACHER;
-       } else if (roleID == 4) {
-           this.role = Role.ADMIN;
-       } else if (roleID == 5) {
-           this.role = Role.JANITOR;
-       }
+        switch (roleID) {
+            case 1: this.role = Role.GUEST; break;
+            case 2: this.role = Role.STUDENT; break;
+            case 3: this.role = Role.TEACHER; break;
+            case 4: this.role = Role.ADMIN; break;
+            case 5: this.role = Role.JANITOR; break;
+        }
     }
-
-
 }
