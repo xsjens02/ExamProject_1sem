@@ -19,7 +19,7 @@
             <Insets />
          </VBox.margin>
       </TextField>
-      <Label fx:id="lblCapacityError" />
+      <Label fx:id="lblCapacityError" textFill="#da0303" />
       <Label minWidth="75.0" text="Udstyr:" />
       <ListView fx:id="lwRoomEquipment" prefHeight="200.0" prefWidth="200.0" />
       <HBox alignment="CENTER_RIGHT" layoutX="25.0" layoutY="499.0" prefHeight="43.0" prefWidth="373.0">

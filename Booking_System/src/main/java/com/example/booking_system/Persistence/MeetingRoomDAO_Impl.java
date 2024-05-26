@@ -5,6 +5,7 @@ import com.example.booking_system.Model.ErrorReport;
 import com.example.booking_system.Model.MeetingRoom;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MeetingRoomDAO_Impl implements MeetingRoomDAO {
@@ -75,6 +76,23 @@ public class MeetingRoomDAO_Impl implements MeetingRoomDAO {
     }
 
     @Override
+    public MeetingRoom read(int id, int institutionID) {
+        try {
+            PreparedStatement readRoom = connection.prepareStatement("SELECT * FROM tblMeeting_Room WHERE fldRoomID=" + id + " AND fldInstitutionID=" + institutionID);
+            ResultSet roomData = readRoom.executeQuery();
+            while (roomData.next()) {
+                String roomName = roomData.getString(2).trim();
+                int availableSeats = roomData.getInt(4);
+
+                return createMeetingRoom(new MeetingRoom(id, roomName, institutionID, availableSeats));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    @Override
     public List<MeetingRoom> readAll() {
         List<MeetingRoom> roomList = new ArrayList<>();
         try {
@@ -109,6 +127,29 @@ public class MeetingRoomDAO_Impl implements MeetingRoomDAO {
                 int availableSeats = allRoomsData.getInt(4);
 
                 roomList.add(createMeetingRoom(new MeetingRoom(roomID, roomName, institutionID, availableSeats)));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if (!roomList.isEmpty()) {
+            return roomList;
+        }
+        return null;
+    }
+
+    @Override
+    public List<MeetingRoom> readAllAvailableRooms(int institutionID, Date searchDate, double startTime, double endTime) {
+        List<MeetingRoom> roomList = new ArrayList<>();
+        try {
+            PreparedStatement readAllRoomIDs = connection.prepareStatement("SELECT * FROM get_available_roomIDs(?, ?, ?)");
+            readAllRoomIDs.setDate(1, (java.sql.Date) searchDate);
+            readAllRoomIDs.setDouble(2, startTime);
+            readAllRoomIDs.setDouble(3, endTime);
+            ResultSet allRoomID = readAllRoomIDs.executeQuery();
+            while (allRoomID.next()) {
+                int roomID = allRoomID.getInt(1);
+
+                roomList.add(createMeetingRoom(read(roomID, institutionID)));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
