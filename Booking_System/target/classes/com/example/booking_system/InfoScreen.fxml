@@ -42,6 +42,10 @@
             </HBox>
             <HBox fx:id="rightHBox" alignment="CENTER_RIGHT" minHeight="50.0" prefHeight="64.0" prefWidth="460.0">
                <children>
+                  <Label fx:id="lblUserInfo">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin></Label>
                   <ComboBox fx:id="administration" onAction="#onAdministrationDropdownChoice" prefHeight="36.8" prefWidth="122.0" promptText="Administration">
                      <HBox.margin>
                         <Insets right="10.0" />

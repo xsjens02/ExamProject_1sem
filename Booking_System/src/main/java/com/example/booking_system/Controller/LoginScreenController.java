@@ -19,6 +19,7 @@ public class LoginScreenController {
 
     public TextField tfUsername;
     private final LoginService loginService = new LoginService();
+    private InfoScreenController infoScreenController;
 
     public PasswordField pfPassword;
     public Button loginButton;
@@ -26,6 +27,10 @@ public class LoginScreenController {
     public Button forgotButton;
     public Label failledLoginLabel;
     public Label forgotPasswordLink;
+
+    public void setInfoScreenController(InfoScreenController infoScreenController){
+        this.infoScreenController = infoScreenController;
+    }
 
 
     public void onLoginButtonClick(ActionEvent actionEvent) {
@@ -35,11 +40,12 @@ public class LoginScreenController {
         boolean isLoggedIn = loginService.validateLogin(username, password);
 
         if(isLoggedIn){
+            if(infoScreenController != null){
+                infoScreenController.updateUI();
+
+            }
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.close();
-
-            User loggedInUser = SystemManager.getInstance().getUser();
-            System.out.println(loggedInUser.getUserID());
 
 
         }else{

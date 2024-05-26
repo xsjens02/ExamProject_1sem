@@ -28,12 +28,10 @@ public class LoginService {
         String hashedPassword = hashPassword(password);
 
         if (user != null && hashedPassword.equals(user.getPassword())){
-            System.out.println("True!");
             SystemManager.getInstance().setUser(user);
             return true;
 
         }else {
-            System.out.println("False!");
             return false;
         }
 

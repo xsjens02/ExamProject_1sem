@@ -5,6 +5,7 @@ import com.example.booking_system.ControllerService.SceneManager;
 import com.example.booking_system.ControllerService.TableViewService;
 import com.example.booking_system.Model.Institution;
 import com.example.booking_system.Model.SystemManager;
+import com.example.booking_system.Model.User;
 import com.example.booking_system.Persistence.DAO;
 import com.example.booking_system.Persistence.InstitutionDAO_Impl;
 import javafx.event.ActionEvent;
@@ -16,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -30,6 +32,7 @@ import java.util.ResourceBundle;
 
 public class InfoScreenController implements Initializable {
 
+    public Label lblUserInfo;
     DAO<Institution> institutionDAO = new InstitutionDAO_Impl();
 
     @FXML
@@ -62,6 +65,7 @@ public class InfoScreenController implements Initializable {
         tableViewService.populateTableView(tableView);
 
         adjustWindowSize();
+        updateUI();
     }
     private void adjustWindowSize(){
         leftHBox.minWidthProperty().bind(mainHBox.widthProperty().divide(2));
@@ -96,9 +100,23 @@ public class InfoScreenController implements Initializable {
 
 
     public void onLoginButtonClick(ActionEvent actionEvent) {
+        User currentUser = SystemManager.getInstance().getUser();
+        if(currentUser != null){
+            SystemManager.getInstance().clearManager();
+            updateUI();
+        }else {
+            openLoginPopup();
+        }
+
+    }
+
+
+    private void openLoginPopup(){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/booking_system/loginScreen.fxml"));
             Parent root = loader.load();
+            LoginScreenController loginScreenController = loader.getController();
+            loginScreenController.setInfoScreenController(this);
 
             Stage loginWindow = new Stage();
             loginWindow.initModality(Modality.APPLICATION_MODAL);
@@ -109,6 +127,16 @@ public class InfoScreenController implements Initializable {
             e.printStackTrace();
         }
     }
+
+    public void updateUI(){
+        User currentUser = SystemManager.getInstance().getUser();
+        if(currentUser != null){
+            lblUserInfo.setText("Velkommen, " + currentUser.getFirstName());
+        } else {
+            lblUserInfo.setText("");
+        }
+    }
+
 
     @FXML
     public void onErrorReportClick() {
