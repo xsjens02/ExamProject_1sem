@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="435.0" spacing="5.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.NewMeetingRoomController">
+<VBox fx:id="VBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="435.0" spacing="5.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.NewMeetingRoomController">
    <children>
       <Label minWidth="75.0" text="Navn:" />
       <TextField fx:id="txtRoomName" maxWidth="250.0" promptText="lokale navn">
@@ -12,12 +12,14 @@
             <Insets />
          </VBox.margin>
       </TextField>
+      <Label fx:id="lblNameError" textFill="#da0303" />
       <Label minWidth="75.0" text="Kapacitet:" />
       <TextField fx:id="txtRoomCapacity" maxWidth="250.0" promptText="antal personer">
          <VBox.margin>
             <Insets />
          </VBox.margin>
       </TextField>
+      <Label fx:id="lblCapacityError" />
       <Label minWidth="75.0" text="Udstyr:" />
       <ListView fx:id="lwRoomEquipment" prefHeight="200.0" prefWidth="200.0" />
       <HBox alignment="CENTER_RIGHT" layoutX="25.0" layoutY="499.0" prefHeight="43.0" prefWidth="373.0">
@@ -34,7 +36,7 @@
       </HBox>
       <Label text="Tilgængelig udstyr:" />
       <ListView fx:id="lwAllEquipment" prefHeight="200.0" prefWidth="200.0" />
-      <HBox alignment="CENTER_RIGHT" layoutX="25.0" layoutY="499.0" prefHeight="43.0" prefWidth="373.0">
+      <HBox alignment="CENTER_RIGHT" layoutX="25.0" layoutY="499.0" prefHeight="43.0" prefWidth="373.0" VBox.vgrow="NEVER">
          <children>
             <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0" HBox.hgrow="ALWAYS">
                <children>

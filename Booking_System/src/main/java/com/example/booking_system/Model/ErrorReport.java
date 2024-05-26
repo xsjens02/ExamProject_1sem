@@ -8,6 +8,14 @@ public class ErrorReport {
     private String description;
     private boolean resolved;
 
+    public ErrorReport(int userID, int roomID, int equipmentID, String description, boolean resolved) {
+        this.userID = userID;
+        this.roomID = roomID;
+        this.equipmentID = equipmentID;
+        this.description = description;
+        this.resolved = resolved;
+    }
+
     public ErrorReport(int reportID, int userID, int roomID, int equipmentID, String description, boolean resolved) {
         this.reportID = reportID;
         this.userID = userID;
