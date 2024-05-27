@@ -1,7 +1,9 @@
 package com.example.booking_system.ControllerService;
 
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.util.Pair;
 
 import java.util.List;
 
@@ -9,16 +11,16 @@ public class ValidationService {
 
     /**
      * validates if a text area have input
-     * @param textArea text area to check for input
+     * @param textArea area to validate for input
+     * @param errorLabel label to display error message
      * @return true if area has input, false if not
      */
-    public static boolean validateAreaEntered(TextArea textArea) {
+    public static boolean validateAreaEntered(TextArea textArea, Label errorLabel) {
         if (textArea.getText().isEmpty()) {
-            textArea.setText("skal udfyldes!");
-            textArea.setStyle("-fx-text-fill: white; -fx-background-color: grey");
+            errorLabel.setText("skal udfyldes");
             textArea.setOnMouseClicked(e -> {
-                textArea.setStyle("-fx-text-fill: black; -fx-background-color: white");
-                textArea.clear();
+                errorLabel.setText("");
+                textArea.setOnMouseClicked(null);
             });
             return false;
         }
@@ -27,16 +29,16 @@ public class ValidationService {
 
     /**
      * validates if a text field have input
-     * @param textField text field to check for input
+     * @param textField field to validate for input
+     * @param errorLabel label to display error message
      * @return true if field has input, false if not
      */
-    public static boolean validateFieldEntered(TextField textField) {
+    public static boolean validateFieldEntered(TextField textField, Label errorLabel) {
         if (textField.getText().isEmpty()) {
-            textField.setText("skal udfyldes!");
-            textField.setStyle("-fx-text-fill: white; -fx-background-color: grey");
+            errorLabel.setText("skal udfyldes");
             textField.setOnMouseClicked(e -> {
-                textField.setStyle("-fx-text-fill: black; -fx-background-color: white");
-                textField.clear();
+                errorLabel.setText("");
+                textField.setOnMouseClicked(null);
             });
             return false;
         }
@@ -45,21 +47,20 @@ public class ValidationService {
 
     /**
      * validates if multiple text fields have input
-     * @param textFields array of text fields to check for input
-     * @return true if all has input, false if one or more has no input
+     * @param fieldLabelList pair array list of fields to check and their corresponding error labels
+     * @return true if all has input, false if one has no input
      */
-    public static boolean validateFieldsEntered(List<TextField> textFields) {
+    public static boolean validateFieldsEntered(List<Pair<TextField, Label>> fieldLabelList) {
         boolean valid = true;
-        for (TextField textField : textFields) {
-            if (textField.getText().isEmpty()) {
-                textField.setText("skal udfyldes!");
-                textField.setStyle("-fx-text-fill: white; -fx-background-color: grey");
+        for (Pair<TextField, Label> pair : fieldLabelList) {
+            if (pair.getKey().getText().isEmpty()) {
                 if (valid) {
                     valid = false;
                 }
-                textField.setOnMouseClicked(e -> {
-                    textField.setStyle("-fx-text-fill: black; -fx-background-color: white");
-                    textField.clear();
+                pair.getValue().setText("skal udfyldes");
+                pair.getKey().setOnMouseClicked(e -> {
+                    pair.getValue().setText("");
+                    pair.getKey().setOnMouseClicked(null);
                 });
             }
         }
@@ -68,24 +69,42 @@ public class ValidationService {
 
     /**
      * validates if text field input is within a specific length
-     * @param textField text field to check
-     * @param maxLength specific length to check input is within
+     * @param textField field to validate
+     * @param maxLength specific length to validate if input is within
+     * @param errorLabel label to display error message
      * @return true if within specific length, false if not
      */
-    public static boolean validFieldLength(TextField textField, int maxLength) {
+    public static boolean validFieldLength(TextField textField, int maxLength, Label errorLabel) {
         String fieldValue = textField.getText();
-        return fieldValue.length() <= maxLength;
+        if (fieldValue.length() > maxLength) {
+            errorLabel.setText("maks. " + maxLength + " tegn");
+            textField.setOnMouseClicked(e -> {
+                errorLabel.setText("");
+                textField.setOnMouseClicked(null);
+            });
+            return false;
+        }
+        return true;
     }
 
     /**
-     * validates if text area input is within a specific length
-     * @param textArea text area to check
-     * @param maxLength specific length to check input is within
-     * @return true if wihtin specific length, false if not
+     * validates if area input is within a specific length
+     * @param textArea area to validate
+     * @param maxLength specific length to validate if input is within
+     * @param errorLabel label to display error message
+     * @return true if within specific length, false if not
      */
-    public static boolean validAreaLength(TextArea textArea, int maxLength) {
+    public static boolean validAreaLength(TextArea textArea, int maxLength, Label errorLabel) {
         String areaValue = textArea.getText();
-        return areaValue.length() <= maxLength;
+        if (areaValue.length() > maxLength) {
+            errorLabel.setText("maks. " + maxLength + " tegn");
+            textArea.setOnMouseClicked(e -> {
+                errorLabel.setText("");
+                textArea.setOnMouseClicked(null);
+            });
+            return false;
+        }
+        return true;
     }
 
     /**

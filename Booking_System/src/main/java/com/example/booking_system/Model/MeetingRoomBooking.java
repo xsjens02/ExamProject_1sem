@@ -22,6 +22,9 @@ public class MeetingRoomBooking {
         this.responsiblePerson = responsisblePerson;
     }
 
+    public void checkAvailability(){
+
+    }
 
     public String getRoomName() {
         return roomName;

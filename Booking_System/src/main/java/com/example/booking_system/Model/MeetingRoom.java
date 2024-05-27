@@ -1,5 +1,9 @@
 package com.example.booking_system.Model;
 
+import com.example.booking_system.Persistence.BookingDAO;
+import com.example.booking_system.Persistence.BookingDAO_Impl;
+
+import java.util.Date;
 import java.util.List;
 
 public class MeetingRoom {
@@ -8,7 +12,9 @@ public class MeetingRoom {
     private int institutionID;
     private int availableSeats;
     private List<Equipment> equipmentList;
-    private List<Booking> bookingList;
+    private List<ErrorReport> unresolvedReports;
+    private List<Booking> dailyBookings;
+    private final BookingDAO bookingDAO = new BookingDAO_Impl();
 
     public MeetingRoom(String roomName, int institutionID, int availableSeats) {
         this.roomName = roomName;
@@ -30,23 +36,6 @@ public class MeetingRoom {
         this.equipmentList = equipmentList;
     }
 
-    public MeetingRoom(int roomID, String roomName, int institutionID, int availableSeats, List<Equipment> equipmentList) {
-        this.roomID = roomID;
-        this.roomName = roomName;
-        this.institutionID = institutionID;
-        this.availableSeats = availableSeats;
-        this.equipmentList = equipmentList;
-    }
-
-    public MeetingRoom(int roomID, String roomName, int institutionID, int availableSeats, List<Equipment> equipmentList, List<Booking> bookingList) {
-        this.roomID = roomID;
-        this.roomName = roomName;
-        this.institutionID = institutionID;
-        this.availableSeats = availableSeats;
-        this.equipmentList = equipmentList;
-        this.bookingList = bookingList;
-    }
-
     public int getRoomID() {
         return roomID;
     }
@@ -62,8 +51,11 @@ public class MeetingRoom {
     public List<Equipment> getEquipmentList() {
         return equipmentList;
     }
-    public List<Booking> getBookingList() {
-        return bookingList;
+    public List<ErrorReport> getUnresolvedReports() {
+        return unresolvedReports;
+    }
+    public List<Booking> getDailyBookings() {
+        return dailyBookings;
     }
 
     public void setRoomID(int roomID) {
@@ -81,8 +73,15 @@ public class MeetingRoom {
     public void setEquipmentList(List<Equipment> equipmentList) {
         this.equipmentList = equipmentList;
     }
-    public void setBookingList(List<Booking> bookingList) {
-        this.bookingList = bookingList;
+    public void setUnresolvedReports(List<ErrorReport> unresolvedReports) {
+        this.unresolvedReports = unresolvedReports;
+    }
+    public void setDailyBookings(List<Booking> dailyBookings) {
+        this.dailyBookings = dailyBookings;
+    }
+
+    public void setupDailyBookings(Date date) {
+        this.setDailyBookings(bookingDAO.readAllRoomBookingsByDate(this.getRoomID(), date));
     }
 
     @Override

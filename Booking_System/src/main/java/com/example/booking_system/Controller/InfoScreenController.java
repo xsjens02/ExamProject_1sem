@@ -53,6 +53,7 @@ public class InfoScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         SystemManager.getInstance().initManager(1);
+        SystemManager.getInstance().setUser(new User(2, "test", "test", 1, 3, "test", "test"));
         administration.getItems().addAll("Konfiguration","Statistik");
 
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -141,5 +142,10 @@ public class InfoScreenController implements Initializable {
     @FXML
     public void onErrorReportClick() {
         SceneManager.openScene(Controller.NewErrorReport, "Fejlmelding");
+    }
+
+    @FXML
+    public void onNewBookingClick() {
+        SceneManager.openScene(Controller.NewBooking, "Ny booking");
     }
 }
