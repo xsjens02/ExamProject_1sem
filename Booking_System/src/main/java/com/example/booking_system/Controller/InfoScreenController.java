@@ -53,7 +53,7 @@ public class InfoScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         SystemManager.getInstance().initManager(1);
-        SystemManager.getInstance().setUser(new User(2, "test", "test", 1, 3, "test", "test"));
+        //SystemManager.getInstance().setUser(new User(2, "test", "test", 1, 3, "test", "test"));
         administration.getItems().addAll("Konfiguration","Statistik");
 
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -103,7 +103,7 @@ public class InfoScreenController implements Initializable {
     public void onLoginButtonClick(ActionEvent actionEvent) {
         User currentUser = SystemManager.getInstance().getUser();
         if(currentUser != null){
-            SystemManager.getInstance().clearManager();
+            SystemManager.getInstance().clearUser();
             updateUI();
         }else {
             openLoginPopup();
@@ -133,8 +133,19 @@ public class InfoScreenController implements Initializable {
         User currentUser = SystemManager.getInstance().getUser();
         if(currentUser != null){
             lblUserInfo.setText("Velkommen, " + currentUser.getFirstName());
+
+            Image logoutImage = new Image(getClass().getResource("/images/logout.png").toExternalForm());
+            ImageView imageView = new ImageView(logoutImage);
+            imageView.setFitHeight(loginButton.getPrefHeight());
+            imageView.setFitWidth(loginButton.getPrefWidth());
+            loginButton.setGraphic(imageView);
         } else {
             lblUserInfo.setText("");
+            Image loginImage = new Image(getClass().getResource("/images/login.png").toExternalForm());
+            ImageView imageView = new ImageView(loginImage);
+            imageView.setFitHeight(loginButton.getPrefHeight());
+            imageView.setFitWidth(loginButton.getPrefWidth());
+            loginButton.setGraphic(imageView);
         }
     }
 

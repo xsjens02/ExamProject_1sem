@@ -53,11 +53,21 @@ public class SystemManager {
     }
 
     public void clearManager() {
-        this.institution = null;
-        notifySubscribers(Subject.Institution);
+      clearUser();
+      clearInstitution();
+    }
+
+    public void clearUser(){
         this.user = null;
         notifySubscribers(Subject.User);
     }
+
+    public void clearInstitution(){
+        this.institution = null;
+        notifySubscribers(Subject.Institution);
+    }
+
+
 
     public void subscribe(Subject subject, Subscriber subscriber) {
         subscribeList.get(subject).add(subscriber);

@@ -26,7 +26,6 @@ public class LoginScreenController {
     public Button cancelButton;
     public Button forgotButton;
     public Label failledLoginLabel;
-    public Label forgotPasswordLink;
 
     public void setInfoScreenController(InfoScreenController infoScreenController){
         this.infoScreenController = infoScreenController;
@@ -42,12 +41,9 @@ public class LoginScreenController {
         if(isLoggedIn){
             if(infoScreenController != null){
                 infoScreenController.updateUI();
-
             }
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.close();
-
-
         }else{
             tfUsername.clear();
             pfPassword.clear();

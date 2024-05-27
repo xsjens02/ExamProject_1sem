@@ -7,17 +7,31 @@
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="253.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.LoginScreenController">
    <children>
       <Label text="Login" />
-      <TextField fx:id="tfUsername" promptText="Brugernavn" />
-      <PasswordField fx:id="pfPassword" promptText="Password" />
-      <Button fx:id="loginButton" mnemonicParsing="false" onAction="#onLoginButtonClick" text="Login" />
-      <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onCancelButtonClick" text="Cancel" />
-      <HBox prefHeight="100.0" prefWidth="200.0">
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Button fx:id="forgotButton" mnemonicParsing="false" onAction="#onForgotButtonClick" text="Har du glemt dit password?">
-               <HBox.margin>
-                  <Insets left="50.0" top="10.0" />
-               </HBox.margin>
-            </Button>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <TextField fx:id="tfUsername" alignment="TOP_LEFT" promptText="Brugernavn">
+                     <VBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </VBox.margin>
+                  </TextField>
+                  <PasswordField fx:id="pfPassword" promptText="Password">
+                     <VBox.margin>
+                        <Insets left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                  </PasswordField>
+                  <Button fx:id="loginButton" mnemonicParsing="false" onAction="#onLoginButtonClick" text="Login">
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onCancelButtonClick" text="Cancel">
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </Button>
+               </children></VBox>
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
@@ -25,6 +39,6 @@
             <Label fx:id="failledLoginLabel" text="Invalid username or password. Please try again." textFill="RED" visible="false" />
          </children>
       </HBox>
-      <Label text="https://moodle.easv.dk/login/forgot_password.php" visible="false" />
+      <Button fx:id="forgotButton" mnemonicParsing="false" onAction="#onForgotButtonClick" text="Har du glemt dit password?" />
    </children>
 </VBox>
