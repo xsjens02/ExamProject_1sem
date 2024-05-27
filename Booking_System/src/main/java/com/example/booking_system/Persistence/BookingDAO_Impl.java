@@ -32,10 +32,11 @@ public class BookingDAO_Impl implements BookingDAO {
                 Date date = bookingData.getDate(6);
                 double startTime = bookingData.getDouble(7);
                 double endTime = bookingData.getDouble(8);
-                int menuID = bookingData.getInt(9);
-                int departmentID = bookingData.getInt(10);
+                double duration = bookingData.getDouble(9);
+                int menuID = bookingData.getInt(10);
+                int departmentID = bookingData.getInt(11);
 
-                return new Booking(id, bookingTitle, userID, roomID, adhoc, date, startTime, endTime, menuID, departmentID);
+                return new Booking(id, bookingTitle, userID, roomID, adhoc, date, startTime, endTime, duration, menuID, departmentID);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -58,10 +59,11 @@ public class BookingDAO_Impl implements BookingDAO {
                 Date date = allBookingData.getDate(6);
                 double startTime = allBookingData.getDouble(7);
                 double endTime = allBookingData.getDouble(8);
-                int menuID = allBookingData.getInt(9);
-                int departmentID = allBookingData.getInt(10);
+                double duration = allBookingData.getDouble(9);
+                int menuID = allBookingData.getInt(10);
+                int departmentID = allBookingData.getInt(11);
 
-                bookingList.add(new Booking(bookingID, bookingTitle, userID, roomID, adhoc, date, startTime, endTime, menuID, departmentID));
+                bookingList.add(new Booking(bookingID, bookingTitle, userID, roomID, adhoc, date, startTime, endTime, duration, menuID, departmentID));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -88,10 +90,11 @@ public class BookingDAO_Impl implements BookingDAO {
                 Date date = allBookingData.getDate(6);
                 double startTime = allBookingData.getDouble(7);
                 double endTime = allBookingData.getDouble(8);
-                int menuID = allBookingData.getInt(9);
-                int departmentID = allBookingData.getInt(10);
+                double duration = allBookingData.getDouble(9);
+                int menuID = allBookingData.getInt(10);
+                int departmentID = allBookingData.getInt(11);
 
-                bookingList.add(new Booking(bookingID, bookingTitle, userID, roomID, adhoc, date, startTime, endTime, menuID, departmentID));
+                bookingList.add(new Booking(bookingID, bookingTitle, userID, roomID, adhoc, date, startTime, endTime, duration, menuID, departmentID));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
