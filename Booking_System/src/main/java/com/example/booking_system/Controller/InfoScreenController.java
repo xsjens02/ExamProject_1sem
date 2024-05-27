@@ -5,6 +5,7 @@ import com.example.booking_system.ControllerService.SceneManager;
 import com.example.booking_system.ControllerService.TableViewService;
 import com.example.booking_system.Model.Institution;
 import com.example.booking_system.Model.SystemManager;
+import com.example.booking_system.Model.User;
 import com.example.booking_system.Persistence.DAO;
 import com.example.booking_system.Persistence.InstitutionDAO_Impl;
 import javafx.event.ActionEvent;
@@ -50,6 +51,7 @@ public class InfoScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         SystemManager.getInstance().initManager(1);
+        SystemManager.getInstance().setUser(new User(2, "test", "test", 1, 3, "test", "test"));
         administration.getItems().addAll("Konfiguration","Statistik");
 
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -113,5 +115,10 @@ public class InfoScreenController implements Initializable {
     @FXML
     public void onErrorReportClick() {
         SceneManager.openScene(Controller.NewErrorReport, "Fejlmelding");
+    }
+
+    @FXML
+    public void onNewBookingClick() {
+        SceneManager.openScene(Controller.NewBooking, "Ny booking");
     }
 }

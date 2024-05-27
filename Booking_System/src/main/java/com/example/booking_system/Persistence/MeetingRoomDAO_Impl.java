@@ -1,14 +1,17 @@
 package com.example.booking_system.Persistence;
 
 import com.example.booking_system.Model.Equipment;
+import com.example.booking_system.Model.ErrorReport;
 import com.example.booking_system.Model.MeetingRoom;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MeetingRoomDAO_Impl implements MeetingRoomDAO {
     private final Connection connection;
     private final DAO<Equipment> equipmentDAO = new EquipmentDAO_Impl();
+    private final DAO<ErrorReport> errorReportDAO = new ErrorReportDAO_Impl();
     public MeetingRoomDAO_Impl() {
         connection = dbConnection.getInstance().getConnection();
     }
@@ -64,12 +67,24 @@ public class MeetingRoomDAO_Impl implements MeetingRoomDAO {
                 int institutionID = roomData.getInt(3);
                 int availableSeats = roomData.getInt(4);
 
-                List<Equipment> roomEquipment = getRoomEquipment(id);
-                if (roomEquipment != null) {
-                    return new MeetingRoom(id, roomName, institutionID, availableSeats, roomEquipment);
-                } else {
-                    return new MeetingRoom(id, roomName, institutionID, availableSeats);
-                }
+                return createMeetingRoom(new MeetingRoom(id, roomName, institutionID, availableSeats));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    @Override
+    public MeetingRoom read(int id, int institutionID) {
+        try {
+            PreparedStatement readRoom = connection.prepareStatement("SELECT * FROM tblMeeting_Room WHERE fldRoomID=" + id + " AND fldInstitutionID=" + institutionID);
+            ResultSet roomData = readRoom.executeQuery();
+            while (roomData.next()) {
+                String roomName = roomData.getString(2).trim();
+                int availableSeats = roomData.getInt(4);
+
+                return createMeetingRoom(new MeetingRoom(id, roomName, institutionID, availableSeats));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -89,12 +104,7 @@ public class MeetingRoomDAO_Impl implements MeetingRoomDAO {
                 int institutionID = allRoomsData.getInt(3);
                 int availableSeats = allRoomsData.getInt(4);
 
-                List<Equipment> roomEquipment = getRoomEquipment(roomID);
-                if (roomEquipment != null) {
-                    roomList.add(new MeetingRoom(roomID, roomName, institutionID, availableSeats, roomEquipment));
-                } else {
-                    roomList.add(new MeetingRoom(roomID, roomName, institutionID, availableSeats));
-                }
+                roomList.add(createMeetingRoom(new MeetingRoom(roomID, roomName, institutionID, availableSeats)));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -116,12 +126,30 @@ public class MeetingRoomDAO_Impl implements MeetingRoomDAO {
                 String roomName = allRoomsData.getString(2).trim();
                 int availableSeats = allRoomsData.getInt(4);
 
-                List<Equipment> roomEquipment = getRoomEquipment(roomID);
-                if (roomEquipment != null) {
-                    roomList.add(new MeetingRoom(roomID, roomName, institutionID, availableSeats, roomEquipment));
-                } else {
-                    roomList.add(new MeetingRoom(roomID, roomName, institutionID, availableSeats));
-                }
+                roomList.add(createMeetingRoom(new MeetingRoom(roomID, roomName, institutionID, availableSeats)));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        if (!roomList.isEmpty()) {
+            return roomList;
+        }
+        return null;
+    }
+
+    @Override
+    public List<MeetingRoom> readAllAvailableRooms(int institutionID, Date searchDate, double startTime, double endTime) {
+        List<MeetingRoom> roomList = new ArrayList<>();
+        try {
+            PreparedStatement readAllRoomIDs = connection.prepareStatement("SELECT * FROM get_available_roomIDs(?, ?, ?)");
+            readAllRoomIDs.setDate(1, (java.sql.Date) searchDate);
+            readAllRoomIDs.setDouble(2, startTime);
+            readAllRoomIDs.setDouble(3, endTime);
+            ResultSet allRoomID = readAllRoomIDs.executeQuery();
+            while (allRoomID.next()) {
+                int roomID = allRoomID.getInt(1);
+
+                roomList.add(createMeetingRoom(read(roomID, institutionID)));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -175,5 +203,46 @@ public class MeetingRoomDAO_Impl implements MeetingRoomDAO {
             throw new RuntimeException(e);
         }
         return roomEquipment;
+    }
+
+    private List<ErrorReport> getUnresolvedRoomReports(int roomID) {
+        List<ErrorReport> unresolvedReports = null;
+        try {
+            CallableStatement validateReports = connection.prepareCall("{? = call validate_room_error_report(?)}");
+            validateReports.registerOutParameter(1, Types.INTEGER);
+            validateReports.setInt(2, roomID);
+            validateReports.execute();
+
+            int validation = validateReports.getInt(1);
+            if (validation > 0) {
+                unresolvedReports = new ArrayList<>();
+                try {
+                    PreparedStatement readRoomReportIDs = connection.prepareStatement("SELECT * FROM get_unresolved_room_reportIDs(?)");
+                    readRoomReportIDs.setInt(1, roomID);
+                    ResultSet reportIDs = readRoomReportIDs.executeQuery();
+                    while (reportIDs.next()) {
+                        int reportID = reportIDs.getInt(1);
+                        unresolvedReports.add(errorReportDAO.read(reportID));
+                    }
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return unresolvedReports;
+    }
+
+    private MeetingRoom createMeetingRoom(MeetingRoom meetingRoom) {
+        List<Equipment> roomEquipment = getRoomEquipment(meetingRoom.getRoomID());
+        if (roomEquipment != null) {
+            meetingRoom.setEquipmentList(roomEquipment);
+        }
+        List<ErrorReport> unresolvedRoomReports = getUnresolvedRoomReports(meetingRoom.getRoomID());
+        if (unresolvedRoomReports != null) {
+            meetingRoom.setUnresolvedReports(unresolvedRoomReports);
+        }
+        return  meetingRoom;
     }
 }

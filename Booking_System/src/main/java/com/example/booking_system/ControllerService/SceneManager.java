@@ -47,7 +47,7 @@ public class SceneManager {
         return scene;
     }
 
-    public static void changeScene(Stage currentStage, Controller sceneController, String sceneTitle) {
+    public static void changeStage(Stage currentStage, Controller sceneController, String sceneTitle) {
         currentStage.setTitle(sceneTitle);
         currentStage.setScene(scenes.get(sceneController));
     }
@@ -58,5 +58,10 @@ public class SceneManager {
         newStage.setTitle(sceneTitle);
         newStage.setScene(scenes.get(sceneController));
         newStage.showAndWait();
+    }
+
+    public static void closeScene(Scene currentScene) {
+        Stage stage = (Stage) currentScene.getWindow();
+        stage.close();
     }
 }
