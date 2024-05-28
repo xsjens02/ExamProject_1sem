@@ -3,10 +3,7 @@ package com.example.booking_system.Controller;
 import com.example.booking_system.ControllerService.SceneManager;
 import com.example.booking_system.ControllerService.ValidationService;
 import com.example.booking_system.Model.*;
-import com.example.booking_system.Persistence.CateringDAO;
-import com.example.booking_system.Persistence.CateringDAO_Impl;
-import com.example.booking_system.Persistence.MeetingRoomDAO;
-import com.example.booking_system.Persistence.MeetingRoomDAO_Impl;
+import com.example.booking_system.Persistence.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -47,7 +44,7 @@ public class NewBookingController implements Initializable {
     @FXML
     private ComboBox<Catering> comboCatering;
     @FXML
-    private ComboBox<String> comboDepartment;
+    private ComboBox<Department> comboDepartment;
 
     @FXML
     private ComboBox<Integer> ComboStartHour, ComboStartMinute, ComboEndMinute, ComboEndHour;
@@ -137,6 +134,15 @@ public class NewBookingController implements Initializable {
 
         for (Catering catering : cateringList) {
             comboCatering.getItems().add(catering);
+        }
+    }
+
+    private void setupDepartment() {
+        DepartmentDAO departmentDAO = new DepartmentDAO_Impl();
+        List<Department> departmentList = departmentDAO.readAllFromUser(SystemManager.getInstance().getUser());
+
+        for (Department department : departmentList) {
+            comboDepartment.getItems().add(department);
         }
     }
 
