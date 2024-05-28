@@ -81,7 +81,7 @@ public class MeetingRoom {
     }
 
     public void setupDailyBookings(Date date) {
-        this.setDailyBookings(bookingDAO.readAllRoomBookingsByDate(this.getRoomID(), date));
+        this.setDailyBookings(bookingDAO.readAllBookingsByDate(this.getRoomID(), date));
     }
 
     @Override
