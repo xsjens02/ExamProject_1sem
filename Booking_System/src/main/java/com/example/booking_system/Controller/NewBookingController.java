@@ -57,12 +57,11 @@ public class NewBookingController implements Initializable {
         requiredFields.add(new Pair<>(txtTitle, lblErrorTitle));
         requiredFields.add(new Pair<>(txtAmountGuest, lblErrorGuest));
         txtRoomDetails.setEditable(false);
-        setupDisplay();
+        //setupDisplay();
         setupCheckAdHocListener();
         setupTimeBoxes();
         setupDateAndTimeListeners();
         setupRoomListener();
-        setupCatering();
     }
 
     @FXML
@@ -138,12 +137,14 @@ public class NewBookingController implements Initializable {
     }
 
     private void setupDepartment() {
-        DepartmentDAO departmentDAO = new DepartmentDAO_Impl();
-        List<Department> departmentList = departmentDAO.readAllFromUser(SystemManager.getInstance().getUser());
+        //if (SystemManager.getInstance().getUser() != null) {
+            //DepartmentDAO departmentDAO = new DepartmentDAO_Impl();
+            //List<Department> departmentList = departmentDAO.readAllFromUser(SystemManager.getInstance().getUser());
 
-        for (Department department : departmentList) {
-            comboDepartment.getItems().add(department);
-        }
+            //for (Department department : departmentList) {
+              //  comboDepartment.getItems().add(department);
+            //}
+        //}
     }
 
     private void checkDateAndTime() {
