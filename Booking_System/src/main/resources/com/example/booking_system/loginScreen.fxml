@@ -4,39 +4,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="253.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.LoginScreenController">
+<VBox alignment="CENTER" spacing="10.0" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.LoginScreenController">
    <children>
-      <Label text="Login" />
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+      <Label text="Login" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+      <TextField fx:id="tfUsername" promptText="Brugernavn" maxWidth="200.0" />
+      <PasswordField fx:id="pfPassword" promptText="Password" maxWidth="200.0" />
+      <Label fx:id="failedLoginLabel" text="Forkert brugernavn eller password. Prøv igen." textFill="RED" visible="false" />
+      <HBox alignment="CENTER" spacing="10.0">
          <children>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <TextField fx:id="tfUsername" alignment="TOP_LEFT" promptText="Brugernavn">
-                     <VBox.margin>
-                        <Insets left="5.0" right="5.0" />
-                     </VBox.margin>
-                  </TextField>
-                  <PasswordField fx:id="pfPassword" promptText="Password">
-                     <VBox.margin>
-                        <Insets left="5.0" right="5.0" top="5.0" />
-                     </VBox.margin>
-                  </PasswordField>
-                  <Button fx:id="loginButton" mnemonicParsing="false" onAction="#onLoginButtonClick" text="Login">
-                     <VBox.margin>
-                        <Insets top="5.0" />
-                     </VBox.margin>
-                  </Button>
-                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onCancelButtonClick" text="Cancel">
-                     <VBox.margin>
-                        <Insets top="5.0" />
-                     </VBox.margin>
-                  </Button>
-               </children></VBox>
-         </children>
-      </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
-         <children>
-            <Label fx:id="failledLoginLabel" text="Invalid username or password. Please try again." textFill="RED" visible="false" />
+            <Button fx:id="loginButton" mnemonicParsing="false" onAction="#onLoginButtonClick" text="Login" />
+            <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onCancelButtonClick" text="Cancel" />
          </children>
       </HBox>
       <Button fx:id="forgotButton" mnemonicParsing="false" onAction="#onForgotButtonClick" text="Har du glemt dit password?" />

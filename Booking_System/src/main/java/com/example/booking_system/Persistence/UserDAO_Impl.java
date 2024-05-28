@@ -47,7 +47,7 @@ public class UserDAO_Impl implements UserDAO {
                 int roleID = resultSet.getInt("fldRoleID");
                 String firstName = resultSet.getString("fldFirst_Name");
                 String lastName = resultSet.getString("fldLast_Name");
-                return new User(userID, userName ,password,institutionID,roleID,firstName,lastName);
+                return new User(userID, userName, password, institutionID, roleID, firstName,lastName);
             }
         }catch (SQLException e){
             e.printStackTrace();

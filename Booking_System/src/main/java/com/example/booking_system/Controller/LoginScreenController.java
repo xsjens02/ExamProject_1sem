@@ -25,7 +25,7 @@ public class LoginScreenController {
     public Button loginButton;
     public Button cancelButton;
     public Button forgotButton;
-    public Label failledLoginLabel;
+    public Label failedLoginLabel;
 
     public void setInfoScreenController(InfoScreenController infoScreenController){
         this.infoScreenController = infoScreenController;
@@ -47,7 +47,7 @@ public class LoginScreenController {
         }else{
             tfUsername.clear();
             pfPassword.clear();
-            failledLoginLabel.setVisible(true);
+            failedLoginLabel.setVisible(true);
         }
 
     }
