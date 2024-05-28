@@ -30,6 +30,12 @@ public class Booking {
         this.menuID = menuID;
         this.departmentID = departmentID;
     }
+    public Booking(double startTime, double endTime, String bookingTitle, String responsible){
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.bookingTitle = bookingTitle;
+        this.responsible = responsible;
+    }
 
     public int getBookingID() {
         return bookingID;

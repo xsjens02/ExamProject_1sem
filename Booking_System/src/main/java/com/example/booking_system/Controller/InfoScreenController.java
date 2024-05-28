@@ -128,7 +128,7 @@ public class InfoScreenController implements Initializable {
             e.printStackTrace();
         }
     }
-
+ 
     public void updateUI(){
         User currentUser = SystemManager.getInstance().getUser();
         if(currentUser != null){
