@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 
@@ -28,17 +29,21 @@ import java.util.ResourceBundle;
 public class NewBookingController implements Initializable {
 
     @FXML
-    private VBox VBoxMain, VBoxDateOption, VBoxAddOptions;
+    private VBox VBoxMain, VBoxMultipleDateOption, VBoxCateringOption;
     @FXML
-    private CheckBox checkAdHoc;
+    private HBox HBoxDateOption;
+    @FXML
+    private CheckBox checkAdHoc, checkMultiple;
     @FXML
     private DatePicker dpBookingDate;
     @FXML
-    private TextField txtTitle, txtAmountGuest;
+    private TextField txtDateMultiplier, txtTitle, txtAmountGuest;
     @FXML
     private Label lblErrorTitle, lblErrorGuest;
     @FXML
     private ListView<MeetingRoom> lwMeetingRooms;
+    @FXML
+    private ListView<LocalDate> lwChosenDates;
     @FXML
     private TextArea txtRoomDetails;
     @FXML
@@ -57,11 +62,8 @@ public class NewBookingController implements Initializable {
         requiredFields.add(new Pair<>(txtTitle, lblErrorTitle));
         requiredFields.add(new Pair<>(txtAmountGuest, lblErrorGuest));
         txtRoomDetails.setEditable(false);
-        //setupDisplay();
-        setupCheckAdHocListener();
-        setupTimeBoxes();
-        setupDateAndTimeListeners();
-        setupRoomListener();
+
+        setupDisplay();
     }
 
     @FXML
@@ -74,8 +76,6 @@ public class NewBookingController implements Initializable {
             // double startTime = Double.parseDouble(txtStartTime.getText());
             // double endTime = Double.parseDouble(txtEndTime.getText());
             //double duration = endTime - startTime;
-
-
         }
     }
 
@@ -84,23 +84,102 @@ public class NewBookingController implements Initializable {
         SceneManager.closeScene(VBoxMain.getScene());
     }
 
-    private void setupDisplay() {
-        User currentUser = SystemManager.getInstance().getUser();
-        if (currentUser.getRole() == Role.STUDENT) {
-            VBoxDateOption.setVisible(false);
-            VBoxAddOptions.setVisible(false);
+    @FXML
+    void onPlusClick() {
+        LocalDate chosenDate = dpBookingDate.getValue();
+        if (chosenDate != null) {
+            if (!txtDateMultiplier.getText().isEmpty()) {
+                if (ValidationService.validateStringIsInt(txtDateMultiplier.getText())) {
+                    int multiplier = Integer.parseInt(txtDateMultiplier.getText());
+                    for (int i = 0; i < multiplier; i++) {
+                        if (i == 0) {
+                            lwChosenDates.getItems().add(chosenDate);
+                        } else {
+                            lwChosenDates.getItems().add(chosenDate.plusWeeks(i));
+                        }
+                    }
+                }
+            } else {
+                lwChosenDates.getItems().add(chosenDate);
+            }
         }
     }
 
-    private void setupCheckAdHocListener() {
+    @FXML
+    void onMinusClick() {
+        LocalDate chosenDate = lwChosenDates.getSelectionModel().getSelectedItem();
+        if (chosenDate != null) {
+            lwChosenDates.getItems().remove(chosenDate);
+        }
+    }
+
+    private void setupDisplay() {
+        User currentUser = SystemManager.getInstance().getUser();
+        if (currentUser.getRole() == Role.STUDENT) {
+            disableAdhoc(true);
+            disableDate(true);
+            checkMultiple.setVisible(false);
+            displayMoreDateOption(false);
+            VBoxCateringOption.setVisible(false);
+        } else if (currentUser.getRole() == Role.TEACHER || currentUser.getRole() == Role.ADMIN) {
+            disableAdhoc(false);
+            setupCheckAdHoc();
+            disableDate(false);
+            checkMultiple.setVisible(true);
+            setupCheckMultiple();
+            setupNumericField(txtDateMultiplier);
+            displayMoreDateOption(false);
+            VBoxCateringOption.setVisible(true);
+            setupCatering();
+            setupDepartment();
+        }
+        setupTimeBoxes();
+        setupDateAndTimeListeners();
+        setupRoomListener();
+    }
+
+    private void disableDate(boolean disable) {
+        if (disable) {
+            dpBookingDate.setValue(LocalDate.now());
+        }
+        dpBookingDate.setDisable(disable);
+    }
+
+    private void disableAdhoc(boolean disable) {
+        checkAdHoc.setSelected(disable);
+        checkAdHoc.setDisable(disable);
+    }
+
+    private void displayMoreDateOption(boolean display) {
+        HBoxDateOption.setVisible(display);
+        VBoxMultipleDateOption.setVisible(display);
+    }
+
+    private void setupCheckAdHoc() {
         checkAdHoc.selectedProperty().addListener(observable -> {
-            if (checkAdHoc.isSelected()) {
-                dpBookingDate.setValue(LocalDate.now());
-                dpBookingDate.setDisable(true);
-            } else {
-                if (dpBookingDate.disabledProperty().get()) {
-                    dpBookingDate.setDisable(false);
-                }
+            if (checkAdHoc.isSelected() && checkMultiple.isSelected()) {
+                checkMultiple.setSelected(false);
+            }
+            disableDate(checkAdHoc.isSelected());
+        });
+    }
+
+    private void setupCheckMultiple() {
+        checkMultiple.selectedProperty().addListener(observable -> {
+            if (checkMultiple.isSelected() && checkAdHoc.isSelected()) {
+                checkAdHoc.setSelected(false);
+            }
+            if (!checkMultiple.isSelected()) {
+                lwChosenDates.getItems().clear();
+            }
+            displayMoreDateOption(checkMultiple.isSelected());
+        });
+    }
+
+    private void setupNumericField(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                textField.setText(newValue.replaceAll("\\D", ""));
             }
         });
     }
@@ -131,20 +210,22 @@ public class NewBookingController implements Initializable {
         CateringDAO cateringDAO = new CateringDAO_Impl();
         List<Catering> cateringList = cateringDAO.readAll(SystemManager.getInstance().getInstitution().getInstitutionID());
 
-        for (Catering catering : cateringList) {
-            comboCatering.getItems().add(catering);
+        if (cateringList != null) {
+            for (Catering catering : cateringList) {
+                comboCatering.getItems().add(catering);
+            }
         }
     }
 
     private void setupDepartment() {
-        //if (SystemManager.getInstance().getUser() != null) {
-            //DepartmentDAO departmentDAO = new DepartmentDAO_Impl();
-            //List<Department> departmentList = departmentDAO.readAllFromUser(SystemManager.getInstance().getUser());
+        DepartmentDAO departmentDAO = new DepartmentDAO_Impl();
+        List<Department> departmentList = departmentDAO.readAllFromUser(SystemManager.getInstance().getUser());
 
-            //for (Department department : departmentList) {
-              //  comboDepartment.getItems().add(department);
-            //}
-        //}
+        if (departmentList != null) {
+            for (Department department : departmentList) {
+                comboDepartment.getItems().add(department);
+            }
+        }
     }
 
     private void checkDateAndTime() {

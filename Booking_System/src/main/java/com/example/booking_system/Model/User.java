@@ -75,9 +75,9 @@ public class User {
         switch (roleID) {
             case 1: this.role = Role.GUEST; break;
             case 2: this.role = Role.JANITOR; break;
-            case 3: this.role = Role.TEACHER; break;
-            case 4: this.role = Role.ADMIN; break;
-            case 5: this.role = Role.STUDENT; break;
+            case 3: this.role = Role.STUDENT; break;
+            case 4: this.role = Role.TEACHER; break;
+            case 5: this.role = Role.ADMIN; break;
         }
     }
 }

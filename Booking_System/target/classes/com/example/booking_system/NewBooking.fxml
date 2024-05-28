@@ -6,44 +6,61 @@
 
 <VBox fx:id="VBoxMain" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="793.0" prefWidth="600.0" spacing="5.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.NewBookingController">
    <children>
-      <VBox fx:id="VBoxDateOption" spacing="5.0">
+      <HBox maxHeight="150.0">
          <children>
-            <CheckBox fx:id="checkAdHoc" mnemonicParsing="false" prefHeight="17.0" prefWidth="86.0" text="Ad Hoc" />
-            <DatePicker fx:id="dpBookingDate" promptText="booking dato" />
+            <VBox spacing="5.0">
+               <children>
+                  <HBox>
+                     <children>
+                        <CheckBox fx:id="checkAdHoc" mnemonicParsing="false" prefHeight="17.0" prefWidth="86.0" text="Ad Hoc" />
+                        <CheckBox fx:id="checkMultiple" mnemonicParsing="false" text="Gentagne" />
+                     </children>
+                  </HBox>
+                  <DatePicker fx:id="dpBookingDate" prefHeight="25.0" prefWidth="170.0" promptText="booking dato" />
+                  <HBox fx:id="HBoxDateOption" alignment="TOP_RIGHT" maxWidth="170.0">
+                     <children>
+                        <TextField fx:id="txtDateMultiplier" prefHeight="25.0" prefWidth="35.0" promptText="x2" />
+                        <Button minWidth="25.0" mnemonicParsing="false" onAction="#onMinusClick" text="-" />
+                        <Button mnemonicParsing="false" onAction="#onPlusClick" text="+" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox fx:id="VBoxMultipleDateOption" maxWidth="200.0">
+               <children>
+                  <Label minHeight="20.0" text="Valgte datoer:" />
+                  <ListView fx:id="lwChosenDates" />
+               </children>
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </VBox>
          </children>
-      </VBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="42.0" prefWidth="600.0">
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <HBox>
+            <VBox alignment="CENTER_LEFT">
                <children>
-                  <VBox alignment="CENTER_LEFT">
+                  <Label text="Start tidspunkt:" />
+                  <HBox prefHeight="100.0" prefWidth="125.0">
                      <children>
-                        <Label text="Start tidspunkt:" />
-                        <HBox prefHeight="100.0" prefWidth="125.0">
-                           <children>
-                              <ComboBox fx:id="ComboStartHour" prefWidth="55.0" promptText="00" />
-                              <ComboBox fx:id="ComboStartMinute" prefWidth="55.0" promptText="00" />
-                           </children>
-                        </HBox>
+                        <ComboBox fx:id="ComboStartHour" prefWidth="55.0" promptText="00" />
+                        <ComboBox fx:id="ComboStartMinute" prefWidth="55.0" promptText="00" />
                      </children>
-                  </VBox>
+                  </HBox>
                </children>
-            </HBox>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            </VBox>
+            <VBox alignment="CENTER_LEFT">
                <children>
-                  <VBox alignment="CENTER_LEFT">
+                  <Label text="Slut tidspunkt:" />
+                  <HBox prefHeight="100.0" prefWidth="125.0">
                      <children>
-                        <Label text="Slut tidspunkt:" />
-                        <HBox prefHeight="100.0" prefWidth="125.0">
-                           <children>
-                              <ComboBox fx:id="ComboEndHour" prefWidth="55.0" promptText="00" />
-                              <ComboBox fx:id="ComboEndMinute" prefWidth="55.0" promptText="00" />
-                           </children>
-                        </HBox>
+                        <ComboBox fx:id="ComboEndHour" prefWidth="55.0" promptText="00" />
+                        <ComboBox fx:id="ComboEndMinute" prefWidth="55.0" promptText="00" />
                      </children>
-                  </VBox>
+                  </HBox>
                </children>
-            </HBox>
+            </VBox>
          </children>
       </HBox>
       <ListView fx:id="lwMeetingRooms" prefHeight="200.0" prefWidth="200.0" />
@@ -54,7 +71,7 @@
       <Label text="Gæster:" />
       <TextField fx:id="txtAmountGuest" maxWidth="200.0" promptText="antal gæster" />
       <Label fx:id="lblErrorGuest" textFill="#d70505" />
-      <VBox fx:id="VBoxAddOptions" alignment="CENTER_LEFT">
+      <VBox fx:id="VBoxCateringOption" alignment="CENTER_LEFT">
          <children>
             <Label text="Forplejning:" />
             <ComboBox fx:id="comboCatering" prefWidth="150.0" promptText="Forplejninger" />
@@ -62,7 +79,7 @@
             <ComboBox fx:id="comboDepartment" prefWidth="150.0" promptText="Afdelinger" />
          </children>
       </VBox>
-      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+      <HBox alignment="CENTER_RIGHT" spacing="5.0">
          <children>
             <Button minWidth="70.0" mnemonicParsing="false" onAction="#onCancelClick" text="Annuller" />
             <Button minWidth="70.0" mnemonicParsing="false" onAction="#onBookClick" text="Book" />
