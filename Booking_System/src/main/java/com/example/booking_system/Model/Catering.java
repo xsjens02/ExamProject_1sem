@@ -10,6 +10,12 @@ public class Catering {
         this.pricePerPerson = pricePerPerson;
     }
 
+    public Catering(int menuID, String menuName, double pricePerPerson) {
+        this.menuID = menuID;
+        this.menuName = menuName;
+        this.pricePerPerson = pricePerPerson;
+    }
+
     public int getMenuID() {
         return menuID;
     }

@@ -6,6 +6,7 @@ public class Booking {
     private int bookingID;
     private String bookingTitle;
     private int userID;
+    private String responsible;
     private int roomID;
     private boolean adhoc;
     private Date date;
@@ -15,10 +16,11 @@ public class Booking {
     private int menuID;
     private int departmentID;
 
-    public Booking(int bookingID, String bookingTitle, int userID, int roomID, boolean adhoc, Date date, double startTime, double endTime, double duration, int menuID, int departmentID) {
+    public Booking(int bookingID, String bookingTitle, int userID, String responsible, int roomID, boolean adhoc, Date date, double startTime, double endTime, double duration, int menuID, int departmentID) {
         this.bookingID = bookingID;
         this.bookingTitle = bookingTitle;
         this.userID = userID;
+        this.responsible = responsible;
         this.roomID = roomID;
         this.adhoc = adhoc;
         this.date = date;
@@ -37,6 +39,9 @@ public class Booking {
     }
     public int getUserID() {
         return userID;
+    }
+    public String getResponsible() {
+        return responsible;
     }
     public int getRoomID() {
         return roomID;
@@ -71,6 +76,9 @@ public class Booking {
     }
     public void setUserID(int userID) {
         this.userID = userID;
+    }
+    public void setResponsible(String responsible) {
+        this.responsible = responsible;
     }
     public void setRoomID(int roomID) {
         this.roomID = roomID;

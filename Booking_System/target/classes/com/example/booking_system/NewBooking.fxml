@@ -19,8 +19,12 @@
                   <VBox alignment="CENTER_LEFT">
                      <children>
                         <Label text="Start tidspunkt:" />
-                        <TextField fx:id="txtStartTime" alignment="CENTER" maxWidth="110.0" promptText="00 : 00" />
-                        <Label fx:id="lblErrorStartTime" textFill="#d70505" />
+                        <HBox prefHeight="100.0" prefWidth="125.0">
+                           <children>
+                              <ComboBox fx:id="ComboStartHour" prefWidth="55.0" promptText="00" />
+                              <ComboBox fx:id="ComboStartMinute" prefWidth="55.0" promptText="00" />
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                </children>
@@ -30,8 +34,12 @@
                   <VBox alignment="CENTER_LEFT">
                      <children>
                         <Label text="Slut tidspunkt:" />
-                        <TextField fx:id="txtEndTime" alignment="CENTER" maxWidth="110.0" promptText="00 : 00" />
-                        <Label fx:id="lblErrorEndTime" textFill="#d70505" />
+                        <HBox prefHeight="100.0" prefWidth="125.0">
+                           <children>
+                              <ComboBox fx:id="ComboEndHour" prefWidth="55.0" promptText="00" />
+                              <ComboBox fx:id="ComboEndMinute" prefWidth="55.0" promptText="00" />
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                </children>

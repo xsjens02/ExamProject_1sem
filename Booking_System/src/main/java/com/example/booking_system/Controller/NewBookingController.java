@@ -3,6 +3,8 @@ package com.example.booking_system.Controller;
 import com.example.booking_system.ControllerService.SceneManager;
 import com.example.booking_system.ControllerService.ValidationService;
 import com.example.booking_system.Model.*;
+import com.example.booking_system.Persistence.CateringDAO;
+import com.example.booking_system.Persistence.CateringDAO_Impl;
 import com.example.booking_system.Persistence.MeetingRoomDAO;
 import com.example.booking_system.Persistence.MeetingRoomDAO_Impl;
 import javafx.fxml.FXML;
@@ -20,8 +22,10 @@ import javafx.util.Pair;
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class NewBookingController implements Initializable {
@@ -33,9 +37,9 @@ public class NewBookingController implements Initializable {
     @FXML
     private DatePicker dpBookingDate;
     @FXML
-    private TextField txtStartTime, txtEndTime, txtTitle, txtAmountGuest;
+    private TextField txtTitle, txtAmountGuest;
     @FXML
-    private Label lblErrorStartTime, lblErrorEndTime, lblErrorTitle, lblErrorGuest;
+    private Label lblErrorTitle, lblErrorGuest;
     @FXML
     private ListView<MeetingRoom> lwMeetingRooms;
     @FXML
@@ -45,26 +49,37 @@ public class NewBookingController implements Initializable {
     @FXML
     private ComboBox<String> comboDepartment;
 
+    @FXML
+    private ComboBox<Integer> ComboStartHour, ComboStartMinute, ComboEndMinute, ComboEndHour;
+
     private final MeetingRoomDAO meetingRoomDAO = new MeetingRoomDAO_Impl();
     private final List<Pair<TextField, Label>> requiredFields = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        requiredFields.add(new Pair<>(txtStartTime, lblErrorStartTime));
-        requiredFields.add(new Pair<>(txtEndTime, lblErrorEndTime));
         requiredFields.add(new Pair<>(txtTitle, lblErrorTitle));
         requiredFields.add(new Pair<>(txtAmountGuest, lblErrorGuest));
         txtRoomDetails.setEditable(false);
         setupDisplay();
         setupCheckAdHocListener();
+        setupTimeBoxes();
         setupDateAndTimeListeners();
         setupRoomListener();
+        setupCatering();
     }
 
     @FXML
     void onBookClick() {
         if (validateBooking()) {
-            System.out.println("Do booking");
+            String bookingTitle = txtTitle.getText();
+            int userID = SystemManager.getInstance().getUser().getUserID();
+            int roomID = lwMeetingRooms.getSelectionModel().getSelectedItem().getRoomID();
+            boolean adHoc = dpBookingDate.getValue().equals(LocalDate.now());
+            // double startTime = Double.parseDouble(txtStartTime.getText());
+            // double endTime = Double.parseDouble(txtEndTime.getText());
+            //double duration = endTime - startTime;
+
+
         }
     }
 
@@ -93,29 +108,50 @@ public class NewBookingController implements Initializable {
             }
         });
     }
+
+    private void setupTimeBoxes() {
+        int openHour = (int) SystemManager.getInstance().getInstitution().getOpenTime();
+        int closeHour = (int) SystemManager.getInstance().getInstitution().getCloseTime();
+        for (int hour = openHour; hour <= closeHour ; hour++) {
+            ComboStartHour.getItems().add(hour);
+            ComboEndHour.getItems().add(hour);
+        }
+
+        int minuteInterval = SystemManager.getInstance().getInstitution().getBookingTimeInterval();
+        for (int minute = 0; minute < 60; minute += minuteInterval) {
+            ComboStartMinute.getItems().add(minute);
+            ComboEndMinute.getItems().add(minute);
+        }
+    }
     private void setupDateAndTimeListeners() {
-        dpBookingDate.valueProperty().addListener(observable -> {
-            checkDateAndTime();
-        });
+        dpBookingDate.valueProperty().addListener(observable -> checkDateAndTime());
+        ComboStartHour.valueProperty().addListener(observable -> checkDateAndTime());
+        ComboStartMinute.valueProperty().addListener(observable -> checkDateAndTime());
+        ComboEndHour.valueProperty().addListener(observable -> checkDateAndTime());
+        ComboEndMinute.valueProperty().addListener(observable -> checkDateAndTime());
+    }
 
-        txtStartTime.textProperty().addListener(observable -> {
-            checkDateAndTime();
-        });
+    private void setupCatering() {
+        CateringDAO cateringDAO = new CateringDAO_Impl();
+        List<Catering> cateringList = cateringDAO.readAll(SystemManager.getInstance().getInstitution().getInstitutionID());
 
-        txtEndTime.textProperty().addListener(observable -> {
-            checkDateAndTime();
-        });
+        for (Catering catering : cateringList) {
+            comboCatering.getItems().add(catering);
+        }
     }
 
     private void checkDateAndTime() {
-        boolean requiredData =  dpBookingDate.getValue() != null && !(txtStartTime.getText().isEmpty()) && !(txtEndTime.getText().isEmpty());
-        if (requiredData) {
-            if (ValidationService.validateStringIsDouble(txtStartTime.getText()) && ValidationService.validateStringIsDouble(txtEndTime.getText())) {
+        if (validateDateAndTime()) {
+            LocalTime startTime = LocalTime.of(ComboStartHour.getValue(), ComboStartMinute.getValue());
+            LocalTime endTime = LocalTime.of(ComboEndHour.getValue(), ComboEndMinute.getValue());
+            if (!endTime.isAfter(startTime)) {
+                lwMeetingRooms.getItems().clear();
+            } else {
                 int institutionID = SystemManager.getInstance().getInstitution().getInstitutionID();
                 Date choosenDate = Date.valueOf(dpBookingDate.getValue());
-                double startTime = Double.parseDouble(txtStartTime.getText());
-                double endTime = Double.parseDouble(txtEndTime.getText());
-                List<MeetingRoom> meetingRoomList = meetingRoomDAO.readAllAvailableRooms(institutionID, choosenDate, startTime, endTime);
+                double start = convertToDouble(startTime);
+                double end = convertToDouble(endTime);
+                List<MeetingRoom> meetingRoomList = meetingRoomDAO.readAllAvailableRooms(institutionID, choosenDate, start, end);
                 if (meetingRoomList != null) {
                     lwMeetingRooms.getItems().setAll(meetingRoomList);
                 }
@@ -133,11 +169,24 @@ public class NewBookingController implements Initializable {
         });
     }
 
+    private boolean validateDateAndTime() {
+        return dpBookingDate.getValue() != null
+                && ComboStartHour.getSelectionModel().getSelectedItem() != null
+                && ComboStartMinute.getSelectionModel().getSelectedItem() != null
+                && ComboEndHour.getSelectionModel().getSelectedItem() != null
+                && ComboEndMinute.getSelectionModel().getSelectedItem() != null;
+    }
+
     private boolean validateBooking() {
         return ValidationService.validateFieldsEntered(requiredFields)
-                && ValidationService.validateStringIsDouble(txtStartTime.getText())
-                && ValidationService.validateStringIsDouble(txtEndTime.getText())
+                && lwMeetingRooms.getSelectionModel().getSelectedItem() != null
+                && ValidationService.validFieldLength(txtTitle, 30, lblErrorTitle)
                 && ValidationService.validateStringIsInt(txtAmountGuest.getText())
-                && ValidationService.validFieldLength(txtTitle, 30, lblErrorTitle);
+                && ValidationService.validFieldLength(txtTitle, 30, lblErrorTitle)
+                && comboCatering.getSelectionModel().getSelectedItem() != null;
+    }
+
+    private double convertToDouble(LocalTime time) {
+        return time.getHour() + time.getMinute() / 60.0;
     }
 }
