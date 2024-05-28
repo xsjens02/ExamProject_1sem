@@ -10,5 +10,15 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.example.booking_system.Controller.StatisticScreenController"
             prefHeight="400.0" prefWidth="600.0">
-
+    <children>
+        <VBox alignment="CENTER" spacing="10.0" layoutX="200.0" layoutY="100.0">
+            <children>
+                <Label text="Start Date" />
+                <DatePicker fx:id="dpStartdate" />
+                <Label text="End Date" />
+                <DatePicker fx:id="dpEnddate" />
+                <Button text="Download" onAction="#onDownloadButtonClick" />
+            </children>
+        </VBox>
+    </children>
 </AnchorPane>
