@@ -5,27 +5,22 @@ public class MeetingRoomBooking {
     private String roomName;
     private String availability;
     private String nextCurrent;
-    private String bookingDate;
     private String startTime;
     private String endTime;
     private String bookingTitle;
     private String responsiblePerson;
+    private String unresolvedError;
 
-    public MeetingRoomBooking(String roomName, String availability, String nextCurrent, String bookingDate, String startTime, String endTime, String bookingTitle, String responsisblePerson) {
+    public MeetingRoomBooking(String roomName, String availability, String nextCurrent, String startTime, String endTime, String bookingTitle, String responsiblePerson, String unresolvedError) {
         this.roomName = roomName;
         this.availability = availability;
         this.nextCurrent = nextCurrent;
-        this.bookingDate = bookingDate;
         this.startTime = startTime;
         this.endTime = endTime;
         this.bookingTitle = bookingTitle;
-        this.responsiblePerson = responsisblePerson;
+        this.responsiblePerson = responsiblePerson;
+        this.unresolvedError = unresolvedError;
     }
-
-    public void checkAvailability(){
-
-    }
-
     public String getRoomName() {
         return roomName;
     }
@@ -49,15 +44,6 @@ public class MeetingRoomBooking {
     public void setNextCurrent(String nextCurrent) {
         this.nextCurrent = nextCurrent;
     }
-
-    public String getBookingDate() {
-        return bookingDate;
-    }
-
-    public void setBookingDate(String bookingDate) {
-        this.bookingDate = bookingDate;
-    }
-
     public String getStartTime() {
         return startTime;
     }
@@ -88,5 +74,8 @@ public class MeetingRoomBooking {
 
     public void setResponsiblePerson(String responsiblePerson) {
         this.responsiblePerson = responsiblePerson;
+    }
+    public String getUnresolvedError() {
+        return unresolvedError;
     }
 }
