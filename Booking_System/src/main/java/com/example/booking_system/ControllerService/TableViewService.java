@@ -2,7 +2,6 @@ package com.example.booking_system.ControllerService;
 
 import com.example.booking_system.Model.*;
 import com.example.booking_system.Persistence.BookingDAO_Impl;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
