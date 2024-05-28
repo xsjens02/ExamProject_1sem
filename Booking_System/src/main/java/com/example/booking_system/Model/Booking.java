@@ -11,10 +11,11 @@ public class Booking {
     private Date date;
     private double startTime;
     private double endTime;
+    private double duration;
     private int menuID;
     private int departmentID;
 
-    public Booking(int bookingID, String bookingTitle, int userID, int roomID, boolean adhoc, Date date, double startTime, double endTime, int menuID, int departmentID) {
+    public Booking(int bookingID, String bookingTitle, int userID, int roomID, boolean adhoc, Date date, double startTime, double endTime, double duration, int menuID, int departmentID) {
         this.bookingID = bookingID;
         this.bookingTitle = bookingTitle;
         this.userID = userID;
@@ -23,6 +24,7 @@ public class Booking {
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.duration = duration;
         this.menuID = menuID;
         this.departmentID = departmentID;
     }
@@ -50,6 +52,9 @@ public class Booking {
     }
     public double getEndTime() {
         return endTime;
+    }
+    public double getDuration() {
+        return duration;
     }
     public int getMenuID() {
         return menuID;
@@ -81,6 +86,9 @@ public class Booking {
     }
     public void setEndTime(double endTime) {
         this.endTime = endTime;
+    }
+    public void setDuration(double duration) {
+        this.duration = duration;
     }
     public void setMenuID(int menuID) {
         this.menuID = menuID;
