@@ -77,7 +77,7 @@ public class BookingDAO_Impl implements BookingDAO {
     }
 
     @Override
-    public List<Booking> readAllRoomBookingsByDate(int roomID, Date searchDate) {
+    public List<Booking> readAllBookingsByDate(int roomID, Date searchDate) {
         List<Booking> bookingList = new ArrayList<>();
         try {
             PreparedStatement readAllBookings = connection.prepareStatement("SELECT * FROM get_room_booking_by_date(?, ?)");
@@ -105,6 +105,11 @@ public class BookingDAO_Impl implements BookingDAO {
         if (!bookingList.isEmpty()) {
             return bookingList;
         }
+        return null;
+    }
+
+    @Override
+    public List<Booking> readAllBookingsInPeriod(int roomId, Date startDate, Date endDate) {
         return null;
     }
 
