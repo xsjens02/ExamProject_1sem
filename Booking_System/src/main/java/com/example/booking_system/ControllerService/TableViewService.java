@@ -6,9 +6,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.util.Callback;
 
 import java.sql.Date;
@@ -19,16 +17,16 @@ import java.util.List;
 public class TableViewService {
 
     private BookingDAO_Impl bookingDAO = new BookingDAO_Impl();
-    private Institution institution = SystemManager.getInstance().getInstitution();
+    public Institution institution = SystemManager.getInstance().getInstitution();
 
     public TableViewService() {
     }
 
-    private LocalDate localDate = LocalDate.now();
-    private LocalTime localTime = LocalTime.now();
-    private int tempHour = localTime.getHour();
-    private double tempMinute = localTime.getMinute();
-    private double tempTime = tempHour + (tempMinute / 60);
+    public LocalDate localDate = LocalDate.now();
+    public LocalTime localTime = LocalTime.now();
+    public int tempHour = localTime.getHour();
+    public double tempMinute = localTime.getMinute();
+    public double tempTime = tempHour + (tempMinute / 60);
 
     public TableView populateTableView(TableView tableView) {
 
@@ -62,7 +60,7 @@ public class TableViewService {
         nextCurrent.minWidthProperty().bind(tableView.widthProperty().divide(24).multiply(3));
         startTime.minWidthProperty().bind(tableView.widthProperty().divide(24).multiply(2));
         endTime.minWidthProperty().bind(tableView.widthProperty().divide(24).multiply(2));
-        bookingTitle.minWidthProperty().bind(tableView.widthProperty().divide(24).multiply(6));
+        bookingTitle.minWidthProperty().bind(tableView.widthProperty().divide(24).multiply(6.5));
         responsiblePerson.minWidthProperty().bind(tableView.widthProperty().divide(24).multiply(3));
         unresolvedError.minWidthProperty().bind(tableView.widthProperty().divide(24).multiply(1));
 
@@ -82,7 +80,7 @@ public class TableViewService {
                             // Change background color based on some condition
                             if (item.contains("Ledig")) {
                                 setStyle("-fx-background-color: lightgreen; -fx-text-fill: black;");
-                            } else {
+                            } else if (item.contains("Optaget")){
                                 setStyle("-fx-background-color: red; -fx-text-fill: black;");
                             }
                         }
@@ -103,12 +101,12 @@ public class TableViewService {
             MeetingRoom tempMeetingRoom = institution.getMeetingRoomList().get(i);
             tempMeetingRoom.setupDailyBookings(tempDate);
             if (tempMeetingRoom.getDailyBookings() != null) {
-                Booking nextBooking = getNextBooking(tempMeetingRoom.getDailyBookings());
+                Booking nextBooking = getNextBooking(tempMeetingRoom.getDailyBookings(), tempTime);
                 if(nextBooking.getStartTime() != 0) {
                     allMeetingRoomAndBookings.add(new MeetingRoomBooking(
                             tempMeetingRoom.getRoomName(),
-                            determineAvailability(nextBooking),
-                            determineNextCurrent(nextBooking),
+                            determineAvailability(nextBooking, tempTime),
+                            determineNextCurrent(nextBooking, tempTime),
                             FormattingService.formatTime(nextBooking.getStartTime()),
                             FormattingService.formatTime(nextBooking.getEndTime()),
                             nextBooking.getBookingTitle(),
@@ -127,29 +125,49 @@ public class TableViewService {
         return allMeetingRoomAndBookings;
     }
 
-    private Booking getNextBooking(List<Booking> bookingList) {
+    private Booking getNextBooking(List<Booking> bookingList, double tempTime) {
 
         for (int i = 0; i < bookingList.size(); i++) {
-            if (bookingList.get(i).getStartTime() < tempTime && bookingList.get(i).getEndTime() > tempTime) {
+            if (bookingList.get(i).getStartTime() <= tempTime && bookingList.get(i).getEndTime() > tempTime) {
                 return bookingList.get(i);
             }
             else if(bookingList.get(i).getStartTime()>tempTime && bookingList.get(i).getEndTime()>tempTime){
                 return bookingList.get(i);
             }
         }
-        return new Booking(0,0,"","");
+        return null;
     }
-    private String determineAvailability(Booking booking){
-        if(booking.getStartTime()>tempTime || booking.getEndTime()<tempTime){
+    private MeetingRoomBooking addMeetingRoomBooking (MeetingRoom meetingRoom, Booking booking, double timeInput){
+        return new MeetingRoomBooking(
+                meetingRoom.getRoomName(),
+                determineAvailability(booking, timeInput),
+                determineNextCurrent(booking, timeInput),
+                FormattingService.formatTime(booking.getStartTime()),
+                FormattingService.formatTime(booking.getEndTime()),
+                booking.getBookingTitle(),
+                booking.getResponsible(),
+                determineUnresolvedError(meetingRoom));
+    }
+    private String determineAvailability(Booking booking, double tempTime){
+        if(booking.getDate().before(Date.valueOf(localDate))){
+            return "";
+        }
+        else if(booking.getStartTime()>tempTime || booking.getEndTime()<tempTime){
             return "Ledig";
         }
         return "Optaget";
     }
-    private String determineNextCurrent(Booking booking){
-        if(booking.getStartTime()>tempTime){
+    private String determineNextCurrent(Booking booking, double tempTime){
+        if(booking.getDate().before(Date.valueOf(localDate))){
+            return "Afholdt";
+        }
+        else if(booking.getStartTime()>tempTime){
             return "Kommende: ";
         }
-        return "Igangværende: ";
+        else if(booking.getStartTime()<tempTime && booking.getEndTime()>tempTime) {
+            return "Igangværende: ";
+        }
+        return "Kommende";
     }
     private MeetingRoomBooking noBookings(MeetingRoom meetingRoom){
         return new MeetingRoomBooking(
@@ -169,4 +187,56 @@ public class TableViewService {
         }
         return "";
     }
+    public TableView searchBookings(TableView tableView, Date dateInput, double timeInput){
+        createTableColumns(tableView);
+        tableView.setItems(getAllMeetingRoomBookingSearchResults(dateInput, timeInput));
+
+        return tableView;
+    }
+    public TableView searchBookingsByText(TableView tableView, String textInput, Date dateInput){
+        createTableColumns(tableView);
+        tableView.setItems(searchMeetingRoomBookingsByText(textInput,dateInput));
+
+        return tableView;
+    }
+    public ObservableList<MeetingRoomBooking> getAllMeetingRoomBookingSearchResults(Date dateInput, double timeInput){
+        ObservableList<MeetingRoomBooking> allMeetingRoomBookingSearchResults = FXCollections.observableArrayList();
+        for (int i = 0; i < institution.getMeetingRoomList().size(); i++) {
+
+            MeetingRoom tempMeetingRoom = institution.getMeetingRoomList().get(i);
+            tempMeetingRoom.setupDailyBookings(dateInput);
+            if (tempMeetingRoom.getDailyBookings() != null) {
+                Booking nextBooking = getNextBooking(tempMeetingRoom.getDailyBookings(), timeInput);
+                if (nextBooking != null) {
+                    allMeetingRoomBookingSearchResults.add(addMeetingRoomBooking(tempMeetingRoom, nextBooking, timeInput));
+                } else {
+                    allMeetingRoomBookingSearchResults.add(noBookings(tempMeetingRoom));
+                    }
+            }
+            else {
+                allMeetingRoomBookingSearchResults.add(noBookings(tempMeetingRoom));
+            }
+        }
+        return allMeetingRoomBookingSearchResults;
+    }
+    public ObservableList<MeetingRoomBooking> searchMeetingRoomBookingsByText(String textInput,Date dateInput){
+        ObservableList<MeetingRoomBooking> allMeetingRoomBookingsByText = FXCollections.observableArrayList();
+        for (int i = 0; i < institution.getMeetingRoomList().size(); i++) {
+
+            MeetingRoom tempMeetingRoom = institution.getMeetingRoomList().get(i);
+            tempMeetingRoom.setupDailyBookings(dateInput);
+            if (tempMeetingRoom.getDailyBookings() != null) {
+                if(!textInput.isEmpty()){
+                    for (int j = 0; j < tempMeetingRoom.getDailyBookings().size(); j++) {
+                        if(tempMeetingRoom.getDailyBookings().get(j).getBookingTitle().contains(textInput)){
+                            allMeetingRoomBookingsByText.add(addMeetingRoomBooking(tempMeetingRoom,tempMeetingRoom.getDailyBookings().get(j), tempTime));
+                        }
+                    }
+                }
+            }
+
+        }
+        return allMeetingRoomBookingsByText;
+    }
+
 }

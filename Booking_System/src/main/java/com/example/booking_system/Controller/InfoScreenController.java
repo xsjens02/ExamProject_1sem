@@ -1,6 +1,7 @@
 package com.example.booking_system.Controller;
 
 import com.example.booking_system.ControllerService.Controller;
+import com.example.booking_system.ControllerService.FormattingService;
 import com.example.booking_system.ControllerService.SceneManager;
 import com.example.booking_system.ControllerService.TableViewService;
 import com.example.booking_system.Model.Institution;
@@ -15,10 +16,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -28,6 +26,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class InfoScreenController implements Initializable {
@@ -47,6 +48,16 @@ public class InfoScreenController implements Initializable {
     private HBox rightHBox;
     @FXML
     private Button loginButton;
+    @FXML
+    private TextField searchInputTextField;
+    @FXML
+    private ComboBox<String> timeComboBox;
+    @FXML
+    private DatePicker searchDate;
+    @FXML
+    private Button resetButton;
+    @FXML
+    private Button editBookingButton;
     private TableViewService tableViewService;
 
 
@@ -65,17 +76,34 @@ public class InfoScreenController implements Initializable {
         tableViewService = new TableViewService();
         tableViewService.populateTableView(tableView);
 
-        adjustWindowSize();
+        adjustWindowSize(primaryScreenBounds);
+        //TableViewService.updateTime(timeComboBox);
+        populateTimeComboBox();
         updateUI();
+        searchDate.setValue(LocalDate.now());
+
+
     }
-    private void adjustWindowSize(){
+    private void adjustWindowSize(Rectangle2D primaryScreenBounds){
         leftHBox.minWidthProperty().bind(mainHBox.widthProperty().divide(2));
         rightHBox.minWidthProperty().bind(mainHBox.widthProperty().divide(2));
+
+        searchInputTextField.minWidthProperty().bind(rightHBox.widthProperty().divide(9).multiply(3));
+        searchDate.minWidthProperty().bind(rightHBox.widthProperty().divide(9).multiply(1.5));
+        timeComboBox.minWidthProperty().bind(rightHBox.widthProperty().divide(9).multiply(1.5));
+        resetButton.minWidthProperty().bind(rightHBox.widthProperty().divide(9).multiply(1.5));
+        if(primaryScreenBounds.getHeight()*2<primaryScreenBounds.getWidth()){
+            searchInputTextField.minWidthProperty().set(200);
+            searchDate.minWidthProperty().set(100);
+            timeComboBox.minWidthProperty().set(100);
+            resetButton.minWidthProperty().set(100);
+        }
 
         Image loginImage = new Image(getClass().getResource("/images/login.png").toExternalForm());
         ImageView imageView = new ImageView(loginImage);
         imageView.setFitHeight(loginButton.getPrefHeight());
         imageView.setFitWidth(loginButton.getPrefWidth());
+        administration.minWidthProperty().bind(editBookingButton.widthProperty().multiply(1.5));
         loginButton.setGraphic(imageView);
     }
     @FXML
@@ -158,5 +186,47 @@ public class InfoScreenController implements Initializable {
     @FXML
     public void onNewBookingClick() {
         SceneManager.openScene(Controller.NewBooking, "Ny booking");
+    }
+    @FXML
+    private void onSearchInputChanged(){
+        searchInputTextField.clear();
+        tableViewService.searchBookings(tableView,Date.valueOf(searchDate.getValue()),FormattingService.formatTime(timeComboBox.getValue()));
+    }
+    @FXML
+    private void onSearchTextChanged(){
+        tableViewService.searchBookingsByText(tableView, searchInputTextField.getText(),Date.valueOf(searchDate.getValue()));
+    }
+    private void populateTimeComboBox(){
+        double inputTime = tableViewService.tempHour;
+        timeComboBox.setValue(FormattingService.formatTime(inputTime));
+        if(searchDate.getValue() != tableViewService.localDate){
+            timeComboBox.getItems().clear();
+            double standardTime = 08.00;
+            while(standardTime < tableViewService.institution.getCloseTime()){
+                timeComboBox.getItems().add(FormattingService.formatTime(standardTime));
+                standardTime += 0.25;
+            }
+        }
+        else {
+            if (inputTime > tableViewService.institution.getOpenTime()) {
+                while (inputTime < tableViewService.institution.getCloseTime()) {
+                    timeComboBox.getItems().add(FormattingService.formatTime(inputTime));
+                    inputTime += 0.25;
+                }
+            } else {
+                inputTime = tableViewService.institution.getOpenTime();
+                while (inputTime < tableViewService.institution.getCloseTime()) {
+                    timeComboBox.getItems().add(FormattingService.formatTime(inputTime));
+                    inputTime += 0.25;
+                }
+            }
+
+        }
+    }
+    @FXML
+    private void onResetSearchButtonClick(){
+        searchDate.setValue(tableViewService.localDate);
+        timeComboBox.setValue(FormattingService.formatTime(tableViewService.tempHour));
+        searchInputTextField.clear();
     }
 }
