@@ -1,10 +1,8 @@
 package com.example.booking_system.Persistence;
 
 import com.example.booking_system.Model.Booking;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -110,6 +108,35 @@ public class BookingDAO_Impl implements BookingDAO {
 
     @Override
     public List<Booking> readAllBookingsInPeriod(int roomId, Date startDate, Date endDate) {
+        List<Booking> bookingList = new ArrayList<>();
+        try{
+            String sql = "SELECT * FROM get_room_bookings(?,?,?)";
+            PreparedStatement getRoomBookings = connection.prepareStatement(sql);
+            getRoomBookings.setInt(1, roomId);
+            getRoomBookings.setDate(2, (java.sql.Date) startDate);
+            getRoomBookings.setDate(3, (java.sql.Date) endDate);
+            ResultSet allBookings = getRoomBookings.executeQuery();
+            while(allBookings.next()){
+                int bookingID = allBookings.getInt(1);
+                String bookingTitle = allBookings.getString(2);
+                int userID = allBookings.getInt(3);
+                String responsible = allBookings.getString(4).trim();
+                boolean adhoc = allBookings.getBoolean(6);
+                Date date = allBookings.getDate(7);
+                double startTime = allBookings.getDouble(8);
+                double endTime = allBookings.getDouble(9);
+                double duration = allBookings.getDouble(10);
+                int menuID = allBookings.getInt(11);
+                int departmentID = allBookings.getInt(12);
+
+                bookingList.add(new Booking(bookingID, bookingTitle, userID, responsible, roomId, adhoc, date, startTime, endTime, duration, menuID, departmentID));
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        if(!bookingList.isEmpty()){
+            return bookingList;
+        }
         return null;
     }
 

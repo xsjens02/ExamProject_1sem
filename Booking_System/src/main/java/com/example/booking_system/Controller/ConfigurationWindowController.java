@@ -84,7 +84,8 @@ public class ConfigurationWindowController implements Initializable {
     }
     @FXML
     private void onReturnButtonClick(){
-        Stage stage = (Stage) returnButton.getScene().getWindow();
-        stage.close();
+        //Stage stage = (Stage) returnButton.getScene().getWindow();
+        //stage.close();
+        SceneManager.openScene(Controller.Statistic, "statistik");
     }
 }
