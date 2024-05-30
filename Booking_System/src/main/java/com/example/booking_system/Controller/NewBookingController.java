@@ -1,9 +1,14 @@
 package com.example.booking_system.Controller;
 
 import com.example.booking_system.ControllerService.SceneManager;
+import com.example.booking_system.ControllerService.Subscriber;
 import com.example.booking_system.ControllerService.ValidationService;
 import com.example.booking_system.Model.*;
 import com.example.booking_system.Persistence.*;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.Property;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -16,20 +21,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
-
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
-public class NewBookingController implements Initializable {
-
+public class NewBookingController implements Initializable, Subscriber {
+    //region FXML annotation
     @FXML
-    private VBox VBoxMain, VBoxMultipleDateOption, VBoxCateringOption;
+    private VBox VBoxMain, VBoxMultipleDateOption;
     @FXML
     private HBox HBoxDateOption;
     @FXML
@@ -50,40 +51,65 @@ public class NewBookingController implements Initializable {
     private ComboBox<Catering> comboCatering;
     @FXML
     private ComboBox<Department> comboDepartment;
-
     @FXML
     private ComboBox<Integer> ComboStartHour, ComboStartMinute, ComboEndMinute, ComboEndHour;
-
+    //endregion
+    //region instance variables
     private final MeetingRoomDAO meetingRoomDAO = new MeetingRoomDAO_Impl();
+    private final BookingDAO bookingDAO = new BookingDAO_Impl();
     private final List<Pair<TextField, Label>> requiredFields = new ArrayList<>();
-
+    private final Map<Property<?>, InvalidationListener> listenerMap = new HashMap<>();
+    //endregion
+    //region initializers
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        requiredFields.add(new Pair<>(txtTitle, lblErrorTitle));
-        requiredFields.add(new Pair<>(txtAmountGuest, lblErrorGuest));
         txtRoomDetails.setEditable(false);
-
-        setupDisplay();
+        initFieldList();
+        initListenerMap();
+        initConstantListeners();
+        //setupDisplay();
+        SystemManager.getInstance().subscribe(Subject.User, this);
+        SystemManager.getInstance().subscribe(Subject.Institution, this);
     }
 
-    @FXML
-    void onBookClick() {
-        if (validateBooking()) {
-            String bookingTitle = txtTitle.getText();
-            int userID = SystemManager.getInstance().getUser().getUserID();
-            int roomID = lwMeetingRooms.getSelectionModel().getSelectedItem().getRoomID();
-            boolean adHoc = dpBookingDate.getValue().equals(LocalDate.now());
-            // double startTime = Double.parseDouble(txtStartTime.getText());
-            // double endTime = Double.parseDouble(txtEndTime.getText());
-            //double duration = endTime - startTime;
+    private void initFieldList() {
+        requiredFields.add(new Pair<>(txtTitle, lblErrorTitle));
+        requiredFields.add(new Pair<>(txtAmountGuest, lblErrorGuest));
+    }
+
+    private void initListenerMap() {
+        List<Property<?>> properties = List.of(
+                checkAdHoc.selectedProperty(),
+                checkMultiple.selectedProperty(),
+                dpBookingDate.valueProperty(),
+                lwChosenDates.itemsProperty(),
+                ComboStartHour.valueProperty(),
+                ComboStartMinute.valueProperty(),
+                ComboEndHour.valueProperty(),
+                ComboEndMinute.valueProperty()
+        );
+
+        for (Property<?> property : properties) {
+            listenerMap.put(property, null);
         }
     }
 
-    @FXML
-    void onCancelClick() {
-        SceneManager.closeScene(VBoxMain.getScene());
-    }
+    private void initConstantListeners() {
+        setupNumericListener(txtDateMultiplier);
+        setupNumericListener(txtAmountGuest);
 
+        lwMeetingRooms.getSelectionModel().selectedItemProperty().addListener(observable -> {
+            MeetingRoom selectedRoom = lwMeetingRooms.getSelectionModel().getSelectedItem();
+            if (selectedRoom != null) {
+                selectedRoom.setupDescription();
+                txtRoomDetails.setText(selectedRoom.getRoomDescription());
+            } else {
+                txtRoomDetails.clear();
+            }
+        });
+    }
+    //endregion
+    //region handler methods
     @FXML
     void onPlusClick() {
         LocalDate chosenDate = dpBookingDate.getValue();
@@ -97,10 +123,13 @@ public class NewBookingController implements Initializable {
                         } else {
                             lwChosenDates.getItems().add(chosenDate.plusWeeks(i));
                         }
+                        sortDateList();
+                        txtDateMultiplier.clear();
                     }
                 }
             } else {
                 lwChosenDates.getItems().add(chosenDate);
+                sortDateList();
             }
         }
     }
@@ -113,75 +142,91 @@ public class NewBookingController implements Initializable {
         }
     }
 
+    @FXML
+    void onCancelClick() {
+        clearAll();
+        SceneManager.closeScene(VBoxMain.getScene());
+    }
+
+    @FXML
+    void onBookClick() {
+        if (validateBooking()) {
+            String bookingTitle = txtTitle.getText();
+            int userID = SystemManager.getInstance().getUser().getUserID();
+            String responsible = SystemManager.getInstance().getUser().getFirstName();
+            int roomID = lwMeetingRooms.getSelectionModel().getSelectedItem().getRoomID();
+            boolean adHoc = dpBookingDate.getValue().equals(LocalDate.now());
+            LocalTime startTime = LocalTime.of(ComboStartHour.getValue(), ComboStartMinute.getValue());
+            LocalTime endTime = LocalTime.of(ComboEndHour.getValue(), ComboEndMinute.getValue());
+            double start = convertToDouble(startTime);
+            double end = convertToDouble(endTime);
+            double duration = end - start;
+
+            boolean result = false;
+            if (checkMultiple.isSelected()) {
+                List<LocalDate> dates = lwChosenDates.getItems();
+                if (!dates.isEmpty()) {
+                    if (validateCatering()) {
+                        for (LocalDate date : dates) {
+                            Date sqlDate = Date.valueOf(date);
+                            int menuID = comboCatering.getSelectionModel().getSelectedItem().getMenuID();
+                            int departmentID = comboDepartment.getSelectionModel().getSelectedItem().getDepartmentID();
+                            result = bookingDAO.add(new Booking(bookingTitle, userID, responsible, roomID, adHoc, sqlDate, start, end, duration, menuID, departmentID));
+                        }
+                    } else {
+                        for (LocalDate date : dates) {
+                            Date sqlDate = Date.valueOf(date);
+                            result = bookingDAO.add(new Booking(bookingTitle, userID, responsible, roomID, adHoc, sqlDate, start, end, duration));
+                        }
+                    }
+                }
+            } else if (checkAdHoc.isSelected()) {
+                LocalDate date = LocalDate.now();
+                Date sqlDate = Date.valueOf(date);
+                if (validateCatering()) {
+                    int menuID = comboCatering.getSelectionModel().getSelectedItem().getMenuID();
+                    int departmentID = comboDepartment.getSelectionModel().getSelectedItem().getDepartmentID();
+                    result = bookingDAO.add(new Booking(bookingTitle, userID, responsible, roomID, adHoc, sqlDate, start, end, duration, menuID, departmentID));
+                } else {
+                    result = bookingDAO.add(new Booking(bookingTitle, userID, responsible, roomID, adHoc, sqlDate, start, end, duration));
+                }
+            } else {
+                LocalDate date = dpBookingDate.getValue();
+                Date sqlDate = Date.valueOf(date);
+                if (validateCatering()) {
+                    int menuID = comboCatering.getSelectionModel().getSelectedItem().getMenuID();
+                    int departmentID = comboDepartment.getSelectionModel().getSelectedItem().getDepartmentID();
+                    result = bookingDAO.add(new Booking(bookingTitle, userID, responsible, roomID, adHoc, sqlDate, start, end, duration, menuID, departmentID));
+                } else {
+                    result = bookingDAO.add(new Booking(bookingTitle, userID, responsible, roomID, adHoc, sqlDate, start, end, duration));
+                }
+            }
+            if (result) {
+                clearAll();
+            }
+        }
+    }
+    //endregion
+    //region setup methods
     private void setupDisplay() {
+        setupTimeBoxes();
+        setupAdhocListener();
+        setupMultipleListener();
         User currentUser = SystemManager.getInstance().getUser();
         if (currentUser.getRole() == Role.STUDENT) {
             disableAdhoc(true);
             disableDate(true);
             checkMultiple.setVisible(false);
             displayMoreDateOption(false);
-            VBoxCateringOption.setVisible(false);
+            disableCatering();
         } else if (currentUser.getRole() == Role.TEACHER || currentUser.getRole() == Role.ADMIN) {
             disableAdhoc(false);
-            setupCheckAdHoc();
             disableDate(false);
             checkMultiple.setVisible(true);
-            setupCheckMultiple();
-            setupNumericField(txtDateMultiplier);
             displayMoreDateOption(false);
-            VBoxCateringOption.setVisible(true);
+            setupDateAndTimeListeners(true);
             setupCatering();
-            setupDepartment();
         }
-        setupTimeBoxes();
-        setupDateAndTimeListeners();
-        setupRoomListener();
-    }
-
-    private void disableDate(boolean disable) {
-        if (disable) {
-            dpBookingDate.setValue(LocalDate.now());
-        }
-        dpBookingDate.setDisable(disable);
-    }
-
-    private void disableAdhoc(boolean disable) {
-        checkAdHoc.setSelected(disable);
-        checkAdHoc.setDisable(disable);
-    }
-
-    private void displayMoreDateOption(boolean display) {
-        HBoxDateOption.setVisible(display);
-        VBoxMultipleDateOption.setVisible(display);
-    }
-
-    private void setupCheckAdHoc() {
-        checkAdHoc.selectedProperty().addListener(observable -> {
-            if (checkAdHoc.isSelected() && checkMultiple.isSelected()) {
-                checkMultiple.setSelected(false);
-            }
-            disableDate(checkAdHoc.isSelected());
-        });
-    }
-
-    private void setupCheckMultiple() {
-        checkMultiple.selectedProperty().addListener(observable -> {
-            if (checkMultiple.isSelected() && checkAdHoc.isSelected()) {
-                checkAdHoc.setSelected(false);
-            }
-            if (!checkMultiple.isSelected()) {
-                lwChosenDates.getItems().clear();
-            }
-            displayMoreDateOption(checkMultiple.isSelected());
-        });
-    }
-
-    private void setupNumericField(TextField textField) {
-        textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                textField.setText(newValue.replaceAll("\\D", ""));
-            }
-        });
     }
 
     private void setupTimeBoxes() {
@@ -198,26 +243,8 @@ public class NewBookingController implements Initializable {
             ComboEndMinute.getItems().add(minute);
         }
     }
-    private void setupDateAndTimeListeners() {
-        dpBookingDate.valueProperty().addListener(observable -> checkDateAndTime());
-        ComboStartHour.valueProperty().addListener(observable -> checkDateAndTime());
-        ComboStartMinute.valueProperty().addListener(observable -> checkDateAndTime());
-        ComboEndHour.valueProperty().addListener(observable -> checkDateAndTime());
-        ComboEndMinute.valueProperty().addListener(observable -> checkDateAndTime());
-    }
 
     private void setupCatering() {
-        CateringDAO cateringDAO = new CateringDAO_Impl();
-        List<Catering> cateringList = cateringDAO.readAll(SystemManager.getInstance().getInstitution().getInstitutionID());
-
-        if (cateringList != null) {
-            for (Catering catering : cateringList) {
-                comboCatering.getItems().add(catering);
-            }
-        }
-    }
-
-    private void setupDepartment() {
         DepartmentDAO departmentDAO = new DepartmentDAO_Impl();
         List<Department> departmentList = departmentDAO.readAllFromUser(SystemManager.getInstance().getUser());
 
@@ -225,44 +252,187 @@ public class NewBookingController implements Initializable {
             for (Department department : departmentList) {
                 comboDepartment.getItems().add(department);
             }
-        }
-    }
+            CateringDAO cateringDAO = new CateringDAO_Impl();
+            List<Catering> cateringList = cateringDAO.readAll(SystemManager.getInstance().getInstitution().getInstitutionID());
 
-    private void checkDateAndTime() {
-        if (validateDateAndTime()) {
-            LocalTime startTime = LocalTime.of(ComboStartHour.getValue(), ComboStartMinute.getValue());
-            LocalTime endTime = LocalTime.of(ComboEndHour.getValue(), ComboEndMinute.getValue());
-            if (!endTime.isAfter(startTime)) {
-                lwMeetingRooms.getItems().clear();
-            } else {
-                int institutionID = SystemManager.getInstance().getInstitution().getInstitutionID();
-                Date choosenDate = Date.valueOf(dpBookingDate.getValue());
-                double start = convertToDouble(startTime);
-                double end = convertToDouble(endTime);
-                List<MeetingRoom> meetingRoomList = meetingRoomDAO.readAllAvailableRooms(institutionID, choosenDate, start, end);
-                if (meetingRoomList != null) {
-                    lwMeetingRooms.getItems().setAll(meetingRoomList);
+            if (cateringList != null) {
+                for (Catering catering : cateringList) {
+                    comboCatering.getItems().add(catering);
                 }
             }
+        } else {
+            disableCatering();
         }
     }
 
-    private void setupRoomListener() {
-        lwMeetingRooms.getSelectionModel().selectedItemProperty().addListener(observable -> {
-            if (lwMeetingRooms.getSelectionModel().getSelectedItem() != null) {
-                MeetingRoom selectedRoom = lwMeetingRooms.getSelectionModel().getSelectedItem();
-                String description = selectedRoom.getRoomName() + "\n\nAntal pladser: " + selectedRoom.getAvailableSeats() + "\nUdstyr: ";
-                txtRoomDetails.setText(description);
+    private void setupAdhocListener() {
+        setupListener(checkAdHoc.selectedProperty(), observable -> {
+            clearTime();
+            lwMeetingRooms.getItems().clear();
+            if (checkAdHoc.isSelected() && checkMultiple.isSelected()) {
+                checkMultiple.setSelected(false);
+            }
+            if (checkAdHoc.isSelected()) {
+                disableDate(true);
+                displayMoreDateOption(false);
+                setupDateAndTimeListeners(true);
+            } else {
+                disableDate(false);
             }
         });
     }
 
-    private boolean validateDateAndTime() {
-        return dpBookingDate.getValue() != null
-                && ComboStartHour.getSelectionModel().getSelectedItem() != null
+    private void setupMultipleListener() {
+        setupListener(checkMultiple.selectedProperty(), observable -> {
+            clearTime();
+            lwMeetingRooms.getItems().clear();
+            if (checkMultiple.isSelected() && checkAdHoc.isSelected()) {
+                checkAdHoc.setSelected(false);
+            }
+            if(checkMultiple.isSelected()) {
+                displayMoreDateOption(true);
+                setupDateAndTimeListeners(false);
+                removeCurrentListener(dpBookingDate.valueProperty());
+            } else if (!checkMultiple.isSelected()) {
+                lwChosenDates.getItems().clear();
+                displayMoreDateOption(false);
+                setupDateAndTimeListeners(true);
+            }
+        });
+    }
+
+    private void setupDateAndTimeListeners(boolean singleDate) {
+        if (singleDate) {
+            List<Property<?>> properties = List.of(
+                    dpBookingDate.valueProperty(),
+                    ComboStartHour.valueProperty(),
+                    ComboStartMinute.valueProperty(),
+                    ComboEndHour.valueProperty(),
+                    ComboEndMinute.valueProperty()
+            );
+            setupListeners(properties, observable -> checkDateAndTime(true));
+            removeCurrentListener(lwChosenDates.itemsProperty());
+            removeCurrentListener(txtDateMultiplier.textProperty());
+        } else {
+            List<Property<?>> properties = List.of(
+                    lwChosenDates.itemsProperty(),
+                    ComboStartHour.valueProperty(),
+                    ComboStartMinute.valueProperty(),
+                    ComboEndHour.valueProperty(),
+                    ComboEndMinute.valueProperty()
+            );
+            setupListeners(properties, observable -> checkDateAndTime(false));
+            removeCurrentListener(dpBookingDate.valueProperty());
+        }
+    }
+
+    private void setupListener(Property<?> property, InvalidationListener listener) {
+        removeCurrentListener(property);
+        property.addListener(listener);
+        listenerMap.put(property, listener);
+    }
+
+
+    private void setupListeners(List<Property<?>> properties, InvalidationListener listener) {
+        removeCurrentListener(properties);
+        for (Property<?> property : properties) {
+            property.addListener(listener);
+            listenerMap.put(property, listener);
+        }
+    }
+
+    private void removeCurrentListener(Property<?> property) {
+        InvalidationListener listener = listenerMap.get(property);
+        if (listener != null) {
+            property.removeListener(listener);
+            listenerMap.put(property, null);
+        }
+    }
+
+    private void removeCurrentListener(List<Property<?>> properties) {
+        for (Property<?> property : properties) {
+            InvalidationListener listener = listenerMap.get(property);
+            if (listener != null) {
+                property.removeListener(listener);
+                listenerMap.put(property, null);
+            }
+        }
+    }
+
+    private void setupNumericListener(TextField textField) {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                textField.setText(newValue.replaceAll("\\D", ""));
+            }
+        });
+    }
+    //endregion
+    //region view methods
+    private void disableAdhoc(boolean disable) {
+        checkAdHoc.setSelected(disable);
+        checkAdHoc.setDisable(disable);
+    }
+
+    private void disableDate(boolean disable) {
+        if (disable) {
+            dpBookingDate.setValue(LocalDate.now());
+        }
+        dpBookingDate.setDisable(disable);
+    }
+
+    private void displayMoreDateOption(boolean display) {
+        HBoxDateOption.setVisible(display);
+        VBoxMultipleDateOption.setVisible(display);
+    }
+
+    private void disableCatering() {
+        if (comboCatering.getItems() != null) {
+            comboCatering.getItems().clear();
+        }
+        if (comboDepartment.getItems() != null) {
+            comboDepartment.getItems().clear();
+        }
+    }
+
+    private void clearAll() {
+        txtDateMultiplier.clear();
+        lwChosenDates.getItems().clear();
+        clearTime();
+        lwMeetingRooms.getItems().clear();
+        txtRoomDetails.clear();
+        txtTitle.clear();
+        txtAmountGuest.clear();
+        lwMeetingRooms.getItems().clear();
+        txtRoomDetails.clear();
+        comboCatering.getSelectionModel().clearSelection();
+        comboDepartment.getSelectionModel().clearSelection();
+        User currentUser = SystemManager.getInstance().getUser();
+        if (currentUser.getRole() == Role.TEACHER || currentUser.getRole() == Role.ADMIN) {
+            checkAdHoc.setSelected(false);
+            checkMultiple.setSelected(false);
+            dpBookingDate.setValue(null);
+            setupDateAndTimeListeners(true);
+        }
+    }
+
+    private void clearTime() {
+        ComboStartHour.getSelectionModel().clearSelection();
+        ComboStartMinute.getSelectionModel().clearSelection();
+        ComboEndHour.getSelectionModel().clearSelection();
+        ComboEndMinute.getSelectionModel().clearSelection();
+    }
+    //endregion
+    //region validation methods
+    private boolean validateTime() {
+        return ComboStartHour.getSelectionModel().getSelectedItem() != null
                 && ComboStartMinute.getSelectionModel().getSelectedItem() != null
                 && ComboEndHour.getSelectionModel().getSelectedItem() != null
                 && ComboEndMinute.getSelectionModel().getSelectedItem() != null;
+    }
+
+    private boolean validateCatering() {
+        return comboCatering.getSelectionModel().getSelectedItem() != null
+                && comboDepartment.getSelectionModel().getSelectedItem() != null;
     }
 
     private boolean validateBooking() {
@@ -270,11 +440,59 @@ public class NewBookingController implements Initializable {
                 && lwMeetingRooms.getSelectionModel().getSelectedItem() != null
                 && ValidationService.validFieldLength(txtTitle, 30, lblErrorTitle)
                 && ValidationService.validateStringIsInt(txtAmountGuest.getText())
-                && ValidationService.validFieldLength(txtTitle, 30, lblErrorTitle)
-                && comboCatering.getSelectionModel().getSelectedItem() != null;
+                && ValidationService.validFieldLength(txtTitle, 30, lblErrorTitle);
+    }
+    //endregion
+    //region functional method
+    private void checkDateAndTime(boolean singleDate) {
+        if (validateTime()) {
+            LocalTime startTime = LocalTime.of(ComboStartHour.getValue(), ComboStartMinute.getValue());
+            LocalTime endTime = LocalTime.of(ComboEndHour.getValue(), ComboEndMinute.getValue());
+
+            if (!endTime.isAfter(startTime)) {
+                lwMeetingRooms.getItems().clear();
+                return;
+            }
+
+            int institutionID = SystemManager.getInstance().getInstitution().getInstitutionID();
+            double start = convertToDouble(startTime);
+            double end = convertToDouble(endTime);
+
+            List<MeetingRoom> meetingRoomList = null;
+
+            if (singleDate && dpBookingDate.getValue() != null) {
+                Date choosenDate = Date.valueOf(dpBookingDate.getValue());
+                meetingRoomList = meetingRoomDAO.readAllAvailableRooms(institutionID, choosenDate, start, end);
+            } else if (!singleDate && lwChosenDates.getItems() != null) {
+                List<LocalDate> chosenDates = lwChosenDates.getItems();
+                List<Date> searchDates = new ArrayList<>();
+                for (LocalDate date : chosenDates) {
+                    searchDates.add(Date.valueOf(date));
+                }
+                meetingRoomList = meetingRoomDAO.readAllAvailableRooms(institutionID, searchDates, start, end);
+            }
+
+            if (meetingRoomList != null) {
+                lwMeetingRooms.getItems().setAll(meetingRoomList);
+            }
+        }
+    }
+    //endregion
+    //region helper methods
+    private void sortDateList() {
+        ObservableList<LocalDate> dates = lwChosenDates.getItems();
+        FXCollections.sort(dates);
     }
 
     private double convertToDouble(LocalTime time) {
         return time.getHour() + time.getMinute() / 60.0;
+    }
+    //endregion
+
+    @Override
+    public void onUpdate() {
+        if (SystemManager.getInstance().getUser() != null) {
+            setupDisplay();
+        }
     }
 }

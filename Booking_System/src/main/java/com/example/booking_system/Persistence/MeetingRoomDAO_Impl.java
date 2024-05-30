@@ -4,9 +4,9 @@ import com.example.booking_system.Model.Equipment;
 import com.example.booking_system.Model.ErrorReport;
 import com.example.booking_system.Model.MeetingRoom;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.sql.Date;
+import java.util.*;
+
 
 public class MeetingRoomDAO_Impl implements MeetingRoomDAO {
     private final Connection connection;
@@ -159,6 +159,39 @@ public class MeetingRoomDAO_Impl implements MeetingRoomDAO {
         }
         return null;
     }
+
+    @Override
+    public List<MeetingRoom> readAllAvailableRooms(int institutionID, List<Date> searchDates, double startTime, double endTime) {
+        List<MeetingRoom> availableRooms = new ArrayList<>();
+        try {
+            int amountDates = searchDates.size();
+            Map<Integer, Integer> roomCount = new HashMap<>();
+            for (java.util.Date searchDate : searchDates) {
+                PreparedStatement ps = connection.prepareStatement("SELECT * FROM get_available_roomIDs(?, ?, ?)");    //sp namespace
+                ps.setDate(1, (java.sql.Date) searchDate);
+                ps.setDouble(2, startTime);
+                ps.setDouble(3, endTime);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    int roomID = rs.getInt(1);
+                    roomCount.put(roomID, roomCount.getOrDefault(roomID, 0) +1);
+                }
+            }
+
+            for (Map.Entry<Integer, Integer> entry : roomCount.entrySet()) {
+                if (entry.getValue() == amountDates) {
+                    availableRooms.add(read(entry.getKey()));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
+        if (!availableRooms.isEmpty()) {
+            return availableRooms;
+        }
+        return null;
+    }
+
 
     @Override
     public boolean remove(int id) {

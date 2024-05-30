@@ -15,6 +15,7 @@ public class MeetingRoom {
     private List<ErrorReport> unresolvedReports;
     private List<Booking> dailyBookings;
     private final BookingDAO bookingDAO = new BookingDAO_Impl();
+    private String roomDescription;
 
     public MeetingRoom(String roomName, int institutionID, int availableSeats) {
         this.roomName = roomName;
@@ -57,6 +58,9 @@ public class MeetingRoom {
     public List<Booking> getDailyBookings() {
         return dailyBookings;
     }
+    public String getRoomDescription() {
+        return roomDescription;
+    }
 
     public void setRoomID(int roomID) {
         this.roomID = roomID;
@@ -79,9 +83,26 @@ public class MeetingRoom {
     public void setDailyBookings(List<Booking> dailyBookings) {
         this.dailyBookings = dailyBookings;
     }
+    public void setRoomDescription(String roomDescription) {
+        this.roomDescription = roomDescription;
+    }
 
     public void setupDailyBookings(Date date) {
         this.setDailyBookings(bookingDAO.readAllBookingsByDate(this.getRoomID(), date));
+    }
+
+    public void setupDescription() {
+        if (this.getRoomDescription() == null) {
+            if (!this.equipmentList.isEmpty()) {
+                StringBuilder equipmentDescription = new StringBuilder();
+                for (Equipment equipment : equipmentList) {
+                    equipmentDescription.append(equipment.toString()).append("\n");
+                }
+                this.setRoomDescription(this.roomName + "\n\nAntal pladser: " + this.availableSeats + "\n\nUdstyr:\n" + equipmentDescription);
+            } else {
+                this.setRoomDescription(this.roomName + "\n\nAntal pladser: " + this.availableSeats);
+            }
+        }
     }
 
     @Override

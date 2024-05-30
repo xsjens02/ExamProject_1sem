@@ -1,4 +1,5 @@
 package com.example.booking_system.Service;
+import com.example.booking_system.Model.Subject;
 import com.example.booking_system.Model.SystemManager;
 import com.example.booking_system.Model.User;
 import com.example.booking_system.Persistence.UserDAO;
@@ -29,6 +30,7 @@ public class LoginService {
 
         if (user != null && hashedPassword.equals(user.getPassword())){
             SystemManager.getInstance().setUser(user);
+            SystemManager.getInstance().notifySubscribers(Subject.User);
             return true;
 
         }else {

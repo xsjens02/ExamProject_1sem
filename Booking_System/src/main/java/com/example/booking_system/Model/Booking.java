@@ -16,6 +16,32 @@ public class Booking {
     private int menuID;
     private int departmentID;
 
+    public Booking(String bookingTitle, int userID, String responsible, int roomID, boolean adhoc, Date date, double startTime, double endTime, double duration) {
+        this.bookingTitle = bookingTitle;
+        this.userID = userID;
+        this.responsible = responsible;
+        this.roomID = roomID;
+        this.adhoc = adhoc;
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.duration = duration;
+    }
+
+    public Booking(String bookingTitle, int userID, String responsible, int roomID, boolean adhoc, Date date, double startTime, double endTime, double duration, int menuID, int departmentID) {
+        this.bookingTitle = bookingTitle;
+        this.userID = userID;
+        this.responsible = responsible;
+        this.roomID = roomID;
+        this.adhoc = adhoc;
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.duration = duration;
+        this.menuID = menuID;
+        this.departmentID = departmentID;
+    }
+
     public Booking(int bookingID, String bookingTitle, int userID, String responsible, int roomID, boolean adhoc, Date date, double startTime, double endTime, double duration, int menuID, int departmentID) {
         this.bookingID = bookingID;
         this.bookingTitle = bookingTitle;

@@ -4,6 +4,7 @@ import com.example.booking_system.ControllerService.Controller;
 import com.example.booking_system.ControllerService.SceneManager;
 import com.example.booking_system.ControllerService.TableViewService;
 import com.example.booking_system.Model.Institution;
+import com.example.booking_system.Model.Subject;
 import com.example.booking_system.Model.SystemManager;
 import com.example.booking_system.Model.User;
 import com.example.booking_system.Persistence.DAO;
@@ -104,6 +105,7 @@ public class InfoScreenController implements Initializable {
         User currentUser = SystemManager.getInstance().getUser();
         if(currentUser != null){
             SystemManager.getInstance().clearUser();
+            SystemManager.getInstance().notifySubscribers(Subject.User);
             updateUI();
         }else {
             openLoginPopup();

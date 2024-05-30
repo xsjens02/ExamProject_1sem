@@ -1,10 +1,8 @@
 package com.example.booking_system.Persistence;
 
 import com.example.booking_system.Model.Booking;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +14,27 @@ public class BookingDAO_Impl implements BookingDAO {
     }
     @Override
     public boolean add(Booking entity) {
-        return false;
+        try {
+            CallableStatement cs = connection.prepareCall("{call add_booking(?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+            cs.setString(1, entity.getBookingTitle());
+            cs.setInt(2, entity.getUserID());
+            cs.setString(3, entity.getResponsible());
+            cs.setInt(4, entity.getRoomID());
+            cs.setBoolean(5, entity.isAdhoc());
+            cs.setDate(6, (java.sql.Date) entity.getDate());
+            cs.setDouble(7, entity.getStartTime());
+            cs.setDouble(8, entity.getEndTime());
+            cs.setDouble(9, entity.getDuration());
+            cs.setInt(10, entity.getMenuID());
+            cs.setInt(11, entity.getDepartmentID());
+            System.out.println(entity.getMenuID());
+            System.out.println(entity.getDepartmentID());
+
+            int result = cs.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
     }
 
     @Override
