@@ -18,10 +18,7 @@ public class TableViewService {
 
     private BookingDAO_Impl bookingDAO = new BookingDAO_Impl();
     public Institution institution = SystemManager.getInstance().getInstitution();
-
-    public TableViewService() {
-    }
-
+    public TableViewService() {}
     public LocalDate localDate = LocalDate.now();
     public LocalTime localTime = LocalTime.now();
     public int tempHour = localTime.getHour();
@@ -30,6 +27,7 @@ public class TableViewService {
 
     public TableView populateTableView(TableView tableView) {
 
+        tableView.getColumns().clear();
         createTableColumns(tableView);
         tableView.setItems(getAllMeetingRoomsAndBookings(institution.getInstitutionID()));
         return tableView;
@@ -57,7 +55,7 @@ public class TableViewService {
 
         roomName.minWidthProperty().bind(tableView.widthProperty().divide(24).multiply(3));
         availability.minWidthProperty().bind(tableView.widthProperty().divide(24).multiply(1.5));
-        nextCurrent.minWidthProperty().bind(tableView.widthProperty().divide(24).multiply(3));
+        nextCurrent.minWidthProperty().bind(tableView.widthProperty().divide(24).multiply(4.65));
         startTime.minWidthProperty().bind(tableView.widthProperty().divide(24).multiply(2));
         endTime.minWidthProperty().bind(tableView.widthProperty().divide(24).multiply(2));
         bookingTitle.minWidthProperty().bind(tableView.widthProperty().divide(24).multiply(6.5));
@@ -94,9 +92,8 @@ public class TableViewService {
 
     public ObservableList<MeetingRoomBooking> getAllMeetingRoomsAndBookings(int institutionID) {
         ObservableList<MeetingRoomBooking> allMeetingRoomAndBookings = FXCollections.observableArrayList();
-
-
         for (int i = 0; i < institution.getMeetingRoomList().size(); i++) {
+
             Date tempDate = Date.valueOf(localDate);
             MeetingRoom tempMeetingRoom = institution.getMeetingRoomList().get(i);
             tempMeetingRoom.setupDailyBookings(tempDate);
@@ -121,7 +118,6 @@ public class TableViewService {
                 allMeetingRoomAndBookings.add(noBookings(tempMeetingRoom));
             }
         }
-
         return allMeetingRoomAndBookings;
     }
 

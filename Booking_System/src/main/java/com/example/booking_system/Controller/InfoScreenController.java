@@ -62,7 +62,6 @@ public class InfoScreenController implements Initializable, Subscriber {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         SystemManager.getInstance().initManager(1);
-        //SystemManager.getInstance().setUser(new User(2, "test", "test", 1, 3, "test", "test"));
         SystemManager.getInstance().subscribe(Subject.Institution,this);
         SystemManager.getInstance().subscribe(Subject.User,this);
         administration.getItems().addAll("Konfiguration","Statistik");
@@ -102,25 +101,12 @@ public class InfoScreenController implements Initializable, Subscriber {
         ImageView imageView = new ImageView(loginImage);
         imageView.setFitHeight(loginButton.getPrefHeight());
         imageView.setFitWidth(loginButton.getPrefWidth());
-        administration.minWidthProperty().bind(editBookingButton.widthProperty().multiply(1.5));
+        administration.minWidthProperty().bind(editBookingButton.widthProperty().multiply(1.2));
         loginButton.setGraphic(imageView);
     }
     @FXML
     private void onAdministrationDropdownChoice(){
-        if(administration.getSelectionModel().getSelectedIndex() == 0) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/booking_system/ConfigurationWindow.fxml"));
-                Parent root = loader.load();
-
-                Stage configWindow = new Stage();
-                configWindow.initModality(Modality.APPLICATION_MODAL);
-                configWindow.setTitle("Konfiguration");
-                configWindow.setScene(new Scene(root));
-                configWindow.showAndWait();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        if(administration.getSelectionModel().getSelectedIndex() == 0) {SceneManager.openScene(Controller.Configuration,"Konfiguration");}
         if(administration.getSelectionModel().getSelectedIndex() == 1){
             System.out.println("Åben statistik");
         }
@@ -129,9 +115,10 @@ public class InfoScreenController implements Initializable, Subscriber {
 
     public void onLoginButtonClick(ActionEvent actionEvent) {
         User currentUser = SystemManager.getInstance().getUser();
-        if(currentUser != null){
+        if(!currentUser.getRole().name().equals("GUEST")){
             SystemManager.getInstance().clearUser();
             SystemManager.getInstance().notifySubscribers(Subject.User);
+            SystemManager.getInstance().setUser(new User(1));
             updateUI();
         }else {
             openLoginPopup();
@@ -159,7 +146,7 @@ public class InfoScreenController implements Initializable, Subscriber {
  
     public void updateUI(){
         User currentUser = SystemManager.getInstance().getUser();
-        if(currentUser != null){
+        if(!currentUser.getRole().name().equals("GUEST")){
             lblUserInfo.setText("Velkommen, " + currentUser.getFirstName());
 
             Image logoutImage = new Image(getClass().getResource("/images/logout.png").toExternalForm());
@@ -167,7 +154,16 @@ public class InfoScreenController implements Initializable, Subscriber {
             imageView.setFitHeight(loginButton.getPrefHeight());
             imageView.setFitWidth(loginButton.getPrefWidth());
             loginButton.setGraphic(imageView);
+            switch (currentUser.getRole().name()){
+                case "GUEST": administration.setVisible(false); editBookingButton.setVisible(false); break;
+                case "JANITOR": break;
+                case "STUDENT": administration.setVisible(false); editBookingButton.setVisible(true); break;
+                case "TEACHER": administration.setVisible(false); editBookingButton.setVisible(true); break;
+                case "ADMIN": administration.setVisible(true); editBookingButton.setVisible(true); break;
+            }
         } else {
+            administration.setVisible(false);
+            editBookingButton.setVisible(false);
             lblUserInfo.setText("");
             Image loginImage = new Image(getClass().getResource("/images/login.png").toExternalForm());
             ImageView imageView = new ImageView(loginImage);
@@ -185,15 +181,22 @@ public class InfoScreenController implements Initializable, Subscriber {
 
     @FXML
     public void onNewBookingClick() {
-        SceneManager.openScene(Controller.NewBooking, "Ny booking");
+        if(SystemManager.getInstance().getUser().getRole().name().equals("GUEST")){
+            openLoginPopup();
+        }
+        else {
+            SceneManager.openScene(Controller.NewBooking, "Ny booking");
+        }
     }
     @FXML
     private void onSearchInputChanged(){
+        tableView.getColumns().clear();
         searchInputTextField.clear();
         tableViewService.searchBookings(tableView,Date.valueOf(searchDate.getValue()),FormattingService.formatTime(timeComboBox.getValue()));
     }
     @FXML
     private void onSearchTextChanged(){
+        tableView.getColumns().clear();
         tableViewService.searchBookingsByText(tableView, searchInputTextField.getText(),Date.valueOf(searchDate.getValue()));
     }
     private void populateTimeComboBox(){
@@ -201,23 +204,23 @@ public class InfoScreenController implements Initializable, Subscriber {
         timeComboBox.setValue(FormattingService.formatTime(inputTime));
         if(searchDate.getValue() != tableViewService.localDate){
             timeComboBox.getItems().clear();
-            double standardTime = 08.00;
+            double standardTime = SystemManager.getInstance().getInstitution().getOpenTime();
             while(standardTime < tableViewService.institution.getCloseTime()){
                 timeComboBox.getItems().add(FormattingService.formatTime(standardTime));
-                standardTime += 0.25;
+                standardTime += SystemManager.getInstance().getInstitution().getBookingTimeInterval()/60.00;
             }
         }
         else {
             if (inputTime > tableViewService.institution.getOpenTime()) {
                 while (inputTime < tableViewService.institution.getCloseTime()) {
                     timeComboBox.getItems().add(FormattingService.formatTime(inputTime));
-                    inputTime += 0.25;
+                    inputTime += SystemManager.getInstance().getInstitution().getBookingTimeInterval()/60.00;
                 }
             } else {
                 inputTime = tableViewService.institution.getOpenTime();
                 while (inputTime < tableViewService.institution.getCloseTime()) {
                     timeComboBox.getItems().add(FormattingService.formatTime(inputTime));
-                    inputTime += 0.25;
+                    inputTime += SystemManager.getInstance().getInstitution().getBookingTimeInterval()/60.00;
                 }
             }
         }
@@ -232,6 +235,7 @@ public class InfoScreenController implements Initializable, Subscriber {
 
     @Override
     public void onUpdate() {
+        tableViewService = new TableViewService();
         tableViewService.populateTableView(tableView);
     }
 }

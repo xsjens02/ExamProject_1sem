@@ -3,6 +3,7 @@ package com.example.booking_system.Controller;
 import com.example.booking_system.ControllerService.SceneManager;
 import com.example.booking_system.Model.Equipment;
 import com.example.booking_system.Model.MeetingRoom;
+import com.example.booking_system.Model.Subject;
 import com.example.booking_system.Model.SystemManager;
 import com.example.booking_system.Persistence.DAO;
 import com.example.booking_system.Persistence.EquipmentDAO_Impl;
@@ -79,6 +80,8 @@ public class NewMeetingRoomController implements Initializable {
             if (insert) {
                 resetAll();
             }
+            SystemManager.getInstance().updateManager();
+            SystemManager.getInstance().notifySubscribers(Subject.Institution);
         }
     }
     @FXML

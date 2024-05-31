@@ -46,6 +46,7 @@ public class SystemManager {
 
     public void initManager(int institutionID) {
         setInstitution(institutionDAO.read(institutionID));
+        setUser(new User(1));
     }
 
     public void updateManager() {

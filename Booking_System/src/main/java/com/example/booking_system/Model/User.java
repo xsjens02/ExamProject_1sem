@@ -10,6 +10,11 @@ public class User {
     private String firstName;
     private String lastName;
 
+    public User (int roleID){
+        this.roleID = roleID;
+        defineUserRole(roleID);
+    }
+
     public User(int userID, String userName, String password, int institutionID, int roleID, String firstName, String lastName) {
         this.userID = userID;
         this.userName = userName;
