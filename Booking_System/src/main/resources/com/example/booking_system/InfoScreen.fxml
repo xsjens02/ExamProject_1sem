@@ -14,24 +14,21 @@
          <children>
             <HBox fx:id="leftHBox" alignment="CENTER_LEFT" maxHeight="27.0" maxWidth="1.7976931348623157E308">
                <children>
-                  <TextField promptText="Søg">
-                     <font>
-                        <Font size="16.0" />
-                     </font></TextField>
-                  <ComboBox prefHeight="36.8" prefWidth="76.0" promptText="Dato">
+                  <DatePicker fx:id="searchDate" minWidth="-Infinity" onAction="#onSearchInputChanged" prefHeight="36.8" prefWidth="100.0" promptText="Dato">
+                  </DatePicker>
+                  <ComboBox fx:id="timeComboBox" onAction="#onSearchInputChanged" prefHeight="26.0" prefWidth="68.0" promptText="Tidspunkt">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
                   </ComboBox>
-                  <TextField prefHeight="26.0" prefWidth="68.0" promptText="Tidspunkt">
+                  <TextField fx:id="searchInputTextField" onKeyPressed="#onSearchTextChanged" promptText="Søg">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
                      <font>
                         <Font size="16.0" />
-                     </font>
-                  </TextField>
-                  <Button mnemonicParsing="false" text="Nulstil">
+                     </font></TextField>
+                  <Button fx:id="resetButton" mnemonicParsing="false" onAction="#onResetSearchButtonClick" text="Nulstil">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -46,12 +43,12 @@
                      <HBox.margin>
                         <Insets right="20.0" />
                      </HBox.margin></Label>
-                  <ComboBox fx:id="administration" onAction="#onAdministrationDropdownChoice" prefHeight="36.8" prefWidth="122.0" promptText="Administration">
+                  <ComboBox fx:id="administration" minWidth="-Infinity" onAction="#onAdministrationDropdownChoice" prefHeight="36.8" prefWidth="122.0" promptText="Administration">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
                   </ComboBox>
-                  <Button mnemonicParsing="false" text="Rediger booking">
+                  <Button fx:id="editBookingButton" mnemonicParsing="false" text="Rediger booking">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>

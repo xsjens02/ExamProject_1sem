@@ -6,3 +6,7 @@
     -fx-font-size: 20px;
     -fx-alignment: CENTER;
 }
+.text{
+    -fx-font-family: "Open Sans";
+    -fx-font-size: 18px;
+}
