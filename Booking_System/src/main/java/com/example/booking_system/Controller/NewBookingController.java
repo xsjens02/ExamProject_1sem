@@ -203,6 +203,7 @@ public class NewBookingController implements Initializable, Subscriber {
             }
             if (result) {
                 clearAll();
+                SystemManager.getInstance().notifySubscribers(Subject.Institution);
             }
         }
     }
