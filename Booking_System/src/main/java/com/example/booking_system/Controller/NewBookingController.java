@@ -52,7 +52,7 @@ public class NewBookingController implements Initializable, Subscriber {
     @FXML
     private ComboBox<Department> comboDepartment;
     @FXML
-    private ComboBox<Integer> ComboStartHour, ComboStartMinute, ComboEndMinute, ComboEndHour;
+    private ComboBox<String> comboStartTime, comboEndTime;
     //endregion
     //region instance variables
     private final MeetingRoomDAO meetingRoomDAO = new MeetingRoomDAO_Impl();
@@ -83,10 +83,8 @@ public class NewBookingController implements Initializable, Subscriber {
                 checkMultiple.selectedProperty(),
                 dpBookingDate.valueProperty(),
                 lwChosenDates.itemsProperty(),
-                ComboStartHour.valueProperty(),
-                ComboStartMinute.valueProperty(),
-                ComboEndHour.valueProperty(),
-                ComboEndMinute.valueProperty()
+                comboStartTime.valueProperty(),
+                comboEndTime.valueProperty()
         );
 
         for (Property<?> property : properties) {
@@ -156,8 +154,8 @@ public class NewBookingController implements Initializable, Subscriber {
             String responsible = SystemManager.getInstance().getUser().getFirstName();
             int roomID = lwMeetingRooms.getSelectionModel().getSelectedItem().getRoomID();
             boolean adHoc = dpBookingDate.getValue().equals(LocalDate.now());
-            LocalTime startTime = LocalTime.of(ComboStartHour.getValue(), ComboStartMinute.getValue());
-            LocalTime endTime = LocalTime.of(ComboEndHour.getValue(), ComboEndMinute.getValue());
+            LocalTime startTime = LocalTime.parse(comboStartTime.getValue());
+            LocalTime endTime = LocalTime.parse(comboEndTime.getValue());
             double start = convertToDouble(startTime);
             double end = convertToDouble(endTime);
             double duration = end - start;
@@ -231,21 +229,33 @@ public class NewBookingController implements Initializable, Subscriber {
     }
 
     private void setupTimeBoxes() {
-        int openHour = (int) SystemManager.getInstance().getInstitution().getOpenTime();
-        int closeHour = (int) SystemManager.getInstance().getInstitution().getCloseTime();
-        for (int hour = openHour; hour <= closeHour ; hour++) {
-            ComboStartHour.getItems().add(hour);
-            ComboEndHour.getItems().add(hour);
-        }
+        comboStartTime.getItems().clear();
+        comboEndTime.getItems().clear();
 
+        double openTime = SystemManager.getInstance().getInstitution().getOpenTime();
+        double closeTime = SystemManager.getInstance().getInstitution().getCloseTime();
         int minuteInterval = SystemManager.getInstance().getInstitution().getBookingTimeInterval();
-        for (int minute = 0; minute < 60; minute += minuteInterval) {
-            ComboStartMinute.getItems().add(minute);
-            ComboEndMinute.getItems().add(minute);
+
+        int openHour = (int) openTime;
+        int openMinute = (int) ((openTime - openHour) * 60);
+        int closeHour = (int) closeTime;
+        int closeMinute = (int) ((closeTime - closeHour) * 60);
+
+        LocalTime startTime = LocalTime.of(openHour, openMinute);
+        LocalTime endTime = LocalTime.of(closeHour, closeMinute);
+
+        while (!startTime.isAfter(endTime)) {
+            String formattedTime = startTime.toString();
+            comboStartTime.getItems().add(formattedTime);
+            comboEndTime.getItems().add(formattedTime);
+            startTime = startTime.plusMinutes(minuteInterval);
         }
     }
 
     private void setupCatering() {
+        comboCatering.getItems().clear();
+        comboDepartment.getItems().clear();
+
         DepartmentDAO departmentDAO = new DepartmentDAO_Impl();
         List<Department> departmentList = departmentDAO.readAllFromUser(SystemManager.getInstance().getUser());
 
@@ -306,10 +316,8 @@ public class NewBookingController implements Initializable, Subscriber {
         if (singleDate) {
             List<Property<?>> properties = List.of(
                     dpBookingDate.valueProperty(),
-                    ComboStartHour.valueProperty(),
-                    ComboStartMinute.valueProperty(),
-                    ComboEndHour.valueProperty(),
-                    ComboEndMinute.valueProperty()
+                    comboStartTime.valueProperty(),
+                    comboEndTime.valueProperty()
             );
             setupListeners(properties, observable -> checkDateAndTime(true));
             removeCurrentListener(lwChosenDates.itemsProperty());
@@ -317,10 +325,8 @@ public class NewBookingController implements Initializable, Subscriber {
         } else {
             List<Property<?>> properties = List.of(
                     lwChosenDates.itemsProperty(),
-                    ComboStartHour.valueProperty(),
-                    ComboStartMinute.valueProperty(),
-                    ComboEndHour.valueProperty(),
-                    ComboEndMinute.valueProperty()
+                    comboStartTime.valueProperty(),
+                    comboEndTime.valueProperty()
             );
             setupListeners(properties, observable -> checkDateAndTime(false));
             removeCurrentListener(dpBookingDate.valueProperty());
@@ -417,18 +423,14 @@ public class NewBookingController implements Initializable, Subscriber {
     }
 
     private void clearTime() {
-        ComboStartHour.getSelectionModel().clearSelection();
-        ComboStartMinute.getSelectionModel().clearSelection();
-        ComboEndHour.getSelectionModel().clearSelection();
-        ComboEndMinute.getSelectionModel().clearSelection();
+        comboStartTime.getSelectionModel().clearSelection();
+        comboEndTime.getSelectionModel().clearSelection();
     }
     //endregion
     //region validation methods
     private boolean validateTime() {
-        return ComboStartHour.getSelectionModel().getSelectedItem() != null
-                && ComboStartMinute.getSelectionModel().getSelectedItem() != null
-                && ComboEndHour.getSelectionModel().getSelectedItem() != null
-                && ComboEndMinute.getSelectionModel().getSelectedItem() != null;
+        return comboStartTime.getSelectionModel().getSelectedItem() != null
+                && comboEndTime.getSelectionModel().getSelectedItem() != null;
     }
 
     private boolean validateCatering() {
@@ -447,8 +449,9 @@ public class NewBookingController implements Initializable, Subscriber {
     //region functional method
     private void checkDateAndTime(boolean singleDate) {
         if (validateTime()) {
-            LocalTime startTime = LocalTime.of(ComboStartHour.getValue(), ComboStartMinute.getValue());
-            LocalTime endTime = LocalTime.of(ComboEndHour.getValue(), ComboEndMinute.getValue());
+
+            LocalTime startTime = LocalTime.parse(comboStartTime.getValue());
+            LocalTime endTime = LocalTime.parse(comboEndTime.getValue());
 
             if (!endTime.isAfter(startTime)) {
                 lwMeetingRooms.getItems().clear();
