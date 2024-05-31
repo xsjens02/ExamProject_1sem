@@ -67,7 +67,7 @@ public class NewBookingController implements Initializable, Subscriber {
         initFieldList();
         initListenerMap();
         initConstantListeners();
-        //setupDisplay();
+        setupDisplay();
         SystemManager.getInstance().subscribe(Subject.User, this);
         SystemManager.getInstance().subscribe(Subject.Institution, this);
     }

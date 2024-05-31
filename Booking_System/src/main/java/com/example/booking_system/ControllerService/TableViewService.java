@@ -102,7 +102,7 @@ public class TableViewService {
             tempMeetingRoom.setupDailyBookings(tempDate);
             if (tempMeetingRoom.getDailyBookings() != null) {
                 Booking nextBooking = getNextBooking(tempMeetingRoom.getDailyBookings(), tempTime);
-                if(nextBooking.getStartTime() != 0) {
+                if(nextBooking != null) {
                     allMeetingRoomAndBookings.add(new MeetingRoomBooking(
                             tempMeetingRoom.getRoomName(),
                             determineAvailability(nextBooking, tempTime),
