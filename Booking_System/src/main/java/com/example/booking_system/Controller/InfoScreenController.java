@@ -1,9 +1,6 @@
 package com.example.booking_system.Controller;
 
-import com.example.booking_system.ControllerService.Controller;
-import com.example.booking_system.ControllerService.FormattingService;
-import com.example.booking_system.ControllerService.SceneManager;
-import com.example.booking_system.ControllerService.TableViewService;
+import com.example.booking_system.ControllerService.*;
 import com.example.booking_system.Model.Institution;
 import com.example.booking_system.Model.Subject;
 import com.example.booking_system.Model.SystemManager;
@@ -32,7 +29,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class InfoScreenController implements Initializable {
+public class InfoScreenController implements Initializable, Subscriber {
 
     public Label lblUserInfo;
     DAO<Institution> institutionDAO = new InstitutionDAO_Impl();
@@ -66,6 +63,8 @@ public class InfoScreenController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         SystemManager.getInstance().initManager(1);
         //SystemManager.getInstance().setUser(new User(2, "test", "test", 1, 3, "test", "test"));
+        SystemManager.getInstance().subscribe(Subject.Institution,this);
+        SystemManager.getInstance().subscribe(Subject.User,this);
         administration.getItems().addAll("Konfiguration","Statistik");
 
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -78,7 +77,6 @@ public class InfoScreenController implements Initializable {
         tableViewService.populateTableView(tableView);
 
         adjustWindowSize(primaryScreenBounds);
-        //TableViewService.updateTime(timeComboBox);
         populateTimeComboBox();
         updateUI();
         searchDate.setValue(LocalDate.now());
@@ -222,7 +220,6 @@ public class InfoScreenController implements Initializable {
                     inputTime += 0.25;
                 }
             }
-
         }
     }
     @FXML
@@ -230,5 +227,11 @@ public class InfoScreenController implements Initializable {
         searchDate.setValue(tableViewService.localDate);
         timeComboBox.setValue(FormattingService.formatTime(tableViewService.tempHour));
         searchInputTextField.clear();
+        tableViewService.populateTableView(tableView);
+    }
+
+    @Override
+    public void onUpdate() {
+        tableViewService.populateTableView(tableView);
     }
 }
