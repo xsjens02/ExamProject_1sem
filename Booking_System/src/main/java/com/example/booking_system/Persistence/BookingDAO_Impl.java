@@ -27,8 +27,6 @@ public class BookingDAO_Impl implements BookingDAO {
             cs.setDouble(9, entity.getDuration());
             cs.setInt(10, entity.getMenuID());
             cs.setInt(11, entity.getDepartmentID());
-            System.out.println(entity.getMenuID());
-            System.out.println(entity.getDepartmentID());
 
             int result = cs.executeUpdate();
             return result > 0;
