@@ -8,6 +8,7 @@ public class Booking {
     private int userID;
     private String responsible;
     private int roomID;
+    private int amountGuest;
     private boolean adhoc;
     private Date date;
     private double startTime;
@@ -78,6 +79,9 @@ public class Booking {
     public int getRoomID() {
         return roomID;
     }
+    public int getAmountGuest() {
+        return amountGuest;
+    }
     public boolean isAdhoc() {
         return adhoc;
     }
@@ -115,6 +119,9 @@ public class Booking {
     public void setRoomID(int roomID) {
         this.roomID = roomID;
     }
+    public void setAmountGuest(int amountGuest) {
+        this.amountGuest = amountGuest;
+    }
     public void setAdhoc(boolean adhoc) {
         this.adhoc = adhoc;
     }
@@ -135,5 +142,10 @@ public class Booking {
     }
     public void setDepartmentID(int departmentID) {
         this.departmentID = departmentID;
+    }
+
+    @Override
+    public String toString() {
+        return this.bookingTitle + "  -  " + this.date;
     }
 }

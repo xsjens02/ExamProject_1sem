@@ -48,7 +48,7 @@
                         <Insets right="10.0" />
                      </HBox.margin>
                   </ComboBox>
-                  <Button fx:id="editBookingButton" mnemonicParsing="false" text="Rediger booking">
+                  <Button fx:id="editBookingButton" mnemonicParsing="false" onAction="#onEditBookingClick" text="Rediger booking">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>

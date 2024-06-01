@@ -14,9 +14,10 @@ public class SceneManager {
 
     static {
         loadScene(Controller.Configuration, "/com/example/booking_system/ConfigurationWindow.fxml");
-        loadScene(Controller.Info, "/com/example/booking_system/InfoScreen.fxml");
+        buildScene(Controller.Info, "/com/example/booking_system/InfoScreen.fxml", "/Stylesheets/tableViewStyle.css");
         loadScene(Controller.Login, "/com/example/booking_system/loginScreen.fxml");
         loadScene(Controller.NewBooking, "/com/example/booking_system/NewBooking.fxml");
+        loadScene(Controller.EditBooking, "/com/example/booking_system/EditBooking.fxml");
         loadScene(Controller.NewCateringOption, "/com/example/booking_system/NewCateringOption.fxml");
         loadScene(Controller.NewErrorReport, "/com/example/booking_system/NewErrorReport.fxml");
         loadScene(Controller.NewMeetingRoom, "/com/example/booking_system/NewMeetingRoom.fxml");
@@ -34,13 +35,14 @@ public class SceneManager {
         }
     }
 
-    private Scene buildScene(String fxmlResource, String cssResource) {
+    private static Scene buildScene(Controller controller, String fxmlResource, String cssResource) {
         Scene scene;
         try {
             FXMLLoader loader = new FXMLLoader(SceneManager.class.getResource(fxmlResource));
             Parent view = loader.load();
             scene = new Scene(view);
             scene.getStylesheets().add(SceneManager.class.getResource(cssResource).toExternalForm());
+            scenes.put(controller, scene);
         } catch (IOException e) {
             throw  new RuntimeException();
         }

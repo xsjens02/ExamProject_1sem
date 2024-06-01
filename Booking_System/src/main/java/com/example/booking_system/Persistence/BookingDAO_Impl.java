@@ -1,6 +1,7 @@
 package com.example.booking_system.Persistence;
 
 import com.example.booking_system.Model.Booking;
+import com.example.booking_system.Model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -93,6 +94,24 @@ public class BookingDAO_Impl implements BookingDAO {
     }
 
     @Override
+    public List<Booking> readAllFromUser(User user) {
+        List<Booking> bookingList = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM get_user_bookings(?)");
+            ps.setInt(1, user.getUserID());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int bookingID = rs.getInt(1);
+
+                bookingList.add(read(bookingID));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
+        return bookingList;
+    }
+
+    @Override
     public List<Booking> readAllBookingsByDate(int roomID, Date searchDate) {
         List<Booking> bookingList = new ArrayList<>();
         try {
@@ -142,6 +161,15 @@ public class BookingDAO_Impl implements BookingDAO {
 
     @Override
     public boolean update(Booking entity) {
-        return false;
+        try {
+            CallableStatement cs = connection.prepareCall("{call update_booking(?, ?)}");
+            cs.setInt(1, entity.getBookingID());
+            cs.setString(2, entity.getBookingTitle());
+
+            int result = cs.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
     }
 }

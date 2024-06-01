@@ -1,5 +1,7 @@
 package com.example.booking_system;
 
+import com.example.booking_system.ControllerService.Controller;
+import com.example.booking_system.ControllerService.SceneManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,13 +12,7 @@ import java.io.IOException;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("InfoScreen.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        scene.getStylesheets().add(getClass().getResource("/Stylesheets/tableViewStyle.css").toExternalForm());
-        stage.setTitle("Booking System");
-        stage.setMaximized(true);
-        stage.setScene(scene);
-        stage.show();
+        SceneManager.openScene(Controller.Info, "Booking System");
     }
 
 

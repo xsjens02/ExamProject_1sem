@@ -5,6 +5,7 @@ public enum Controller {
     Info,
     Login,
     NewBooking,
+    EditBooking,
     NewCateringOption,
     NewErrorReport,
     NewMeetingRoom,
