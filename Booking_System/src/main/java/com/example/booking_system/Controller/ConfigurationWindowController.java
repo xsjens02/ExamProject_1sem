@@ -1,7 +1,7 @@
 package com.example.booking_system.Controller;
 
-import com.example.booking_system.ControllerService.Controller;
-import com.example.booking_system.ControllerService.SceneManager;
+import com.example.booking_system.ControllerService.Managers.Controller;
+import com.example.booking_system.ControllerService.Managers.SceneManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;

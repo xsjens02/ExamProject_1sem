@@ -1,4 +1,4 @@
-package com.example.booking_system.ControllerService;
+package com.example.booking_system.ControllerService.Managers;
 
 public enum Controller {
     Configuration,

@@ -1,9 +1,11 @@
 package com.example.booking_system.Controller;
 
-import com.example.booking_system.ControllerService.SceneManager;
-import com.example.booking_system.ControllerService.Subject;
-import com.example.booking_system.ControllerService.Subscriber;
-import com.example.booking_system.ControllerService.ValidationService;
+import com.example.booking_system.ControllerService.Managers.SceneManager;
+import com.example.booking_system.ControllerService.Managers.SystemManager;
+import com.example.booking_system.ControllerService.PubSub.Subject;
+import com.example.booking_system.ControllerService.PubSub.Subscriber;
+import com.example.booking_system.ControllerService.Utilities.ListenerService;
+import com.example.booking_system.ControllerService.Utilities.ValidationService;
 import com.example.booking_system.Model.*;
 import com.example.booking_system.Persistence.DAO.BookingDAO_Impl;
 import javafx.fxml.FXML;
@@ -19,7 +21,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class EditBookingController implements Initializable, Subscriber {
-
+    //region FXML annotations
     @FXML
     private VBox VBoxMain;
     @FXML
@@ -30,7 +32,13 @@ public class EditBookingController implements Initializable, Subscriber {
     private Label lblErrorTitle, lblErrorGuest;
     private final BookingDAO_Impl bookingDAO = new BookingDAO_Impl();
     private final List<Pair<TextField, Label>> requiredFields = new ArrayList<>();
-
+    //endregion
+    //region initializer methods
+    /**
+     * initializes the controller class
+     * @param url location
+     * @param resourceBundle resources
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         SystemManager.getInstance().subscribe(Subject.User, this);
@@ -47,13 +55,27 @@ public class EditBookingController implements Initializable, Subscriber {
             }
         });
 
-        txtAmountGuest.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                txtAmountGuest.setText(newValue.replaceAll("\\D", ""));
-            }
-        });
+        ListenerService.setupNumericListener(txtAmountGuest);
     }
 
+    /**
+     * initializes the listView containing all user bookings
+     */
+    private void setupBookingList() {
+        User currentUser = SystemManager.getInstance().getUser();
+        if (currentUser != null) {
+            lwBookings.getItems().clear();
+            List<Booking> bookingList = bookingDAO.readAllFromUser(currentUser);
+            if (bookingList != null) {
+                lwBookings.getItems().setAll(bookingList);
+            }
+        }
+    }
+    //endregion
+    //region handler methods
+    /**
+     * handles deletion of a selected booking from system
+     */
     @FXML
     void onDeleteClick() {
         Booking selectedBooking = lwBookings.getSelectionModel().getSelectedItem();
@@ -67,12 +89,18 @@ public class EditBookingController implements Initializable, Subscriber {
         }
     }
 
+    /**
+     * handles resetting view and closing of window
+     */
     @FXML
     void onCancelClick() {
         clearAll();
         SceneManager.closeScene(VBoxMain.getScene());
     }
 
+    /**
+     * handles updating edited booking details in system
+     */
     @FXML
     void onUpdateClick() {
         if (validateUpdate()) {
@@ -86,31 +114,34 @@ public class EditBookingController implements Initializable, Subscriber {
             }
         }
     }
-
-    private void setupBookingList() {
-        User currentUser = SystemManager.getInstance().getUser();
-        if (currentUser != null) {
-            lwBookings.getItems().clear();
-            List<Booking> bookingList = bookingDAO.readAllFromUser(currentUser);
-            if (bookingList != null) {
-                lwBookings.getItems().setAll(bookingList);
-            }
-        }
+    //endregion
+    //region view methods
+    /**
+     * clears view and set it to default state
+     */
+    private void clearAll() {
+        txtTitle.clear();
+        txtAmountGuest.clear();
     }
-
+    //endregion
+    //region validation methods
+    /**
+     * validates if all necessary data is in order to update a booking
+     * @return if validation pass, false if not
+     */
     private boolean validateUpdate() {
         return ValidationService.validateFieldsEntered(requiredFields)
                 && ValidationService.validFieldLength(txtTitle, 30, lblErrorTitle)
                 && lwBookings.getSelectionModel().getSelectedItem() != null;
     }
-
-    private void clearAll() {
-        txtTitle.clear();
-        txtAmountGuest.clear();
-    }
-
+    //endregion
+    //region subscriber method
+    /**
+     * updates the booking ListView to reflect the current user's bookings
+     */
     @Override
     public void onUpdate() {
         setupBookingList();
     }
+    //endregion
 }

@@ -1,4 +1,4 @@
-package com.example.booking_system.ControllerService;
+package com.example.booking_system.ControllerService.Utilities;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;

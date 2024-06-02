@@ -1,10 +1,9 @@
-package com.example.booking_system.ControllerService;
+package com.example.booking_system.ControllerService.Utilities;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.util.Pair;
-
 import java.util.List;
 
 public class ValidationService {

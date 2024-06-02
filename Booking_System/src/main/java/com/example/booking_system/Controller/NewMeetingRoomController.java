@@ -1,14 +1,14 @@
 package com.example.booking_system.Controller;
 
-import com.example.booking_system.ControllerService.SceneManager;
+import com.example.booking_system.ControllerService.Managers.SceneManager;
 import com.example.booking_system.Model.Equipment;
 import com.example.booking_system.Model.MeetingRoom;
-import com.example.booking_system.ControllerService.Subject;
-import com.example.booking_system.Model.SystemManager;
+import com.example.booking_system.ControllerService.PubSub.Subject;
+import com.example.booking_system.ControllerService.Managers.SystemManager;
 import com.example.booking_system.Persistence.DAO.DAO;
 import com.example.booking_system.Persistence.DAO.EquipmentDAO_Impl;
-import com.example.booking_system.ControllerService.ClearingService;
-import com.example.booking_system.ControllerService.ValidationService;
+import com.example.booking_system.ControllerService.Utilities.ClearingService;
+import com.example.booking_system.ControllerService.Utilities.ValidationService;
 import com.example.booking_system.Persistence.DAO.MeetingRoomDAO_Impl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,12 +23,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class NewMeetingRoomController implements Initializable {
-
-    private final DAO<Equipment> equipmentDAO = new EquipmentDAO_Impl();
-    private final DAO<MeetingRoom> meetingRoomDAO = new MeetingRoomDAO_Impl();
-    private final ObservableList<Equipment> roomEquipment = FXCollections.observableArrayList();
-    private final List<Pair<TextField, Label>> requiredFields = new ArrayList<>();
-
+    //region FXML annotations
     @FXML
     private VBox VBox;
     @FXML
@@ -37,16 +32,33 @@ public class NewMeetingRoomController implements Initializable {
     private TextField txtRoomName, txtRoomCapacity;
     @FXML
     private Label lblNameError, lblCapacityError;
-
+    //endregion
+    //region instance variables
+    private final DAO<Equipment> equipmentDAO = new EquipmentDAO_Impl();
+    private final DAO<MeetingRoom> meetingRoomDAO = new MeetingRoomDAO_Impl();
+    private final ObservableList<Equipment> roomEquipment = FXCollections.observableArrayList();
+    private final List<Pair<TextField, Label>> requiredFields = new ArrayList<>();
+    //endregion
+    //region initializer methods
+    /**
+     * initializes the controller class
+     * @param url location
+     * @param resourceBundle resources
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         requiredFields.add(new Pair<>(txtRoomName, lblNameError));
         requiredFields.add(new Pair<>(txtRoomCapacity, lblCapacityError));
+
         List<Equipment> equipmentList = equipmentDAO.readAll();
         lwAllEquipment.getItems().addAll(equipmentList);
         lwRoomEquipment.setItems(roomEquipment);
     }
-
+    //endregion
+    //region handler methods
+    /**
+     * handles removing selected equipment from a meeting room
+     */
     @FXML
     private void onRemoveClick() {
         Equipment selectedEquipment = lwRoomEquipment.getSelectionModel().getSelectedItem();
@@ -54,6 +66,10 @@ public class NewMeetingRoomController implements Initializable {
             roomEquipment.remove(selectedEquipment);
         }
     }
+
+    /**
+     * handles adding selected equipment to a meeting room
+     */
     @FXML
     private void onAddClick() {
         Equipment selectedEquipment = lwAllEquipment.getSelectionModel().getSelectedItem();
@@ -62,6 +78,9 @@ public class NewMeetingRoomController implements Initializable {
         }
     }
 
+    /**
+     * handles the creation of a meeting room in system
+     */
     @FXML
     private void onCreateClick() {
         if (validateMeetingRoom()) {
@@ -84,24 +103,34 @@ public class NewMeetingRoomController implements Initializable {
             SystemManager.getInstance().notifySubscribers(Subject.Institution);
         }
     }
+
+    /**
+     * handles resetting view and closing of window
+     */
     @FXML
     private void onCancelClick() {
         SceneManager.closeScene(VBox.getScene());
     }
-
+    //endregion
+    //region view methods
+    /**
+     * clears view and set it to default state
+     */
+    private void resetAll() {
+        roomEquipment.clear();
+        lwAllEquipment.getSelectionModel().clearSelection();
+        ClearingService.clearFields(requiredFields);
+    }
+    //endregion
+    //region validation methods
+    /**
+     * validates if all necessary data is in order to create a meeting room
+     * @return true if validation pass, false if not
+     */
     private boolean validateMeetingRoom() {
         return ValidationService.validateFieldsEntered(requiredFields)
                 && ValidationService.validFieldLength(txtRoomName, 30, lblNameError)
                 && ValidationService.validateStringIsInt(txtRoomCapacity.getText());
     }
-
-    private void resetAll() {
-        if (!roomEquipment.isEmpty()) {
-            roomEquipment.clear();
-        }
-        if (lwAllEquipment.getSelectionModel().getSelectedItem() != null) {
-            lwAllEquipment.getSelectionModel().clearSelection();
-        }
-        ClearingService.clearFields(requiredFields);
-    }
+    //endregion
 }

@@ -1,9 +1,13 @@
 package com.example.booking_system.Controller;
 
-import com.example.booking_system.ControllerService.*;
+import com.example.booking_system.ControllerService.Managers.Controller;
+import com.example.booking_system.ControllerService.Managers.SceneManager;
+import com.example.booking_system.ControllerService.PubSub.Subscriber;
+import com.example.booking_system.ControllerService.Utilities.FormattingService;
+import com.example.booking_system.ControllerService.Utilities.TableViewService;
 import com.example.booking_system.Model.Institution;
-import com.example.booking_system.ControllerService.Subject;
-import com.example.booking_system.Model.SystemManager;
+import com.example.booking_system.ControllerService.PubSub.Subject;
+import com.example.booking_system.ControllerService.Managers.SystemManager;
 import com.example.booking_system.Model.User;
 import com.example.booking_system.Persistence.DAO.DAO;
 import com.example.booking_system.Persistence.DAO.InstitutionDAO_Impl;
@@ -105,7 +109,8 @@ public class InfoScreenController implements Initializable, Subscriber {
     }
     @FXML
     private void onAdministrationDropdownChoice(){
-        if(administration.getSelectionModel().getSelectedIndex() == 0) {SceneManager.openScene(Controller.Configuration,"Konfiguration");}
+        if(administration.getSelectionModel().getSelectedIndex() == 0) {
+            SceneManager.openScene(Controller.Configuration,"Konfiguration");}
         if(administration.getSelectionModel().getSelectedIndex() == 1){
             System.out.println("Åben statistik");
         }
@@ -196,7 +201,7 @@ public class InfoScreenController implements Initializable, Subscriber {
     private void onSearchInputChanged(){
         tableView.getColumns().clear();
         searchInputTextField.clear();
-        tableViewService.searchBookings(tableView,Date.valueOf(searchDate.getValue()),FormattingService.formatTime(timeComboBox.getValue()));
+        tableViewService.searchBookings(tableView,Date.valueOf(searchDate.getValue()), FormattingService.formatTime(timeComboBox.getValue()));
     }
     @FXML
     private void onSearchTextChanged(){

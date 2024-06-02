@@ -1,8 +1,11 @@
 package com.example.booking_system.Controller;
 
-import com.example.booking_system.ControllerService.ClearingService;
-import com.example.booking_system.ControllerService.SceneManager;
-import com.example.booking_system.ControllerService.ValidationService;
+import com.example.booking_system.ControllerService.Managers.SceneManager;
+import com.example.booking_system.ControllerService.Managers.SystemManager;
+import com.example.booking_system.ControllerService.PubSub.Subject;
+import com.example.booking_system.ControllerService.PubSub.Subscriber;
+import com.example.booking_system.ControllerService.Utilities.ClearingService;
+import com.example.booking_system.ControllerService.Utilities.ValidationService;
 import com.example.booking_system.Model.*;
 import com.example.booking_system.Persistence.DAO.DAO;
 import com.example.booking_system.Persistence.DAO.ErrorReportDAO_Impl;
@@ -16,10 +19,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class NewErrorReportController implements Initializable {
-
-    private final DAO<ErrorReport> errorReportDAO = new ErrorReportDAO_Impl();
-
+public class NewErrorReportController implements Initializable, Subscriber {
+    //region FXMl annotations
     @FXML
     private VBox VBox;
     @FXML
@@ -30,19 +31,46 @@ public class NewErrorReportController implements Initializable {
     private TextArea txtDescription;
     @FXML
     private Label lblDescriptionError;
-
+    //endregion
+    //region instance variables
+    private final DAO<ErrorReport> errorReportDAO = new ErrorReportDAO_Impl();
+    //endregion
+    //region initializer methods
+    /**
+     * initializes the controller class
+     * @param url location
+     * @param resourceBundle resources
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        SystemManager.getInstance().subscribe(Subject.Institution, this);
+
+        setupRoomList();
+
+        lwMeetingRooms.getSelectionModel().selectedItemProperty().addListener(observable -> {
+            MeetingRoom selectedRoom = lwMeetingRooms.getSelectionModel().getSelectedItem();
+            if (selectedRoom != null) {
+                List<Equipment> equipmentList = selectedRoom.getEquipmentList();
+                if (equipmentList != null) {
+                    lwRoomEquipment.getItems().setAll(equipmentList);
+                }
+            }
+        });
+    }
+
+    /**
+     * initializes the listView containing all institution meeting rooms
+     */
+    private void setupRoomList() {
+        lwMeetingRooms.getItems().clear();
         List<MeetingRoom> meetingRooms = SystemManager.getInstance().getInstitution().getMeetingRoomList();
         lwMeetingRooms.getItems().addAll(meetingRooms);
-
-        lwMeetingRooms.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                List<Equipment> equipmentList = newValue.getEquipmentList();
-                lwRoomEquipment.getItems().setAll(equipmentList);
-            }
-        }));
     }
+    //endregion
+    //region handler methods
+    /**
+     * handles the creation of an error report for a meeting room equipment issue
+     */
     @FXML
     void onCreateClick() {
         if (validateErrorReport()) {
@@ -54,15 +82,36 @@ public class NewErrorReportController implements Initializable {
             boolean insert = errorReportDAO.add(new ErrorReport(userID, roomID, equipmentID, description, false));
             if (insert) {
                 resetAll();
+                SystemManager.getInstance().updateManager();
+                SystemManager.getInstance().notifySubscribers(Subject.Institution);
             }
         }
     }
 
+    /**
+     * handles resetting view and closing of window
+     */
     @FXML
     void onCancelClick() {
+        resetAll();
         SceneManager.closeScene(VBox.getScene());
     }
-
+    //endregion
+    //region view methods
+    /**
+     * clears view and set it to default state
+     */
+    private void resetAll() {
+        lwMeetingRooms.getSelectionModel().clearSelection();
+        lwRoomEquipment.getItems().clear();
+        ClearingService.clearArea(txtDescription);
+    }
+    //endregion
+    //region validation methods
+    /**
+     * validates if all necessary data is in order to create an error report
+     * @return true if validation pass, false if not
+     */
     private boolean validateErrorReport() {
         return ValidationService.validateAreaEntered(txtDescription, lblDescriptionError)
                 && ValidationService.validAreaLength(txtDescription, 150, lblDescriptionError)
@@ -70,18 +119,15 @@ public class NewErrorReportController implements Initializable {
                 && lwRoomEquipment.getSelectionModel().getSelectedItem() != null
                 && SystemManager.getInstance().getUser() != null;
     }
-
-    private void resetAll() {
-        if (lwRoomEquipment.getSelectionModel().getSelectedItem() != null) {
-            lwRoomEquipment.getSelectionModel().clearSelection();
-        }
-        if (!lwRoomEquipment.getItems().isEmpty()) {
-            lwRoomEquipment.getItems().clear();
-        }
-        if (lwMeetingRooms.getSelectionModel().getSelectedItem() != null) {
-            lwMeetingRooms.getSelectionModel().clearSelection();
-        }
-        ClearingService.clearArea(txtDescription);
+    //endregion
+    //region subscriber method
+    /**
+     * updates the meeting room ListView to reflect the current institution's meeting rooms
+     */
+    @Override
+    public void onUpdate() {
+        setupRoomList();
     }
+    //endregion
 }
 

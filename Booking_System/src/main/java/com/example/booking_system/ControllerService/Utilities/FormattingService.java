@@ -1,4 +1,4 @@
-package com.example.booking_system.ControllerService;
+package com.example.booking_system.ControllerService.Utilities;
 
 import java.time.LocalTime;
 

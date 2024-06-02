@@ -11,6 +11,10 @@ module com.example.booking_system {
     exports com.example.booking_system;
     exports com.example.booking_system.Controller;
     opens com.example.booking_system.Controller to javafx.fxml;
-    exports com.example.booking_system.ControllerService;
-    opens com.example.booking_system.ControllerService to javafx.fxml;
+    exports com.example.booking_system.ControllerService.PubSub;
+    opens com.example.booking_system.ControllerService.PubSub to javafx.fxml;
+    exports com.example.booking_system.ControllerService.Managers;
+    opens com.example.booking_system.ControllerService.Managers to javafx.fxml;
+    exports com.example.booking_system.ControllerService.Utilities;
+    opens com.example.booking_system.ControllerService.Utilities to javafx.fxml;
 }
