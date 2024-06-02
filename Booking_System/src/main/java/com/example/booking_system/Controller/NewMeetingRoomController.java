@@ -1,6 +1,7 @@
 package com.example.booking_system.Controller;
 
 import com.example.booking_system.ControllerService.Managers.SceneManager;
+import com.example.booking_system.ControllerService.Utilities.AlertService;
 import com.example.booking_system.Model.Equipment;
 import com.example.booking_system.Model.MeetingRoom;
 import com.example.booking_system.ControllerService.PubSub.Subject;
@@ -97,10 +98,12 @@ public class NewMeetingRoomController implements Initializable {
             }
 
             if (insert) {
-                resetAll();
+                SystemManager.getInstance().updateManager();
+                SystemManager.getInstance().notifySubscribers(Subject.Institution);
+            } else {
+                AlertService.showAlert("Fejl", "nyt mødelokale kunne ikke oprettes");
             }
-            SystemManager.getInstance().updateManager();
-            SystemManager.getInstance().notifySubscribers(Subject.Institution);
+            resetAll();
         }
     }
 
