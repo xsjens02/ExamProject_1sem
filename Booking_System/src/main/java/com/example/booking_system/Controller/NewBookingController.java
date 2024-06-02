@@ -487,7 +487,7 @@ public class NewBookingController implements Initializable, Subscriber {
                 for (LocalDate date : chosenDates) {
                     searchDates.add(Date.valueOf(date));
                 }
-                meetingRoomList = meetingRoomDAO.readAllAvailableWithinDates(institutionID, searchDates, start, end);
+                meetingRoomList = meetingRoomDAO.readAllAvailableInPeriod(institutionID, searchDates, start, end);
             }
 
             if (meetingRoomList != null) {

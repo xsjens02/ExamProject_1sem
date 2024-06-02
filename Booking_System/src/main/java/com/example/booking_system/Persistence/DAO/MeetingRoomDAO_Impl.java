@@ -177,7 +177,7 @@ public class MeetingRoomDAO_Impl implements MeetingRoomDAO<MeetingRoom> {
      * @return all available meeting rooms
      */
     @Override
-    public List<MeetingRoom> readAllAvailableWithinDates(int institutionID, List<Date> searchDates, double startTime, double endTime) {
+    public List<MeetingRoom> readAllAvailableInPeriod(int institutionID, List<Date> searchDates, double startTime, double endTime) {
         List<MeetingRoom> availableRooms = new ArrayList<>();
         try {
             int amountDates = searchDates.size();
