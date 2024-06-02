@@ -1,7 +1,7 @@
 package com.example.booking_system.Controller;
 
 import com.example.booking_system.Model.Catering;
-import com.example.booking_system.Persistence.CateringDAO_Impl;
+import com.example.booking_system.Persistence.DAO.CateringDAO_Impl;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;

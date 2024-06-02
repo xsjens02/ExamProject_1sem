@@ -9,6 +9,5 @@ public enum Controller {
     NewCateringOption,
     NewErrorReport,
     NewMeetingRoom,
-    OpeningHoursAndTimeSlots,
-    UserBookings
+    OpeningHoursAndTimeSlots
 }

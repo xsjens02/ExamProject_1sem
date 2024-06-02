@@ -1,10 +1,14 @@
 package com.example.booking_system.Controller;
 
 import com.example.booking_system.ControllerService.SceneManager;
+import com.example.booking_system.ControllerService.Subject;
 import com.example.booking_system.ControllerService.Subscriber;
 import com.example.booking_system.ControllerService.ValidationService;
 import com.example.booking_system.Model.*;
-import com.example.booking_system.Persistence.*;
+import com.example.booking_system.Persistence.DAO.BookingDAO_Impl;
+import com.example.booking_system.Persistence.DAO.CateringDAO_Impl;
+import com.example.booking_system.Persistence.DAO.DepartmentDAO_Impl;
+import com.example.booking_system.Persistence.DAO.MeetingRoomDAO_Impl;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.Property;
 import javafx.collections.FXCollections;
@@ -55,8 +59,8 @@ public class NewBookingController implements Initializable, Subscriber {
     private ComboBox<String> comboStartTime, comboEndTime;
     //endregion
     //region instance variables
-    private final MeetingRoomDAO meetingRoomDAO = new MeetingRoomDAO_Impl();
-    private final BookingDAO bookingDAO = new BookingDAO_Impl();
+    private final MeetingRoomDAO_Impl meetingRoomDAO = new MeetingRoomDAO_Impl();
+    private final BookingDAO_Impl bookingDAO = new BookingDAO_Impl();
     private final List<Pair<TextField, Label>> requiredFields = new ArrayList<>();
     private final Map<Property<?>, InvalidationListener> listenerMap = new HashMap<>();
     //endregion
@@ -256,15 +260,15 @@ public class NewBookingController implements Initializable, Subscriber {
         comboCatering.getItems().clear();
         comboDepartment.getItems().clear();
 
-        DepartmentDAO departmentDAO = new DepartmentDAO_Impl();
+        DepartmentDAO_Impl departmentDAO = new DepartmentDAO_Impl();
         List<Department> departmentList = departmentDAO.readAllFromUser(SystemManager.getInstance().getUser());
 
         if (departmentList != null) {
             for (Department department : departmentList) {
                 comboDepartment.getItems().add(department);
             }
-            CateringDAO cateringDAO = new CateringDAO_Impl();
-            List<Catering> cateringList = cateringDAO.readAll(SystemManager.getInstance().getInstitution().getInstitutionID());
+            CateringDAO_Impl cateringDAO = new CateringDAO_Impl();
+            List<Catering> cateringList = cateringDAO.readAllFromInstitution(SystemManager.getInstance().getInstitution().getInstitutionID());
 
             if (cateringList != null) {
                 for (Catering catering : cateringList) {
@@ -466,14 +470,14 @@ public class NewBookingController implements Initializable, Subscriber {
 
             if (singleDate && dpBookingDate.getValue() != null) {
                 Date choosenDate = Date.valueOf(dpBookingDate.getValue());
-                meetingRoomList = meetingRoomDAO.readAllAvailableRooms(institutionID, choosenDate, start, end);
+                meetingRoomList = meetingRoomDAO.readAllAvailableOnDate(institutionID, choosenDate, start, end);
             } else if (!singleDate && lwChosenDates.getItems() != null) {
                 List<LocalDate> chosenDates = lwChosenDates.getItems();
                 List<Date> searchDates = new ArrayList<>();
                 for (LocalDate date : chosenDates) {
                     searchDates.add(Date.valueOf(date));
                 }
-                meetingRoomList = meetingRoomDAO.readAllAvailableRooms(institutionID, searchDates, start, end);
+                meetingRoomList = meetingRoomDAO.readAllAvailableWithinDates(institutionID, searchDates, start, end);
             }
 
             if (meetingRoomList != null) {

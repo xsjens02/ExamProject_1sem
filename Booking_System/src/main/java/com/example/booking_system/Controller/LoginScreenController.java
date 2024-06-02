@@ -1,7 +1,5 @@
 package com.example.booking_system.Controller;
 
-import com.example.booking_system.Model.SystemManager;
-import com.example.booking_system.Model.User;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

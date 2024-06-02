@@ -1,8 +1,9 @@
 package com.example.booking_system.Model;
 
+import com.example.booking_system.ControllerService.Subject;
 import com.example.booking_system.ControllerService.Subscriber;
-import com.example.booking_system.Persistence.DAO;
-import com.example.booking_system.Persistence.InstitutionDAO_Impl;
+import com.example.booking_system.Persistence.DAO.DAO;
+import com.example.booking_system.Persistence.DAO.InstitutionDAO_Impl;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -67,8 +68,6 @@ public class SystemManager {
         this.institution = null;
         notifySubscribers(Subject.Institution);
     }
-
-
 
     public void subscribe(Subject subject, Subscriber subscriber) {
         subscribeList.get(subject).add(subscriber);

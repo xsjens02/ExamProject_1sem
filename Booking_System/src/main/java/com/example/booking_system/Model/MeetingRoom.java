@@ -1,8 +1,7 @@
 package com.example.booking_system.Model;
 
-import com.example.booking_system.Persistence.BookingDAO;
-import com.example.booking_system.Persistence.BookingDAO_Impl;
 
+import com.example.booking_system.Persistence.DAO.BookingDAO_Impl;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +13,7 @@ public class MeetingRoom {
     private List<Equipment> equipmentList;
     private List<ErrorReport> unresolvedReports;
     private List<Booking> dailyBookings;
-    private final BookingDAO bookingDAO = new BookingDAO_Impl();
+    private final BookingDAO_Impl bookingDAO = new BookingDAO_Impl();
     private String roomDescription;
 
     public MeetingRoom(String roomName, int institutionID, int availableSeats) {
@@ -88,7 +87,7 @@ public class MeetingRoom {
     }
 
     public void setupDailyBookings(Date date) {
-        this.setDailyBookings(bookingDAO.readAllBookingsByDate(this.getRoomID(), date));
+        this.setDailyBookings(bookingDAO.readAllForRoomOnDate(this.getRoomID(), date));
     }
 
     public void setupDescription() {

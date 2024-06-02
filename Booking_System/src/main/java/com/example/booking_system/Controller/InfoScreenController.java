@@ -2,11 +2,11 @@ package com.example.booking_system.Controller;
 
 import com.example.booking_system.ControllerService.*;
 import com.example.booking_system.Model.Institution;
-import com.example.booking_system.Model.Subject;
+import com.example.booking_system.ControllerService.Subject;
 import com.example.booking_system.Model.SystemManager;
 import com.example.booking_system.Model.User;
-import com.example.booking_system.Persistence.DAO;
-import com.example.booking_system.Persistence.InstitutionDAO_Impl;
+import com.example.booking_system.Persistence.DAO.DAO;
+import com.example.booking_system.Persistence.DAO.InstitutionDAO_Impl;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class InfoScreenController implements Initializable, Subscriber {

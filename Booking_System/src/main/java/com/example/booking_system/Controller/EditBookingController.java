@@ -1,10 +1,11 @@
 package com.example.booking_system.Controller;
 
 import com.example.booking_system.ControllerService.SceneManager;
+import com.example.booking_system.ControllerService.Subject;
 import com.example.booking_system.ControllerService.Subscriber;
 import com.example.booking_system.ControllerService.ValidationService;
 import com.example.booking_system.Model.*;
-import com.example.booking_system.Persistence.*;
+import com.example.booking_system.Persistence.DAO.BookingDAO_Impl;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -27,20 +28,16 @@ public class EditBookingController implements Initializable, Subscriber {
     private TextField txtTitle, txtAmountGuest;
     @FXML
     private Label lblErrorTitle, lblErrorGuest;
-
-    private final BookingDAO bookingDAO = new BookingDAO_Impl();
+    private final BookingDAO_Impl bookingDAO = new BookingDAO_Impl();
     private final List<Pair<TextField, Label>> requiredFields = new ArrayList<>();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("test");
         SystemManager.getInstance().subscribe(Subject.User, this);
         SystemManager.getInstance().subscribe(Subject.Institution, this);
 
         requiredFields.add(new Pair<>(txtTitle, lblErrorTitle));
         requiredFields.add(new Pair<>(txtAmountGuest, lblErrorGuest));
-
-        setupBookingList();
 
         lwBookings.getSelectionModel().selectedItemProperty().addListener(observable -> {
             Booking selectedBooking = lwBookings.getSelectionModel().getSelectedItem();
@@ -65,6 +62,7 @@ public class EditBookingController implements Initializable, Subscriber {
             if (result) {
                 setupBookingList();
                 clearAll();
+                SystemManager.getInstance().notifySubscribers(Subject.Institution);
             }
         }
     }
@@ -84,6 +82,7 @@ public class EditBookingController implements Initializable, Subscriber {
             if (result) {
                 setupBookingList();
                 clearAll();
+                SystemManager.getInstance().notifySubscribers(Subject.Institution);
             }
         }
     }
