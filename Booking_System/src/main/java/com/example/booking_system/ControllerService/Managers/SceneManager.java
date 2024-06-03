@@ -23,6 +23,7 @@ public class SceneManager {
         loadScene(Controller.NewErrorReport, "/com/example/booking_system/NewErrorReport.fxml");
         loadScene(Controller.NewMeetingRoom, "/com/example/booking_system/NewMeetingRoom.fxml");
         loadScene(Controller.OpeningHoursAndTimeSlots, "/com/example/booking_system/OpeningHoursAndTimeSlotsWindow.fxml");
+        loadScene(Controller.Statistics, "/com/example/booking_system/statisticsWindow.fxml");
     }
 
     /**

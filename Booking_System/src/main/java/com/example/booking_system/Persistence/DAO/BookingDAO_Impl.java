@@ -171,7 +171,40 @@ public class BookingDAO_Impl implements BookingDAO<Booking> {
 
     @Override
     public List<Booking> readAllBookingsInPeriod(int roomId, Date startDate, Date endDate) {
-        return null;
+        List<Booking> bookingList = new ArrayList<>();
+        try{
+            String sql = "SELECT * FROM dbo.get_room_bookings(?,?,?)";
+            PreparedStatement getRoomBookings = connection.prepareStatement(sql);
+            getRoomBookings.setInt(1, roomId);
+            getRoomBookings.setDate(2, new java.sql.Date (startDate.getTime()));
+            getRoomBookings.setDate(3, new java.sql.Date (endDate.getTime()));
+
+            ResultSet allBookings = getRoomBookings.executeQuery();
+            while(allBookings.next()){
+                int bookingID = allBookings.getInt("fldBookingID");
+                String bookingTitle = allBookings.getString("fldBooking_Title");
+                int userID = allBookings.getInt("fldUserID");
+                String responsible = allBookings.getString("fldResponsible").trim();
+                boolean adhoc = allBookings.getBoolean("fldAdhoc");
+                Date date = allBookings.getDate("fldDate");
+                double startTime = allBookings.getDouble("fldStart_Time");
+                double endTime = allBookings.getDouble("fldEnd_Time");
+                double duration = allBookings.getDouble("fldDuration");
+                int menuID = allBookings.getInt("fldMenuID");
+                int departmentID = allBookings.getInt("fldDepartmentID");
+
+                Booking booking = new Booking(bookingID, bookingTitle, userID, responsible, roomId, adhoc, date, startTime, endTime, duration, menuID, departmentID);
+
+                if(!bookingList.contains(booking)){
+                    bookingList.add(booking);
+                }else {
+                    System.out.println("Dupe booking" + booking);
+                }
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        return bookingList;
     }
 
     /**
