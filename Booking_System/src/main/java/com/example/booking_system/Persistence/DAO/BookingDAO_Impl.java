@@ -1,7 +1,7 @@
 package com.example.booking_system.Persistence.DAO;
 
-import com.example.booking_system.Model.Booking;
-import com.example.booking_system.Model.User;
+import com.example.booking_system.Model.Models.Booking;
+import com.example.booking_system.Model.Models.User;
 import com.example.booking_system.Persistence.Database.dbConnection;
 
 import java.sql.*;

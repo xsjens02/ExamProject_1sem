@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="VBoxMain" alignment="CENTER_LEFT" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.EditBookingController">
+<VBox fx:id="VBoxMain" alignment="CENTER_LEFT" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.Controllers.EditBookingController">
    <children>
       <Label text="Bookinger:">
          <VBox.margin>

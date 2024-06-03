@@ -7,14 +7,13 @@ module com.example.booking_system {
     requires java.sql;
     requires java.desktop;
 
-    opens com.example.booking_system to javafx.fxml;
-    exports com.example.booking_system;
-    exports com.example.booking_system.Controller;
-    opens com.example.booking_system.Controller to javafx.fxml;
-    exports com.example.booking_system.ControllerService.PubSub;
-    opens com.example.booking_system.ControllerService.PubSub to javafx.fxml;
-    exports com.example.booking_system.ControllerService.Managers;
-    opens com.example.booking_system.ControllerService.Managers to javafx.fxml;
-    exports com.example.booking_system.ControllerService.Utilities;
-    opens com.example.booking_system.ControllerService.Utilities to javafx.fxml;
+
+    exports com.example.booking_system.Controller.ControllerService.PubSub;
+    opens com.example.booking_system.Controller.ControllerService.PubSub to javafx.fxml;
+    exports com.example.booking_system.Controller.ControllerService.Managers;
+    opens com.example.booking_system.Controller.ControllerService.Managers to javafx.fxml;
+    exports com.example.booking_system.Controller.Utilities;
+    opens com.example.booking_system.Controller.Utilities to javafx.fxml;
+    exports com.example.booking_system.Controller.Controllers;
+    opens com.example.booking_system.Controller.Controllers to javafx.fxml;
 }

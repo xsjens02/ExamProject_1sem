@@ -1,6 +1,6 @@
 package com.example.booking_system.Persistence.DAO;
 
-import com.example.booking_system.Model.ErrorReport;
+import com.example.booking_system.Model.Models.ErrorReport;
 import com.example.booking_system.Persistence.Database.dbConnection;
 
 import java.sql.*;

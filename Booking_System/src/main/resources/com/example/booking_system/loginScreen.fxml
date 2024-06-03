@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" spacing="10.0" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.LoginScreenController">
+<VBox alignment="CENTER" spacing="10.0" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.Controllers.LoginScreenController">
    <children>
       <Label text="Login" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
       <TextField fx:id="tfUsername" promptText="Brugernavn" maxWidth="200.0" />
