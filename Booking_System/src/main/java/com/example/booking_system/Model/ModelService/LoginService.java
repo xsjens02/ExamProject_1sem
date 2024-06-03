@@ -1,6 +1,6 @@
 package com.example.booking_system.Model.ModelService;
-import com.example.booking_system.Controller.ControllerService.PubSub.Subject;
-import com.example.booking_system.Controller.ControllerService.Managers.SystemManager;
+import com.example.booking_system.Controller.System.PubSub.Subject;
+import com.example.booking_system.Controller.System.Managers.SystemManager;
 import com.example.booking_system.Model.Models.User;
 import com.example.booking_system.Persistence.DAO.UserDAO_Impl;
 import com.example.booking_system.Persistence.Database.dbConnection;

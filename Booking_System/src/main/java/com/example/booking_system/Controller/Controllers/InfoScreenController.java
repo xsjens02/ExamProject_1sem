@@ -1,13 +1,13 @@
 package com.example.booking_system.Controller.Controllers;
 
-import com.example.booking_system.Controller.ControllerService.Managers.Controller;
-import com.example.booking_system.Controller.ControllerService.Managers.SceneManager;
-import com.example.booking_system.Controller.ControllerService.PubSub.Subscriber;
-import com.example.booking_system.Controller.Utilities.FormattingService;
-import com.example.booking_system.Controller.Utilities.TableViewService;
+import com.example.booking_system.Controller.System.Managers.Controller;
+import com.example.booking_system.Controller.System.Managers.SceneManager;
+import com.example.booking_system.Controller.System.PubSub.Subscriber;
+import com.example.booking_system.Controller.ControllerService.FormattingService;
+import com.example.booking_system.Controller.ControllerService.TableViewService;
 import com.example.booking_system.Model.Models.Institution;
-import com.example.booking_system.Controller.ControllerService.PubSub.Subject;
-import com.example.booking_system.Controller.ControllerService.Managers.SystemManager;
+import com.example.booking_system.Controller.System.PubSub.Subject;
+import com.example.booking_system.Controller.System.Managers.SystemManager;
 import com.example.booking_system.Model.Models.User;
 import com.example.booking_system.Persistence.DAO.DAO;
 import com.example.booking_system.Persistence.DAO.InstitutionDAO_Impl;
