@@ -31,6 +31,7 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 
 public class InfoScreenController implements Initializable, Subscriber {
@@ -202,39 +203,42 @@ public class InfoScreenController implements Initializable, Subscriber {
     private void onSearchInputChanged(){
         tableView.getColumns().clear();
         searchInputTextField.clear();
-        tableViewService.searchBookings(tableView,Date.valueOf(searchDate.getValue()), Time.valueOf(timeComboBox.getValue()));
+        tableViewService.searchBookings(tableView,Date.valueOf(searchDate.getValue()), Time.valueOf(timeComboBox.getValue()+":00"));
     }
     @FXML
     private void onSearchTextChanged(){
         tableView.getColumns().clear();
         tableViewService.searchBookingsByText(tableView, searchInputTextField.getText(),Date.valueOf(searchDate.getValue()));
     }
+
     private void populateTimeComboBox(){
         double inputTime = tableViewService.tempHour;
         timeComboBox.setValue(FormattingService.formatTime(inputTime));
         if(searchDate.getValue() != tableViewService.localDate){
             timeComboBox.getItems().clear();
-            double standardTime = SystemManager.getInstance().getInstitution().getOpenTime().getTime();
-            while(standardTime < SystemManager.getInstance().getInstitution().getCloseTime().getTime()){
+            double standardTime = (SystemManager.getInstance().getInstitution().getOpenTime().getHours())+(SystemManager.getInstance().getInstitution().getOpenTime().getMinutes()/60.0);
+            while(standardTime < ((SystemManager.getInstance().getInstitution().getCloseTime().getHours())+(SystemManager.getInstance().getInstitution().getCloseTime().getMinutes()/60.0))){
                 timeComboBox.getItems().add(FormattingService.formatTime(standardTime));
                 standardTime += SystemManager.getInstance().getInstitution().getBookingTimeInterval()/60.00;
             }
         }
         else {
-            if (inputTime > SystemManager.getInstance().getInstitution().getOpenTime().getTime()) {
-                while (inputTime < SystemManager.getInstance().getInstitution().getCloseTime().getTime()) {
+            if (inputTime > SystemManager.getInstance().getInstitution().getOpenTime().getHours()) {
+                while (inputTime < SystemManager.getInstance().getInstitution().getCloseTime().getHours()) {
                     timeComboBox.getItems().add(FormattingService.formatTime(inputTime));
                     inputTime += SystemManager.getInstance().getInstitution().getBookingTimeInterval()/60.00;
                 }
             } else {
-                inputTime = SystemManager.getInstance().getInstitution().getOpenTime().getTime();
-                while (inputTime < SystemManager.getInstance().getInstitution().getCloseTime().getTime()) {
+                inputTime = SystemManager.getInstance().getInstitution().getOpenTime().getHours();
+                while (inputTime < SystemManager.getInstance().getInstitution().getCloseTime().getHours()) {
                     timeComboBox.getItems().add(FormattingService.formatTime(inputTime));
                     inputTime += SystemManager.getInstance().getInstitution().getBookingTimeInterval()/60.00;
                 }
             }
         }
     }
+
+
     @FXML
     private void onResetSearchButtonClick(){
         searchDate.setValue(tableViewService.localDate);

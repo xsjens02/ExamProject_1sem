@@ -27,7 +27,6 @@ public class TableViewService {
     public LocalTime localTime = LocalTime.now();
     public int tempHour = localTime.getHour();
     public double tempMinute = localTime.getMinute();
-    //public double tempTime = tempHour + (tempMinute / 60);
     public Time tempTime = Time.valueOf(localTime);
 
     public TableView populateTableView(TableView tableView) {
@@ -175,8 +174,8 @@ public class TableViewService {
                 meetingRoom.getRoomName(),
                 "Ledig",
                 "Ingen bookinger resten af dagen",
-                Time.valueOf(""),
-                Time.valueOf(""),
+                Time.valueOf("00:00:00"),
+                Time.valueOf("00:00:00"),
                 "",
                 "",
                 determineUnresolvedError(meetingRoom)
