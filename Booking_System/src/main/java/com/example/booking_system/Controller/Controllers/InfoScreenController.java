@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
@@ -201,7 +202,7 @@ public class InfoScreenController implements Initializable, Subscriber {
     private void onSearchInputChanged(){
         tableView.getColumns().clear();
         searchInputTextField.clear();
-        tableViewService.searchBookings(tableView,Date.valueOf(searchDate.getValue()), FormattingService.formatTime(timeComboBox.getValue()));
+        tableViewService.searchBookings(tableView,Date.valueOf(searchDate.getValue()), Time.valueOf(timeComboBox.getValue()));
     }
     @FXML
     private void onSearchTextChanged(){
@@ -213,21 +214,21 @@ public class InfoScreenController implements Initializable, Subscriber {
         timeComboBox.setValue(FormattingService.formatTime(inputTime));
         if(searchDate.getValue() != tableViewService.localDate){
             timeComboBox.getItems().clear();
-            double standardTime = SystemManager.getInstance().getInstitution().getOpenTime();
-            while(standardTime < tableViewService.institution.getCloseTime()){
+            double standardTime = SystemManager.getInstance().getInstitution().getOpenTime().getTime();
+            while(standardTime < SystemManager.getInstance().getInstitution().getCloseTime().getTime()){
                 timeComboBox.getItems().add(FormattingService.formatTime(standardTime));
                 standardTime += SystemManager.getInstance().getInstitution().getBookingTimeInterval()/60.00;
             }
         }
         else {
-            if (inputTime > tableViewService.institution.getOpenTime()) {
-                while (inputTime < tableViewService.institution.getCloseTime()) {
+            if (inputTime > SystemManager.getInstance().getInstitution().getOpenTime().getTime()) {
+                while (inputTime < SystemManager.getInstance().getInstitution().getCloseTime().getTime()) {
                     timeComboBox.getItems().add(FormattingService.formatTime(inputTime));
                     inputTime += SystemManager.getInstance().getInstitution().getBookingTimeInterval()/60.00;
                 }
             } else {
-                inputTime = tableViewService.institution.getOpenTime();
-                while (inputTime < tableViewService.institution.getCloseTime()) {
+                inputTime = SystemManager.getInstance().getInstitution().getOpenTime().getTime();
+                while (inputTime < SystemManager.getInstance().getInstitution().getCloseTime().getTime()) {
                     timeComboBox.getItems().add(FormattingService.formatTime(inputTime));
                     inputTime += SystemManager.getInstance().getInstitution().getBookingTimeInterval()/60.00;
                 }
