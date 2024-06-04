@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.util.Callback;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -26,7 +27,8 @@ public class TableViewService {
     public LocalTime localTime = LocalTime.now();
     public int tempHour = localTime.getHour();
     public double tempMinute = localTime.getMinute();
-    public double tempTime = tempHour + (tempMinute / 60);
+    //public double tempTime = tempHour + (tempMinute / 60);
+    public Time tempTime = Time.valueOf(localTime);
 
     public TableView populateTableView(TableView tableView) {
 
@@ -44,9 +46,9 @@ public class TableViewService {
         TableColumn<MeetingRoomBooking, String> nextCurrent = new TableColumn<>("Næste/Nuværende");
         nextCurrent.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNextCurrent()));
         TableColumn<MeetingRoomBooking, String> startTime = new TableColumn<>("Start tid");
-        startTime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStartTime()));
+        startTime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStartTime().toString()));
         TableColumn<MeetingRoomBooking, String> endTime = new TableColumn<>("Slut tid");
-        endTime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEndTime()));
+        endTime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEndTime().toString()));
         TableColumn<MeetingRoomBooking, String> bookingTitle = new TableColumn<>("Møde titel");
         bookingTitle.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBookingTitle()));
         TableColumn<MeetingRoomBooking, String> responsiblePerson = new TableColumn<>("Ansvarlig");
@@ -107,8 +109,8 @@ public class TableViewService {
                             tempMeetingRoom.getRoomName(),
                             determineAvailability(nextBooking, tempTime),
                             determineNextCurrent(nextBooking, tempTime),
-                            FormattingService.formatTime(nextBooking.getStartTime()),
-                            FormattingService.formatTime(nextBooking.getEndTime()),
+                            nextBooking.getStartTime(),
+                            nextBooking.getEndTime(),
                             nextBooking.getBookingTitle(),
                             nextBooking.getResponsible(),
                             determineUnresolvedError(tempMeetingRoom)));
@@ -124,46 +126,46 @@ public class TableViewService {
         return allMeetingRoomAndBookings;
     }
 
-    private Booking getNextBooking(List<Booking> bookingList, double tempTime) {
+    private Booking getNextBooking(List<Booking> bookingList, Time tempTime) {
 
         for (int i = 0; i < bookingList.size(); i++) {
-            if (bookingList.get(i).getStartTime() <= tempTime && bookingList.get(i).getEndTime() > tempTime) {
+            if (bookingList.get(i).getStartTime().before(tempTime) && bookingList.get(i).getEndTime().after(tempTime)) {
                 return bookingList.get(i);
             }
-            else if(bookingList.get(i).getStartTime()>tempTime && bookingList.get(i).getEndTime()>tempTime){
+            else if(bookingList.get(i).getStartTime().after(tempTime) && bookingList.get(i).getEndTime().after(tempTime)){
                 return bookingList.get(i);
             }
         }
         return null;
     }
-    private MeetingRoomBooking addMeetingRoomBooking (MeetingRoom meetingRoom, Booking booking, double timeInput){
+    private MeetingRoomBooking addMeetingRoomBooking (MeetingRoom meetingRoom, Booking booking, Time timeInput){
         return new MeetingRoomBooking(
                 meetingRoom.getRoomName(),
                 determineAvailability(booking, timeInput),
                 determineNextCurrent(booking, timeInput),
-                FormattingService.formatTime(booking.getStartTime()),
-                FormattingService.formatTime(booking.getEndTime()),
+                booking.getStartTime(),
+                booking.getEndTime(),
                 booking.getBookingTitle(),
                 booking.getResponsible(),
                 determineUnresolvedError(meetingRoom));
     }
-    private String determineAvailability(Booking booking, double tempTime){
+    private String determineAvailability(Booking booking, Time tempTime){
         if(booking.getDate().before(Date.valueOf(localDate))){
             return "";
         }
-        else if(booking.getStartTime()>tempTime || booking.getEndTime()<tempTime){
+        else if(booking.getStartTime().before(tempTime) || booking.getEndTime().after(tempTime)){
             return "Ledig";
         }
         return "Optaget";
     }
-    private String determineNextCurrent(Booking booking, double tempTime){
+    private String determineNextCurrent(Booking booking, Time tempTime){
         if(booking.getDate().before(Date.valueOf(localDate))){
             return "Afholdt";
         }
-        else if(booking.getStartTime()>tempTime){
+        else if(booking.getStartTime().after(tempTime)){
             return "Kommende: ";
         }
-        else if(booking.getStartTime()<tempTime && booking.getEndTime()>tempTime) {
+        else if(booking.getStartTime().before(tempTime) && booking.getEndTime().after(tempTime)) {
             return "Igangværende: ";
         }
         return "Kommende";
@@ -173,8 +175,8 @@ public class TableViewService {
                 meetingRoom.getRoomName(),
                 "Ledig",
                 "Ingen bookinger resten af dagen",
-                "",
-                "",
+                Time.valueOf(""),
+                Time.valueOf(""),
                 "",
                 "",
                 determineUnresolvedError(meetingRoom)
@@ -186,7 +188,7 @@ public class TableViewService {
         }
         return "";
     }
-    public TableView searchBookings(TableView tableView, Date dateInput, double timeInput){
+    public TableView searchBookings(TableView tableView, Date dateInput, Time timeInput){
         createTableColumns(tableView);
         tableView.setItems(getAllMeetingRoomBookingSearchResults(dateInput, timeInput));
 
@@ -198,7 +200,7 @@ public class TableViewService {
 
         return tableView;
     }
-    public ObservableList<MeetingRoomBooking> getAllMeetingRoomBookingSearchResults(Date dateInput, double timeInput){
+    public ObservableList<MeetingRoomBooking> getAllMeetingRoomBookingSearchResults(Date dateInput, Time timeInput){
         ObservableList<MeetingRoomBooking> allMeetingRoomBookingSearchResults = FXCollections.observableArrayList();
         for (int i = 0; i < institution.getMeetingRoomList().size(); i++) {
 

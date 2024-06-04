@@ -1,17 +1,19 @@
 package com.example.booking_system.Model.Models;
 
+import java.sql.Time;
+
 public class MeetingRoomBooking {
 
     private String roomName;
     private String availability;
     private String nextCurrent;
-    private String startTime;
-    private String endTime;
+    private Time startTime;
+    private Time endTime;
     private String bookingTitle;
     private String responsiblePerson;
     private String unresolvedError;
 
-    public MeetingRoomBooking(String roomName, String availability, String nextCurrent, String startTime, String endTime, String bookingTitle, String responsiblePerson, String unresolvedError) {
+    public MeetingRoomBooking(String roomName, String availability, String nextCurrent, Time startTime, Time endTime, String bookingTitle, String responsiblePerson, String unresolvedError) {
         this.roomName = roomName;
         this.availability = availability;
         this.nextCurrent = nextCurrent;
@@ -44,19 +46,19 @@ public class MeetingRoomBooking {
     public void setNextCurrent(String nextCurrent) {
         this.nextCurrent = nextCurrent;
     }
-    public String getStartTime() {
+    public Time getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(Time startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public Time getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(Time endTime) {
         this.endTime = endTime;
     }
 
