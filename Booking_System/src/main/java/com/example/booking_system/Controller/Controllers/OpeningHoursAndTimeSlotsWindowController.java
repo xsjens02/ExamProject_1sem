@@ -10,6 +10,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class OpeningHoursAndTimeSlotsWindowController implements Subscriber {
 
@@ -30,18 +33,29 @@ public class OpeningHoursAndTimeSlotsWindowController implements Subscriber {
 
     @FXML
     private void handleApply() {
-        String startTime = startTimeField.getText();
-        String endTime = endTimeField.getText();
+        String open = startTimeField.getText();
+        String close = endTimeField.getText();
         String interval = intervalField.getText();
 
         // Validation and applying logic
-        if (validateTimeFormat(startTime) && validateTimeFormat(endTime) && validateInterval(interval)) {
+        if (validateTimeFormat(open) && validateTimeFormat(close) && validateInterval(interval)) {
+            LocalTime startLocalTime = LocalTime.parse(open, DateTimeFormatter.ofPattern("HH:mm"));
+            LocalTime endLocalTime = LocalTime.parse(close, DateTimeFormatter.ofPattern("HH:mm"));
+
+            Time openTime = Time.valueOf(startLocalTime);
+            Time closeTime = Time.valueOf(endLocalTime);
+
+            SystemManager.getInstance().getInstitution().setOpenTime(openTime);
+            SystemManager.getInstance().getInstitution().setCloseTime(closeTime);
+
             // If valid, show success alert
             boolean result = institutionDAO.update(SystemManager.getInstance().getInstitution());
             if (result) {
                 SystemManager.getInstance().updateManager();
                 SystemManager.getInstance().notifySubscribers(Subject.Institution);
                 showAlert("Success", "Registrering af ny tid succesfuldt");
+            } else {
+                showAlert("Error", "Fejl i registrering af ny tid");
             }
         } else {
             // If invalid, show error alert
@@ -61,8 +75,8 @@ public class OpeningHoursAndTimeSlotsWindowController implements Subscriber {
         Time closeTime = SystemManager.getInstance().getInstitution().getCloseTime();
         int interval = SystemManager.getInstance().getInstitution().getBookingTimeInterval();
 
-        startTimeField.setText(openTime.toString());
-        endTimeField.setText(closeTime.toString());
+        startTimeField.setText(openTime.toLocalTime().toString());
+        endTimeField.setText(closeTime.toLocalTime().toString());
         intervalField.setText(String.valueOf(interval));
     }
 

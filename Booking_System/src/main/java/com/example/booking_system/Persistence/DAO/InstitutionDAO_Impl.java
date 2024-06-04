@@ -115,8 +115,23 @@ public class InstitutionDAO_Impl implements DAO<Institution> {
         }
     }
 
+    /**
+     * update a institution in database
+     * @param entity updated institution
+     * @return true if updated, false if not
+     */
     @Override
     public boolean update(Institution entity) {
-        return false;
+        try {
+            CallableStatement cs = connection.prepareCall("{call update_institution(?, ?, ?)}");
+            cs.setInt(1, entity.getInstitutionID());
+            cs.setTime(2, entity.getOpenTime());
+            cs.setTime(3, entity.getCloseTime());
+
+            int result = cs.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
     }
 }
