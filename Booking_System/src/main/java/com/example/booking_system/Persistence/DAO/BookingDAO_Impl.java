@@ -30,9 +30,9 @@ public class BookingDAO_Impl implements BookingDAO<Booking> {
             cs.setInt(4, entity.getRoomID());
             cs.setBoolean(5, entity.isAdhoc());
             cs.setDate(6, (java.sql.Date) entity.getDate());
-            cs.setDouble(7, entity.getStartTime());
-            cs.setDouble(8, entity.getEndTime());
-            cs.setDouble(9, entity.getDuration());
+            cs.setTime(7, entity.getStartTime());
+            cs.setTime(8, entity.getEndTime());
+            cs.setInt(9, entity.getDuration());
             cs.setInt(10, entity.getAttendance());
             cs.setInt(11, entity.getMenuID());
             cs.setInt(12, entity.getDepartmentID());
@@ -61,9 +61,9 @@ public class BookingDAO_Impl implements BookingDAO<Booking> {
                 int roomID = rs.getInt(5);
                 boolean adhoc = rs.getBoolean(6);
                 Date date = rs.getDate(7);
-                double startTime = rs.getDouble(8);
-                double endTime = rs.getDouble(9);
-                double duration = rs.getDouble(10);
+                Time startTime = rs.getTime(8);
+                Time endTime = rs.getTime(9);
+                int duration = rs.getInt(10);
                 int attendance = rs.getInt(11);
                 int menuID = rs.getInt(12);
                 int departmentID = rs.getInt(13);
@@ -84,7 +84,7 @@ public class BookingDAO_Impl implements BookingDAO<Booking> {
     public List<Booking> readAll() {
         List<Booking> bookingList = new ArrayList<>();
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tblEquipment");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tblBooking");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int bookingID = rs.getInt(1);
@@ -94,9 +94,9 @@ public class BookingDAO_Impl implements BookingDAO<Booking> {
                 int roomID = rs.getInt(5);
                 boolean adhoc = rs.getBoolean(6);
                 Date date = rs.getDate(7);
-                double startTime = rs.getDouble(8);
-                double endTime = rs.getDouble(9);
-                double duration = rs.getDouble(10);
+                Time startTime = rs.getTime(8);
+                Time endTime = rs.getTime(9);
+                int duration = rs.getInt(10);
                 int attendance = rs.getInt(11);
                 int menuID = rs.getInt(12);
                 int departmentID = rs.getInt(13);
@@ -155,9 +155,9 @@ public class BookingDAO_Impl implements BookingDAO<Booking> {
                 int userID = rs.getInt(3);
                 String responsible = rs.getString(4).trim();
                 boolean adhoc = rs.getBoolean(6);
-                double startTime = rs.getDouble(8);
-                double endTime = rs.getDouble(9);
-                double duration = rs.getDouble(10);
+                Time startTime = rs.getTime(8);
+                Time endTime = rs.getTime(9);
+                int duration = rs.getInt(10);
                 int attendance = rs.getInt(11);
                 int menuID = rs.getInt(12);
                 int departmentID = rs.getInt(13);
@@ -191,13 +191,14 @@ public class BookingDAO_Impl implements BookingDAO<Booking> {
                 String responsible = allBookings.getString("fldResponsible").trim();
                 boolean adhoc = allBookings.getBoolean("fldAdhoc");
                 Date date = allBookings.getDate("fldDate");
-                double startTime = allBookings.getDouble("fldStart_Time");
-                double endTime = allBookings.getDouble("fldEnd_Time");
-                double duration = allBookings.getDouble("fldDuration");
+                Time startTime = allBookings.getTime("fldStart_Time");
+                Time endTime = allBookings.getTime("fldEnd_Time");
+                int duration = allBookings.getInt("fldDuration");
+                int attendance = allBookings.getInt("fldAttendance");
                 int menuID = allBookings.getInt("fldMenuID");
                 int departmentID = allBookings.getInt("fldDepartmentID");
 
-                Booking booking = new Booking(bookingID, bookingTitle, userID, responsible, roomId, adhoc, date, startTime, endTime, duration, menuID, departmentID);
+                Booking booking = new Booking(bookingID, bookingTitle, userID, responsible, roomId, adhoc, date, startTime, endTime, duration, attendance, menuID, departmentID);
 
                 if(!bookingList.contains(booking)){
                     bookingList.add(booking);

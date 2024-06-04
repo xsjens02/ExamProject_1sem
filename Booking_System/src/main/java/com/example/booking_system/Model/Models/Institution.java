@@ -1,16 +1,17 @@
 package com.example.booking_system.Model.Models;
 
+import java.sql.Time;
 import java.util.List;
 
 public class Institution {
     private int institutionID;
     private String institutionName;
-    private double openTime;
-    private double closeTime;
+    private Time openTime;
+    private Time closeTime;
     private int bookingTimeInterval;
     private List<MeetingRoom> meetingRoomList;
 
-    public Institution(int institutionID, String institutionName, double openTime, double closeTime, int bookingTimeInterval) {
+    public Institution(int institutionID, String institutionName, Time openTime, Time closeTime, int bookingTimeInterval) {
         this.institutionID = institutionID;
         this.institutionName = institutionName;
         this.openTime = openTime;
@@ -18,7 +19,7 @@ public class Institution {
         this.bookingTimeInterval = bookingTimeInterval;
     }
 
-    public Institution(int institutionID, String institutionName, double openTime, double closeTime, int bookingTimeInterval, List<MeetingRoom> meetingRoomList) {
+    public Institution(int institutionID, String institutionName, Time openTime, Time closeTime, int bookingTimeInterval, List<MeetingRoom> meetingRoomList) {
         this.institutionID = institutionID;
         this.institutionName = institutionName;
         this.openTime = openTime;
@@ -33,10 +34,10 @@ public class Institution {
     public String getInstitutionName() {
         return institutionName;
     }
-    public double getOpenTime() {
+    public Time getOpenTime() {
         return openTime;
     }
-    public double getCloseTime() {
+    public Time getCloseTime() {
         return closeTime;
     }
     public int getBookingTimeInterval() {
@@ -52,10 +53,10 @@ public class Institution {
     public void setInstitutionName(String institutionName) {
         this.institutionName = institutionName;
     }
-    public void setOpenTime(double openTime) {
+    public void setOpenTime(Time openTime) {
         this.openTime = openTime;
     }
-    public void setCloseTime(double closeTime) {
+    public void setCloseTime(Time closeTime) {
         this.closeTime = closeTime;
     }
     public void setBookingTimeInterval(int bookingTimeInterval) {

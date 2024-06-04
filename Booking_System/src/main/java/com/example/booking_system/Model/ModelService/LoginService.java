@@ -13,8 +13,6 @@ public class LoginService {
 
     private final UserDAO_Impl userDAO = new UserDAO_Impl();
 
-    //private final LoginScreenController loginScreenController = new LoginScreenController();
-
     public LoginService(){
         connection = dbConnection.getInstance().getConnection();
     }

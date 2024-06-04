@@ -25,8 +25,8 @@ public class InstitutionDAO_Impl implements DAO<Institution> {
         try {
             CallableStatement cs = connection.prepareCall("{call add_institution(?, ?, ?, ?)}");
             cs.setString(1, entity.getInstitutionName());
-            cs.setDouble(2, entity.getOpenTime());
-            cs.setDouble(3, entity.getCloseTime());
+            cs.setTime(2, entity.getOpenTime());
+            cs.setTime(3, entity.getCloseTime());
             cs.setInt(4, entity.getBookingTimeInterval());
 
             int result = cs.executeUpdate();
@@ -49,8 +49,8 @@ public class InstitutionDAO_Impl implements DAO<Institution> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String institutionName = rs.getString(2).trim();
-                double openTime = rs.getDouble(3);
-                double closeTime = rs.getDouble(4);
+                Time openTime = rs.getTime(3);
+                Time closeTime = rs.getTime(4);
                 int bookingTimeInterval = rs.getInt(5);
 
                 List<MeetingRoom> institutionRooms = meetingRoomDAO.readAllFromInstitution(id);
@@ -79,8 +79,8 @@ public class InstitutionDAO_Impl implements DAO<Institution> {
             while (rs.next()) {
                 int institutionID = rs.getInt(1);
                 String institutionName = rs.getString(2).trim();
-                double openTime = rs.getDouble(3);
-                double closeTime = rs.getDouble(4);
+                Time openTime = rs.getTime(3);
+                Time closeTime = rs.getTime(4);
                 int bookingTimeInterval = rs.getInt(5);
 
                 List<MeetingRoom> institutionRooms = meetingRoomDAO.readAllFromInstitution(institutionID);

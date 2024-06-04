@@ -1,5 +1,6 @@
 package com.example.booking_system.Model.Models;
 
+import java.sql.Time;
 import java.util.Date;
 
 public class Booking {
@@ -10,14 +11,14 @@ public class Booking {
     private int roomID;
     private boolean adhoc;
     private Date date;
-    private double startTime;
-    private double endTime;
-    private double duration;
+    private Time startTime;
+    private Time endTime;
+    private int duration;
     private int attendance;
     private int menuID;
     private int departmentID;
 
-    public Booking(String bookingTitle, int userID, String responsible, int roomID, boolean adhoc, Date date, double startTime, double endTime, double duration, int menuID, int departmentID) {
+    public Booking(String bookingTitle, int userID, String responsible, int roomID, boolean adhoc, Date date, Time startTime, Time endTime, int duration, int menuID, int departmentID) {
         this.bookingTitle = bookingTitle;
         this.userID = userID;
         this.responsible = responsible;
@@ -31,7 +32,7 @@ public class Booking {
         this.departmentID = departmentID;
     }
 
-    public Booking(int bookingID, String bookingTitle, int userID, String responsible, int roomID, boolean adhoc, Date date, double startTime, double endTime, double duration, int menuID, int departmentID) {
+    public Booking(int bookingID, String bookingTitle, int userID, String responsible, int roomID, boolean adhoc, Date date, Time startTime, Time endTime, int duration, int menuID, int departmentID) {
         this.bookingID = bookingID;
         this.bookingTitle = bookingTitle;
         this.userID = userID;
@@ -46,7 +47,7 @@ public class Booking {
         this.departmentID = departmentID;
     }
 
-    public Booking(String bookingTitle, int userID, String responsible, int roomID, boolean adhoc, Date date, double startTime, double endTime, double duration, int attendance, int menuID, int departmentID) {
+    public Booking(String bookingTitle, int userID, String responsible, int roomID, boolean adhoc, Date date, Time startTime, Time endTime, int duration, int attendance, int menuID, int departmentID) {
         this.bookingTitle = bookingTitle;
         this.userID = userID;
         this.responsible = responsible;
@@ -61,7 +62,7 @@ public class Booking {
         this.departmentID = departmentID;
     }
 
-    public Booking(int bookingID, String bookingTitle, int userID, String responsible, int roomID, boolean adhoc, Date date, double startTime, double endTime, double duration, int attendance, int menuID, int departmentID) {
+    public Booking(int bookingID, String bookingTitle, int userID, String responsible, int roomID, boolean adhoc, Date date, Time startTime, Time endTime, int duration, int attendance, int menuID, int departmentID) {
         this.bookingID = bookingID;
         this.bookingTitle = bookingTitle;
         this.userID = userID;
@@ -101,13 +102,13 @@ public class Booking {
     public Date getDate() {
         return date;
     }
-    public double getStartTime() {
+    public Time getStartTime() {
         return startTime;
     }
-    public double getEndTime() {
+    public Time getEndTime() {
         return endTime;
     }
-    public double getDuration() {
+    public int getDuration() {
         return duration;
     }
     public int getMenuID() {
@@ -141,13 +142,13 @@ public class Booking {
     public void setDate(Date date) {
         this.date = date;
     }
-    public void setStartTime(double startTime) {
+    public void setStartTime(Time startTime) {
         this.startTime = startTime;
     }
-    public void setEndTime(double endTime) {
+    public void setEndTime(Time endTime) {
         this.endTime = endTime;
     }
-    public void setDuration(double duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
     public void setMenuID(int menuID) {

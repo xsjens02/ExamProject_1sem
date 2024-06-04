@@ -29,6 +29,8 @@ import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 import java.net.URL;
 import java.sql.Date;
+import java.sql.Time;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -146,17 +148,12 @@ public class NewBookingController implements Initializable, Subscriber {
         comboStartTime.getItems().clear();
         comboEndTime.getItems().clear();
 
-        double openTime = SystemManager.getInstance().getInstitution().getOpenTime();
-        double closeTime = SystemManager.getInstance().getInstitution().getCloseTime();
+        Time openTime = SystemManager.getInstance().getInstitution().getOpenTime();
+        Time closeTime = SystemManager.getInstance().getInstitution().getCloseTime();
         int minuteInterval = SystemManager.getInstance().getInstitution().getBookingTimeInterval();
 
-        int openHour = (int) openTime;
-        int openMinute = (int) ((openTime - openHour) * 60);
-        int closeHour = (int) closeTime;
-        int closeMinute = (int) ((closeTime - closeHour) * 60);
-
-        LocalTime startTime = LocalTime.of(openHour, openMinute);
-        LocalTime endTime = LocalTime.of(closeHour, closeMinute);
+        LocalTime startTime = openTime.toLocalTime();
+        LocalTime endTime = closeTime.toLocalTime();
 
         while (!startTime.isAfter(endTime)) {
             String formattedTime = startTime.toString();
@@ -320,11 +317,12 @@ public class NewBookingController implements Initializable, Subscriber {
             String responsible = currentUser.getFirstName();
             int roomID = lwMeetingRooms.getSelectionModel().getSelectedItem().getRoomID();
             boolean adHoc = dpBookingDate.getValue().equals(LocalDate.now());
-            LocalTime startTime = LocalTime.parse(comboStartTime.getValue());
-            LocalTime endTime = LocalTime.parse(comboEndTime.getValue());
-            double start = convertToDouble(startTime);
-            double end = convertToDouble(endTime);
-            double duration = end - start;
+            LocalTime start = LocalTime.parse(comboStartTime.getValue());
+            LocalTime end = LocalTime.parse(comboEndTime.getValue());
+            Time startTime = Time.valueOf(start);
+            Time endTime = Time.valueOf(end);
+            Duration duration = Duration.between(start, end);
+            int durationMinutes = (int) duration.toMinutes();
             int attendance = Integer.parseInt(txtAmountGuest.getText());
 
             boolean result = false;
@@ -339,14 +337,14 @@ public class NewBookingController implements Initializable, Subscriber {
 
                     for (LocalDate chosenDate : dates) {
                         sqlDate = Date.valueOf(chosenDate);
-                        result = bookingDAO.add(new Booking(bookingTitle, userID, responsible, roomID, adHoc, sqlDate, start, end, duration, attendance, menuID, departmentID));
+                        result = bookingDAO.add(new Booking(bookingTitle, userID, responsible, roomID, adHoc, sqlDate, startTime, endTime, durationMinutes, attendance, menuID, departmentID));
                     }
                 }
             } else {
                 int menuID = validateCatering() ? comboCatering.getSelectionModel().getSelectedItem().getMenuID() : 0;
                 int departmentID = validateCatering() ? comboDepartment.getSelectionModel().getSelectedItem().getDepartmentID() : 0;
 
-                result = bookingDAO.add(new Booking(bookingTitle, userID, responsible, roomID, adHoc, sqlDate, start, end, duration, attendance, menuID, departmentID));
+                result = bookingDAO.add(new Booking(bookingTitle, userID, responsible, roomID, adHoc, sqlDate, startTime, endTime, durationMinutes, attendance, menuID, departmentID));
             }
 
             if (result) {
