@@ -84,8 +84,6 @@ public class InfoScreenController implements Initializable, Subscriber {
         populateTimeComboBox();
         updateUI();
         searchDate.setValue(LocalDate.now());
-
-
     }
     private void adjustWindowSize(Rectangle2D primaryScreenBounds){
         leftHBox.minWidthProperty().bind(mainHBox.widthProperty().divide(2));
