@@ -17,7 +17,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -52,7 +54,7 @@ public class EditBookingController implements Initializable, Subscriber {
             Booking selectedBooking = lwBookings.getSelectionModel().getSelectedItem();
             if (selectedBooking != null) {
                 txtTitle.setText(selectedBooking.getBookingTitle());
-                txtAmountGuest.setText(String.valueOf(selectedBooking.getAmountGuest()));
+                txtAmountGuest.setText(String.valueOf(selectedBooking.getAttendance()));
             }
         });
 
@@ -68,7 +70,12 @@ public class EditBookingController implements Initializable, Subscriber {
             lwBookings.getItems().clear();
             List<Booking> bookingList = bookingDAO.readAllFromUser(currentUser);
             if (bookingList != null) {
-                lwBookings.getItems().setAll(bookingList);
+                LocalDate localDate = LocalDate.now();
+                Date currentDate = Date.valueOf(localDate);
+                List<Booking> filteredBookingList = bookingList.stream()
+                                .filter(booking -> !booking.getDate().before(currentDate))
+                                .toList();
+                lwBookings.getItems().setAll(filteredBookingList);
             }
         }
     }
@@ -107,6 +114,7 @@ public class EditBookingController implements Initializable, Subscriber {
         if (validateUpdate()) {
             Booking selectedBooking = lwBookings.getSelectionModel().getSelectedItem();
             selectedBooking.setBookingTitle(txtTitle.getText());
+            selectedBooking.setAttendance(Integer.parseInt(txtAmountGuest.getText()));
             boolean result = bookingDAO.update(selectedBooking);
             if (result) {
                 setupBookingList();

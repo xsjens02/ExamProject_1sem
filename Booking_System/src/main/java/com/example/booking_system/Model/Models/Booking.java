@@ -8,26 +8,14 @@ public class Booking {
     private int userID;
     private String responsible;
     private int roomID;
-    private int amountGuest;
     private boolean adhoc;
     private Date date;
     private double startTime;
     private double endTime;
     private double duration;
+    private int attendance;
     private int menuID;
     private int departmentID;
-
-    public Booking(String bookingTitle, int userID, String responsible, int roomID, boolean adhoc, Date date, double startTime, double endTime, double duration) {
-        this.bookingTitle = bookingTitle;
-        this.userID = userID;
-        this.responsible = responsible;
-        this.roomID = roomID;
-        this.adhoc = adhoc;
-        this.date = date;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.duration = duration;
-    }
 
     public Booking(String bookingTitle, int userID, String responsible, int roomID, boolean adhoc, Date date, double startTime, double endTime, double duration, int menuID, int departmentID) {
         this.bookingTitle = bookingTitle;
@@ -57,11 +45,36 @@ public class Booking {
         this.menuID = menuID;
         this.departmentID = departmentID;
     }
-    public Booking(double startTime, double endTime, String bookingTitle, String responsible){
+
+    public Booking(String bookingTitle, int userID, String responsible, int roomID, boolean adhoc, Date date, double startTime, double endTime, double duration, int attendance, int menuID, int departmentID) {
+        this.bookingTitle = bookingTitle;
+        this.userID = userID;
+        this.responsible = responsible;
+        this.roomID = roomID;
+        this.adhoc = adhoc;
+        this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.duration = duration;
+        this.attendance = attendance;
+        this.menuID = menuID;
+        this.departmentID = departmentID;
+    }
+
+    public Booking(int bookingID, String bookingTitle, int userID, String responsible, int roomID, boolean adhoc, Date date, double startTime, double endTime, double duration, int attendance, int menuID, int departmentID) {
+        this.bookingID = bookingID;
         this.bookingTitle = bookingTitle;
+        this.userID = userID;
         this.responsible = responsible;
+        this.roomID = roomID;
+        this.adhoc = adhoc;
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.duration = duration;
+        this.attendance = attendance;
+        this.menuID = menuID;
+        this.departmentID = departmentID;
     }
 
     public int getBookingID() {
@@ -79,8 +92,8 @@ public class Booking {
     public int getRoomID() {
         return roomID;
     }
-    public int getAmountGuest() {
-        return amountGuest;
+    public int getAttendance() {
+        return attendance;
     }
     public boolean isAdhoc() {
         return adhoc;
@@ -119,8 +132,8 @@ public class Booking {
     public void setRoomID(int roomID) {
         this.roomID = roomID;
     }
-    public void setAmountGuest(int amountGuest) {
-        this.amountGuest = amountGuest;
+    public void setAttendance(int attendance) {
+        this.attendance = attendance;
     }
     public void setAdhoc(boolean adhoc) {
         this.adhoc = adhoc;

@@ -325,6 +325,7 @@ public class NewBookingController implements Initializable, Subscriber {
             double start = convertToDouble(startTime);
             double end = convertToDouble(endTime);
             double duration = end - start;
+            int attendance = Integer.parseInt(txtAmountGuest.getText());
 
             boolean result = false;
             LocalDate date = adHoc ? LocalDate.now() : dpBookingDate.getValue();
@@ -338,14 +339,14 @@ public class NewBookingController implements Initializable, Subscriber {
 
                     for (LocalDate chosenDate : dates) {
                         sqlDate = Date.valueOf(chosenDate);
-                        result = bookingDAO.add(new Booking(bookingTitle, userID, responsible, roomID, adHoc, sqlDate, start, end, duration, menuID, departmentID));
+                        result = bookingDAO.add(new Booking(bookingTitle, userID, responsible, roomID, adHoc, sqlDate, start, end, duration, attendance, menuID, departmentID));
                     }
                 }
             } else {
                 int menuID = validateCatering() ? comboCatering.getSelectionModel().getSelectedItem().getMenuID() : 0;
                 int departmentID = validateCatering() ? comboDepartment.getSelectionModel().getSelectedItem().getDepartmentID() : 0;
 
-                result = bookingDAO.add(new Booking(bookingTitle, userID, responsible, roomID, adHoc, sqlDate, start, end, duration, menuID, departmentID));
+                result = bookingDAO.add(new Booking(bookingTitle, userID, responsible, roomID, adHoc, sqlDate, start, end, duration, attendance, menuID, departmentID));
             }
 
             if (result) {

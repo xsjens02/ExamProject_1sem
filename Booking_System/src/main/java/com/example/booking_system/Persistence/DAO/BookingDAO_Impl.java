@@ -23,7 +23,7 @@ public class BookingDAO_Impl implements BookingDAO<Booking> {
     @Override
     public boolean add(Booking entity) {
         try {
-            CallableStatement cs = connection.prepareCall("{call add_booking(?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+            CallableStatement cs = connection.prepareCall("{call add_booking(?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
             cs.setString(1, entity.getBookingTitle());
             cs.setInt(2, entity.getUserID());
             cs.setString(3, entity.getResponsible());
@@ -33,8 +33,9 @@ public class BookingDAO_Impl implements BookingDAO<Booking> {
             cs.setDouble(7, entity.getStartTime());
             cs.setDouble(8, entity.getEndTime());
             cs.setDouble(9, entity.getDuration());
-            cs.setInt(10, entity.getMenuID());
-            cs.setInt(11, entity.getDepartmentID());
+            cs.setInt(10, entity.getAttendance());
+            cs.setInt(11, entity.getMenuID());
+            cs.setInt(12, entity.getDepartmentID());
 
             int result = cs.executeUpdate();
             return result > 0;
@@ -63,10 +64,11 @@ public class BookingDAO_Impl implements BookingDAO<Booking> {
                 double startTime = rs.getDouble(8);
                 double endTime = rs.getDouble(9);
                 double duration = rs.getDouble(10);
-                int menuID = rs.getInt(11);
-                int departmentID = rs.getInt(12);
+                int attendance = rs.getInt(11);
+                int menuID = rs.getInt(12);
+                int departmentID = rs.getInt(13);
 
-                return new Booking(id, bookingTitle, userID, responsible, roomID, adhoc, date, startTime, endTime, duration, menuID, departmentID);
+                return new Booking(id, bookingTitle, userID, responsible, roomID, adhoc, date, startTime, endTime, duration, attendance, menuID, departmentID);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -95,10 +97,11 @@ public class BookingDAO_Impl implements BookingDAO<Booking> {
                 double startTime = rs.getDouble(8);
                 double endTime = rs.getDouble(9);
                 double duration = rs.getDouble(10);
-                int menuID = rs.getInt(11);
-                int departmentID = rs.getInt(12);
+                int attendance = rs.getInt(11);
+                int menuID = rs.getInt(12);
+                int departmentID = rs.getInt(13);
 
-                bookingList.add(new Booking(bookingID, bookingTitle, userID, responsible, roomID, adhoc, date, startTime, endTime, duration, menuID, departmentID));
+                bookingList.add(new Booking(bookingID, bookingTitle, userID, responsible, roomID, adhoc, date, startTime, endTime, duration, attendance, menuID, departmentID));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -155,10 +158,11 @@ public class BookingDAO_Impl implements BookingDAO<Booking> {
                 double startTime = rs.getDouble(8);
                 double endTime = rs.getDouble(9);
                 double duration = rs.getDouble(10);
-                int menuID = rs.getInt(11);
-                int departmentID = rs.getInt(12);
+                int attendance = rs.getInt(11);
+                int menuID = rs.getInt(12);
+                int departmentID = rs.getInt(13);
 
-                bookingList.add(new Booking(bookingID, bookingTitle, userID, responsible, roomID, adhoc, date, startTime, endTime, duration, menuID, departmentID));
+                bookingList.add(new Booking(bookingID, bookingTitle, userID, responsible, roomID, adhoc, date, startTime, endTime, duration, attendance, menuID, departmentID));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -231,9 +235,10 @@ public class BookingDAO_Impl implements BookingDAO<Booking> {
     @Override
     public boolean update(Booking entity) {
         try {
-            CallableStatement cs = connection.prepareCall("{call update_booking(?, ?)}");
+            CallableStatement cs = connection.prepareCall("{call update_booking(?, ?, ?)}");
             cs.setInt(1, entity.getBookingID());
             cs.setString(2, entity.getBookingTitle());
+            cs.setInt(3, entity.getAttendance());
 
             int result = cs.executeUpdate();
             return result > 0;
