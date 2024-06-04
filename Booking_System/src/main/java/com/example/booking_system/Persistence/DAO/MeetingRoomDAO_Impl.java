@@ -144,14 +144,14 @@ public class MeetingRoomDAO_Impl implements MeetingRoomDAO<MeetingRoom> {
      * @return all available meeting rooms
      */
     @Override
-    public List<MeetingRoom> readAllAvailableOnDate(int institutionID, Date searchDate, double startTime, double endTime) {
+    public List<MeetingRoom> readAllAvailableOnDate(int institutionID, Date searchDate, Time startTime, Time endTime) {
         List<MeetingRoom> roomList = new ArrayList<>();
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM get_available_roomIDs(?, ?, ?, ?)");
             ps.setInt(1, institutionID);
             ps.setDate(2, (java.sql.Date) searchDate);
-            ps.setDouble(3, startTime);
-            ps.setDouble(4, endTime);
+            ps.setTime(3, startTime);
+            ps.setTime(4, endTime);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int roomID = rs.getInt(1);
@@ -177,7 +177,7 @@ public class MeetingRoomDAO_Impl implements MeetingRoomDAO<MeetingRoom> {
      * @return all available meeting rooms
      */
     @Override
-    public List<MeetingRoom> readAllAvailableInPeriod(int institutionID, List<Date> searchDates, double startTime, double endTime) {
+    public List<MeetingRoom> readAllAvailableInPeriod(int institutionID, List<Date> searchDates, Time startTime, Time endTime) {
         List<MeetingRoom> availableRooms = new ArrayList<>();
         try {
             int amountDates = searchDates.size();
@@ -186,8 +186,8 @@ public class MeetingRoomDAO_Impl implements MeetingRoomDAO<MeetingRoom> {
                 PreparedStatement ps = connection.prepareStatement("SELECT * FROM get_available_roomIDs(?, ?, ?, ?)");
                 ps.setInt(1, institutionID);
                 ps.setDate(2, (java.sql.Date) searchDate);
-                ps.setDouble(3, startTime);
-                ps.setDouble(4, endTime);
+                ps.setTime(3, startTime);
+                ps.setTime(4, endTime);
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     int roomID = rs.getInt(1);

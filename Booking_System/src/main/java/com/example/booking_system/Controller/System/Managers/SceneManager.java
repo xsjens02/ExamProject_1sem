@@ -21,7 +21,7 @@ public class SceneManager {
         loadScene(Controller.NewBooking, "/com/example/booking_system/NewBooking.fxml");
         loadScene(Controller.EditBooking, "/com/example/booking_system/EditBooking.fxml");
         loadScene(Controller.NewCateringOption, "/com/example/booking_system/NewCateringOption.fxml");
-        loadScene(Controller.NewErrorReport, "/com/example/booking_system/NewBooking.fxml");
+        loadScene(Controller.NewErrorReport, "/com/example/booking_system/NewErrorReport.fxml");
         loadScene(Controller.NewMeetingRoom, "/com/example/booking_system/NewMeetingRoom.fxml");
         loadScene(Controller.OpeningHoursAndTimeSlots, "/com/example/booking_system/OpeningHoursAndTimeSlotsWindow.fxml");
         loadScene(Controller.Statistics, "/com/example/booking_system/statisticsWindow.fxml");

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="226.0" prefWidth="414.0" spacing="5.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.Controllers.OpeningHoursAndTimeSlotsWindowController">
+<VBox alignment="CENTER" prefHeight="226.0" prefWidth="414.0" spacing="5.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.Controllers.OpeningHoursAndTimeSlotsWindowController">
    <children>
       <HBox maxWidth="200.0" prefHeight="100.0" prefWidth="200.0">
          <children>

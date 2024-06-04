@@ -463,30 +463,30 @@ public class NewBookingController implements Initializable, Subscriber {
     private void checkDateAndTime(boolean singleDate) {
         if (validateTime()) {
 
-            LocalTime startTime = LocalTime.parse(comboStartTime.getValue());
-            LocalTime endTime = LocalTime.parse(comboEndTime.getValue());
+            LocalTime start = LocalTime.parse(comboStartTime.getValue());
+            LocalTime end = LocalTime.parse(comboEndTime.getValue());
 
-            if (!endTime.isAfter(startTime)) {
+            if (!end.isAfter(start)) {
                 lwMeetingRooms.getItems().clear();
                 return;
             }
 
             int institutionID = SystemManager.getInstance().getInstitution().getInstitutionID();
-            double start = convertToDouble(startTime);
-            double end = convertToDouble(endTime);
+            Time startTime = Time.valueOf(start);
+            Time endTime = Time.valueOf(end);
 
             List<MeetingRoom> meetingRoomList = null;
 
             if (singleDate && dpBookingDate.getValue() != null) {
                 Date choosenDate = Date.valueOf(dpBookingDate.getValue());
-                meetingRoomList = meetingRoomDAO.readAllAvailableOnDate(institutionID, choosenDate, start, end);
+                meetingRoomList = meetingRoomDAO.readAllAvailableOnDate(institutionID, choosenDate, startTime, endTime);
             } else if (!singleDate && lwChosenDates.getItems() != null) {
                 List<LocalDate> chosenDates = lwChosenDates.getItems();
                 List<Date> searchDates = new ArrayList<>();
                 for (LocalDate date : chosenDates) {
                     searchDates.add(Date.valueOf(date));
                 }
-                meetingRoomList = meetingRoomDAO.readAllAvailableInPeriod(institutionID, searchDates, start, end);
+                meetingRoomList = meetingRoomDAO.readAllAvailableInPeriod(institutionID, searchDates, startTime, endTime);
             }
 
             if (meetingRoomList != null) {
@@ -502,15 +502,6 @@ public class NewBookingController implements Initializable, Subscriber {
     private void sortDateList() {
         ObservableList<LocalDate> dates = lwChosenDates.getItems();
         FXCollections.sort(dates);
-    }
-
-    /**
-     * converts a given LocalTime object to a double representing the time in hours
-     * @param time LocalTime object to be converted
-     * @return time represented as a double value in hours
-     */
-    private double convertToDouble(LocalTime time) {
-        return time.getHour() + time.getMinute() / 60.0;
     }
     //endregion
     //region subscriber method
