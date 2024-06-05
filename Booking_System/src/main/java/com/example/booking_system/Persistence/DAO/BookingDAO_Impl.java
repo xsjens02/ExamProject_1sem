@@ -173,6 +173,13 @@ public class BookingDAO_Impl implements BookingDAO<Booking> {
         return null;
     }
 
+    /**
+     * Reads all bookings specified in a specific period in time from the database
+     * @param roomId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     @Override
     public List<Booking> readAllBookingsInPeriod(int roomId, Date startDate, Date endDate) {
         List<Booking> bookingList = new ArrayList<>();

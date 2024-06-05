@@ -116,7 +116,11 @@ public class InfoScreenController implements Initializable, Subscriber {
         }
     }
 
-
+    /**
+     * Method for when the login button is clicked, it checks if the user is already set
+     * and if not it opens the scene for the login page.
+     * @param actionEvent
+     */
     public void onLoginButtonClick(ActionEvent actionEvent) {
         User currentUser = SystemManager.getInstance().getUser();
         if(!currentUser.getRole().name().equals("GUEST")){
@@ -135,7 +139,9 @@ public class InfoScreenController implements Initializable, Subscriber {
         SceneManager.openScene(Controller.EditBooking, "rediger booking");
     }
 
-
+    /**
+     * Method for opening the login scene
+     */
     private void openLoginPopup(){
         try{
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/booking_system/loginScreen.fxml"));
@@ -152,7 +158,10 @@ public class InfoScreenController implements Initializable, Subscriber {
             e.printStackTrace();
         }
     }
- 
+
+    /**
+     * Method that updates the UI for when a user has logged in
+     */
     public void updateUI(){
         User currentUser = SystemManager.getInstance().getUser();
         if(!currentUser.getRole().name().equals("GUEST")){

@@ -18,6 +18,11 @@ public class StatisticScreenController {
     public DatePicker dpStartdate;
     public DatePicker dpEnddate;
 
+    /**
+     *  Method for when the download button is clicked, it gets the dates from the date pickers
+     *  and gets the bookings that are in that timeframe, so the CSV file can be downloaded
+     * @param actionEvent
+     */
     public void onDownloadButtonClick(ActionEvent actionEvent) {
         if(dpEnddate.getValue() != null && dpStartdate.getValue() != null){
             Date startDate = Date.valueOf(dpStartdate.getValue());
@@ -38,15 +43,20 @@ public class StatisticScreenController {
 
     }
 
+    /**
+     * Method for saving the booking information into a csv file, and formats it correctly
+     * @param file
+     * @param bookings
+     */
     private void saveBookingsToCSV(File file, List<Booking> bookings){
         try(FileWriter writer = new FileWriter(file)){
             writer.append("Booking ID;Booking Title;User ID;Responsible;Room ID;Ad-hoc;Date;Start Time;End Time;Duration;Attendance;Menu ID;Department ID\n");
             for (Booking booking : bookings) {
                 writer.append(String.format("%d;%s;%d;%s;%d;%b;%s;%s;%s;%s;%d;%d;%d\n",
                         booking.getBookingID(),
-                        columns(booking.getBookingTitle()),
+                        specialCharacters(booking.getBookingTitle()),
                         booking.getUserID(),
-                        columns(booking.getResponsible()),
+                        specialCharacters(booking.getResponsible()),
                         booking.getRoomID(),
                         booking.isAdhoc(),
                         booking.getDate().toString(),
@@ -61,8 +71,12 @@ public class StatisticScreenController {
         }
     }
 
-
-    private String columns(String data){
+    /**
+     * Method that replaces special characters
+     * @param data
+     * @return
+     */
+    private String specialCharacters(String data){
         String newColumns = data;
 
         if(data.contains("\"")){

@@ -18,6 +18,12 @@ public class Statistics {
 
     List<Booking> bookingList;
 
+    /**
+     *  Method that gets bookings from the database, and stores it into a list. In the method it also checks
+     *  if there is an existing booking, so we don't get duplicates of the same booking.
+     * @param startDate
+     * @param endDate
+     */
     public void getBookings(Date startDate, Date endDate){
         bookingList.clear();
 
@@ -41,6 +47,10 @@ public class Statistics {
 
     }
 
+    /**
+     * This is so we can retrieve the booking list in other classes.
+     * @return
+     */
     public List<Booking> getBookingList(){
         return bookingList;
     }

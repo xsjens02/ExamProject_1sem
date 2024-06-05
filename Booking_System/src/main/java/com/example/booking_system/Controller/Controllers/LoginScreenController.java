@@ -30,7 +30,11 @@ public class LoginScreenController {
         this.infoScreenController = infoScreenController;
     }
 
-
+    /**
+     * Method for when the login button is clicked, it retrieves the information from the text fields
+     * and calls the validate login method.
+     * @param actionEvent
+     */
     public void onLoginButtonClick(ActionEvent actionEvent) {
         String username = tfUsername.getText();
         String password = pfPassword.getText();
@@ -51,6 +55,11 @@ public class LoginScreenController {
 
     }
 
+    /**
+     * Method for when the forgot password button is clicked, it opens up a browser
+     * to a website
+     * @param actionEvent
+     */
     public void onForgotButtonClick(ActionEvent actionEvent) {
         String url = "https://moodle.easv.dk/login/forgot_password.php";
 
@@ -65,6 +74,10 @@ public class LoginScreenController {
 
     }
 
+    /**
+     * Method for when the cancel button is clicked, it closes the stage
+     * @param actionEvent
+     */
     public void onCancelButtonClick(ActionEvent actionEvent) {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();

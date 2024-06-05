@@ -17,10 +17,21 @@ public class LoginService {
         connection = dbConnection.getInstance().getConnection();
     }
 
+    /**
+     * Method for hashing passwords
+     * @param password
+     * @return
+     */
     public String hashPassword(String password) {
         return String.valueOf(password.hashCode());
     }
 
+    /**
+     * Method that validates the users login
+     * @param username
+     * @param password
+     * @return
+     */
     public boolean validateLogin(String username, String password){
         User user = userDAO.read(username);
         String hashedPassword = hashPassword(password);
