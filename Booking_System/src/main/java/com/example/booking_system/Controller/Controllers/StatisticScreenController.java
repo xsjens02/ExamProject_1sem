@@ -40,9 +40,9 @@ public class StatisticScreenController {
 
     private void saveBookingsToCSV(File file, List<Booking> bookings){
         try(FileWriter writer = new FileWriter(file)){
-            writer.append("Booking ID;Booking Title;User ID;Responsible;Room ID;Ad-hoc;Date;Start Time;End Time;Duration;Menu ID;Department ID\n");
+            writer.append("Booking ID;Booking Title;User ID;Responsible;Room ID;Ad-hoc;Date;Start Time;End Time;Duration;Attendance;Menu ID;Department ID\n");
             for (Booking booking : bookings) {
-                writer.append(String.format("%d;%s;%d;%s;%d;%b;%s;%.2f;%.2f;%.2f;%d;%d\n",
+                writer.append(String.format("%d;%s;%d;%s;%d;%b;%s;%s;%s;%s;%d;%d;%d\n",
                         booking.getBookingID(),
                         columns(booking.getBookingTitle()),
                         booking.getUserID(),
@@ -53,6 +53,7 @@ public class StatisticScreenController {
                         booking.getStartTime(),
                         booking.getEndTime(),
                         booking.getDuration(),
+                        booking.getAttendance(),
                         booking.getMenuID(),
                         booking.getDepartmentID()));
             }
