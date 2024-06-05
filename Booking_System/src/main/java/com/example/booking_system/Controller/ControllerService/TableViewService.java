@@ -16,6 +16,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 
 public class TableViewService {
@@ -126,9 +127,10 @@ public class TableViewService {
     }
 
     private Booking getNextBooking(List<Booking> bookingList, Time tempTime) {
+        bookingList.sort(Comparator.comparing(Booking::getStartTime));
 
         for (int i = 0; i < bookingList.size(); i++) {
-            if (bookingList.get(i).getStartTime().before(tempTime) && bookingList.get(i).getEndTime().after(tempTime)) {
+            if (bookingList.get(i).getStartTime().before(tempTime) && bookingList.get(i).getEndTime().after(tempTime) || bookingList.get(i).getStartTime().equals(tempTime) && bookingList.get(i).getEndTime().after(tempTime)) {
                 return bookingList.get(i);
             }
             else if(bookingList.get(i).getStartTime().after(tempTime) && bookingList.get(i).getEndTime().after(tempTime)){
@@ -149,25 +151,25 @@ public class TableViewService {
                 determineUnresolvedError(meetingRoom));
     }
     private String determineAvailability(Booking booking, Time tempTime){
-        if(booking.getDate().before(Date.valueOf(localDate))){
+        if(booking.getDate().before(Date.valueOf(localDate)) || booking.getDate().equals(Date.valueOf(localDate)) && booking.getEndTime().before(tempTime)){
             return "";
         }
-        else if(booking.getStartTime().before(tempTime) || booking.getEndTime().after(tempTime)){
+        else if(booking.getStartTime().after(tempTime) || booking.getEndTime().before(tempTime)){
             return "Ledig";
         }
         return "Optaget";
     }
     private String determineNextCurrent(Booking booking, Time tempTime){
-        if(booking.getDate().before(Date.valueOf(localDate))){
+        if(booking.getDate().before(Date.valueOf(localDate)) || booking.getDate().equals(Date.valueOf(localDate)) && booking.getEndTime().before(tempTime)){
             return "Afholdt";
         }
         else if(booking.getStartTime().after(tempTime)){
             return "Kommende: ";
         }
-        else if(booking.getStartTime().before(tempTime) && booking.getEndTime().after(tempTime)) {
+        else if(booking.getStartTime().before(tempTime) && booking.getEndTime().after(tempTime) || booking.getStartTime().equals(tempTime)) {
             return "Igangværende: ";
         }
-        return "Kommende";
+        return "Kommende: ";
     }
     private MeetingRoomBooking noBookings(MeetingRoom meetingRoom){
         return new MeetingRoomBooking(
