@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EquipmentDAO_Impl implements DAO<Equipment> {
+public class EquipmentDAO_Impl implements InstitutionDAO<Equipment> {
     private final Connection connection;
     public EquipmentDAO_Impl() {
         connection = dbConnection.getInstance().getConnection();
@@ -69,6 +69,30 @@ public class EquipmentDAO_Impl implements DAO<Equipment> {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+        if (!equipmentList.isEmpty()) {
+            return equipmentList;
+        }
+        return null;
+    }
+
+    /**
+     * read all institution equipment from database
+     * @param institutionID identification of institution
+     * @return all institution equipment from database
+     */
+    @Override
+    public List<Equipment> readAllFromInstitution(int institutionID) {
+        List<Equipment> equipmentList = new ArrayList<>();
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT fldEquipmentID FROM tblInstitution_Equipment WHERE fldInstitutionID=" + institutionID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int equipmentID = rs.getInt(1);
+                equipmentList.add(read(equipmentID));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException();
         }
         if (!equipmentList.isEmpty()) {
             return equipmentList;
