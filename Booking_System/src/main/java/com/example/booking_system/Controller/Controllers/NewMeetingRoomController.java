@@ -2,6 +2,7 @@ package com.example.booking_system.Controller.Controllers;
 
 import com.example.booking_system.Controller.System.Managers.SceneManager;
 import com.example.booking_system.Controller.ControllerService.AlertService;
+import com.example.booking_system.Controller.System.PubSub.Subscriber;
 import com.example.booking_system.Model.Models.Equipment;
 import com.example.booking_system.Model.Models.MeetingRoom;
 import com.example.booking_system.Controller.System.PubSub.Subject;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class NewMeetingRoomController implements Initializable {
+public class NewMeetingRoomController implements Initializable, Subscriber {
     //region FXML annotations
     @FXML
     private VBox VBox;
@@ -35,7 +36,7 @@ public class NewMeetingRoomController implements Initializable {
     private Label lblNameError, lblCapacityError;
     //endregion
     //region instance variables
-    private final DAO<Equipment> equipmentDAO = new EquipmentDAO_Impl();
+    private final EquipmentDAO_Impl equipmentDAO = new EquipmentDAO_Impl();
     private final DAO<MeetingRoom> meetingRoomDAO = new MeetingRoomDAO_Impl();
     private final ObservableList<Equipment> roomEquipment = FXCollections.observableArrayList();
     private final List<Pair<TextField, Label>> requiredFields = new ArrayList<>();
@@ -48,12 +49,21 @@ public class NewMeetingRoomController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        SystemManager.getInstance().subscribe(Subject.Institution, this);
+
         requiredFields.add(new Pair<>(txtRoomName, lblNameError));
         requiredFields.add(new Pair<>(txtRoomCapacity, lblCapacityError));
-
-        List<Equipment> equipmentList = equipmentDAO.readAll();
-        lwAllEquipment.getItems().addAll(equipmentList);
         lwRoomEquipment.setItems(roomEquipment);
+
+        setupEquipmentList();
+    }
+
+    /**
+     * initializes equipment list
+     */
+    private void setupEquipmentList() {
+        List<Equipment> equipmentList = equipmentDAO.readAllFromInstitution(SystemManager.getInstance().getInstitution().getInstitutionID());
+        lwAllEquipment.getItems().setAll(equipmentList);
     }
     //endregion
     //region handler methods
@@ -134,6 +144,12 @@ public class NewMeetingRoomController implements Initializable {
         return ValidationService.validateFieldsEntered(requiredFields)
                 && ValidationService.validFieldLength(txtRoomName, 30, lblNameError)
                 && ValidationService.validateStringIsInt(txtRoomCapacity.getText());
+    }
+    //endregion
+    //region subscriber method
+    @Override
+    public void onUpdate() {
+        setupEquipmentList();
     }
     //endregion
 }
