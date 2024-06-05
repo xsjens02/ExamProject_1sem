@@ -1,7 +1,5 @@
 package com.example.booking_system.Model.Models;
 
-import com.example.booking_system.Model.Models.Role;
-
 public class User {
     private int userID;
     private String userName;
