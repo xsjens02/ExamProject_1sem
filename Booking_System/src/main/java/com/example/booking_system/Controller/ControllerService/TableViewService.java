@@ -184,7 +184,7 @@ public class TableViewService {
         );
     }
     private String determineUnresolvedError(MeetingRoom meetingRoom){
-        if(meetingRoom.getUnresolvedReports() != null){
+        if(meetingRoom.getUnresolvedReports() != null && !meetingRoom.getUnresolvedReports().isEmpty()){
             return "!";
         }
         return "";

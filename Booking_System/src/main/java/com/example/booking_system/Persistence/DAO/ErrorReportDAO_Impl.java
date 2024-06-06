@@ -106,8 +106,22 @@ public class ErrorReportDAO_Impl implements DAO<ErrorReport> {
         }
     }
 
+    /**
+     * update a error report in database
+     * @param entity updated error report
+     * @return true if updated, false if not
+     */
     @Override
     public boolean update(ErrorReport entity) {
-        return false;
+        try {
+            CallableStatement cs = connection.prepareCall("{call update_error_report(?, ?)}");
+            cs.setInt(1, entity.getReportID());
+            cs.setBoolean(2, entity.isResolved());
+
+            int result = cs.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException();
+        }
     }
 }

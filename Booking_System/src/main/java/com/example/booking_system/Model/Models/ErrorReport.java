@@ -1,5 +1,7 @@
 package com.example.booking_system.Model.Models;
 
+import com.example.booking_system.Persistence.DAO.EquipmentDAO_Impl;
+
 public class ErrorReport {
     private int reportID;
     private int userID;
@@ -7,6 +9,8 @@ public class ErrorReport {
     private int equipmentID;
     private String description;
     private boolean resolved;
+    private final EquipmentDAO_Impl equipmentDAO = new EquipmentDAO_Impl();
+    private String unresolvedDescription;
 
     public ErrorReport(int userID, int roomID, int equipmentID, String description, boolean resolved) {
         this.userID = userID;
@@ -43,6 +47,9 @@ public class ErrorReport {
     public boolean isResolved() {
         return resolved;
     }
+    public String getUnresolvedDescription() {
+        return unresolvedDescription;
+    }
 
     public void setReportID(int reportID) {
         this.reportID = reportID;
@@ -61,5 +68,18 @@ public class ErrorReport {
     }
     public void setResolved(boolean resolved) {
         this.resolved = resolved;
+    }
+    public void setUnresolvedDescription(String unresolvedDescription) {
+        this.unresolvedDescription = unresolvedDescription;
+    }
+
+    public void setupUnresolvedDescription() {
+        Equipment equipment = equipmentDAO.read(this.getEquipmentID());
+        this.setUnresolvedDescription("Udstyr: " + equipment.getEquipmentName() + "\n\nBeskrivelse:\n" + this.getDescription());
+    }
+
+    @Override
+    public String toString() {
+        return "rapport nr." + this.reportID;
     }
 }
