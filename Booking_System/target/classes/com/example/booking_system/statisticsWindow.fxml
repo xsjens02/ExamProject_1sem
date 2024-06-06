@@ -5,7 +5,7 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.booking_system.Controller.Controllers.StatisticScreenController">
     <children>
-        <VBox alignment="CENTER" layoutX="200.0" layoutY="100.0" spacing="10.0">
+        <VBox fx:id="vBox" alignment="CENTER" layoutX="200.0" layoutY="100.0" spacing="10.0">
             <children>
                 <Label text="Start Date" />
                 <DatePicker fx:id="dpStartdate" />

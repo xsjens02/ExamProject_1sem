@@ -61,6 +61,7 @@ public class SceneManager {
             scene.getStylesheets().add(cssURL.toExternalForm());
             scenes.put(controller, scene);
         } catch (IOException e) {
+            e.printStackTrace();
             throw  new RuntimeException();
         }
         return scene;
@@ -87,7 +88,11 @@ public class SceneManager {
         newStage.initModality(Modality.APPLICATION_MODAL);
         newStage.setTitle(sceneTitle);
         newStage.setScene(scenes.get(sceneController));
+        if(sceneController == Controller.Info){
+            newStage.setMaximized(true);
+        }
         newStage.showAndWait();
+
     }
 
     /**

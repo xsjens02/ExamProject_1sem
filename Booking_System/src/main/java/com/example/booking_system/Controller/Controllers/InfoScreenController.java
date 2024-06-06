@@ -110,9 +110,10 @@ public class InfoScreenController implements Initializable, Subscriber {
     @FXML
     private void onAdministrationDropdownChoice(){
         if(administration.getSelectionModel().getSelectedIndex() == 0) {
-            SceneManager.openScene(Controller.Configuration,"Konfiguration");}
+            SceneManager.openScene(Controller.Configuration,"Konfiguration");
+        }
         if(administration.getSelectionModel().getSelectedIndex() == 1){
-            SceneManager.openScene(Controller.Statistics, "statistik");
+            SceneManager.openScene(Controller.Statistics, "Statistik");
         }
     }
 

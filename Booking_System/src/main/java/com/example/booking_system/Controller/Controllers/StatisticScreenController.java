@@ -1,9 +1,11 @@
 package com.example.booking_system.Controller.Controllers;
 
+import com.example.booking_system.Controller.System.Managers.SceneManager;
 import com.example.booking_system.Model.Models.Booking;
 import com.example.booking_system.Model.Models.Statistics;
 import javafx.event.ActionEvent;
 import javafx.scene.control.DatePicker;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
@@ -17,6 +19,7 @@ public class StatisticScreenController {
     private final Statistics stats = new Statistics();
     public DatePicker dpStartdate;
     public DatePicker dpEnddate;
+    public VBox vBox;
 
     /**
      *  Method for when the download button is clicked, it gets the dates from the date pickers
@@ -38,6 +41,11 @@ public class StatisticScreenController {
             if(selectedDirectory != null){
                 File csvFile = new File(selectedDirectory, "bookings_statistics.csv");
                 saveBookingsToCSV(csvFile, bookings);
+                if (selectedDirectory.canExecute()) {
+                    SceneManager.closeScene(vBox.getScene());
+                    dpStartdate.setValue(null);
+                    dpEnddate.setValue(null);
+                }
             }
         }
 
