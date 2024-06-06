@@ -112,7 +112,7 @@ public class InfoScreenController implements Initializable, Subscriber {
         if(administration.getSelectionModel().getSelectedIndex() == 0) {
             SceneManager.openScene(Controller.Configuration,"Konfiguration");}
         if(administration.getSelectionModel().getSelectedIndex() == 1){
-            SceneManager.openScene(Controller.Statistics, "Statistics");
+            SceneManager.openScene(Controller.Statistics, "statistik");
         }
     }
 
