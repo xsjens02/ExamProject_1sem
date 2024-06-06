@@ -8,6 +8,7 @@ public enum Controller {
     EditBooking,
     NewCateringOption,
     NewErrorReport,
+    EditErrorReport,
     NewMeetingRoom,
     OpeningHoursAndTimeSlots,
     Statistics
