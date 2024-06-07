@@ -109,7 +109,6 @@ public class NewMeetingRoomController implements Initializable, Subscriber {
 
             if (insert) {
                 SystemManager.getInstance().updateManager();
-                SystemManager.getInstance().notifySubscribers(Subject.Institution);
             } else {
                 AlertService.showAlert("Fejl", "nyt mødelokale kunne ikke oprettes");
             }

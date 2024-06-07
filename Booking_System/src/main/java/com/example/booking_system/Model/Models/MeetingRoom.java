@@ -95,14 +95,14 @@ public class MeetingRoom {
 
     public void setupDescription() {
         if (this.getRoomDescription() == null) {
-            if (!this.equipmentList.isEmpty()) {
+            if (this.equipmentList != null) {
                 StringBuilder equipmentDescription = new StringBuilder();
                 for (Equipment equipment : equipmentList) {
                     equipmentDescription.append(equipment.toString()).append("\n");
                 }
                 this.setRoomDescription(this.roomName + "\n\nAntal pladser: " + this.availableSeats + "\n\nUdstyr:\n" + equipmentDescription);
             } else {
-                this.setRoomDescription(this.roomName + "\n\nAntal pladser: " + this.availableSeats);
+                this.setRoomDescription(this.roomName + "\n\nAntal pladser: " + this.availableSeats + "\n\nIntet udstyr");
             }
         }
     }

@@ -44,7 +44,7 @@ public class MeetingRoomDAO_Impl implements MeetingRoomDAO<MeetingRoom> {
                     entity.setRoomID(getRoomID.getInt(1));
 
                     for (Equipment equipment : entity.getEquipmentList()) {
-                        PreparedStatement addEquipment = connection.prepareStatement("INSERT INTO tblMeeting_Room_Equipment VALUES (?, ?)");
+                        CallableStatement addEquipment = connection.prepareCall("{call add_room_equipment(?, ?)}");
                         addEquipment.setInt(1, entity.getRoomID());
                         addEquipment.setInt(2, equipment.getEquipmentID());
                         addEquipment.executeUpdate();
