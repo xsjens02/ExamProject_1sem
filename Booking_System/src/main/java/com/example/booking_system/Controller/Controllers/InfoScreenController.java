@@ -8,6 +8,8 @@ import com.example.booking_system.Controller.ControllerService.TableViewService;
 import com.example.booking_system.Model.Models.Institution;
 import com.example.booking_system.Controller.System.PubSub.Subject;
 import com.example.booking_system.Controller.System.Managers.SystemManager;
+import com.example.booking_system.Model.Models.MeetingRoom;
+import com.example.booking_system.Model.Models.Role;
 import com.example.booking_system.Model.Models.User;
 import com.example.booking_system.Persistence.DAO.DAO;
 import com.example.booking_system.Persistence.DAO.InstitutionDAO_Impl;
@@ -195,7 +197,12 @@ public class InfoScreenController implements Initializable, Subscriber {
 
     @FXML
     public void onErrorReportClick() {
-        SceneManager.openScene(Controller.NewErrorReport, "Fejlmelding");
+        User currentUser = SystemManager.getInstance().getUser();
+        if (currentUser != null && currentUser.getRole() == Role.JANITOR) {
+            SceneManager.openScene(Controller.EditErrorReport, "Fejlrapporter");
+        } else {
+            SceneManager.openScene(Controller.NewErrorReport, "Fejlmelding");
+        }
     }
 
     @FXML
