@@ -1,5 +1,6 @@
 package com.example.booking_system.Controller.Controllers;
 
+import com.example.booking_system.Controller.System.Managers.SceneManager;
 import com.example.booking_system.Model.Models.Catering;
 import com.example.booking_system.Persistence.DAO.CateringDAO_Impl;
 import javafx.fxml.FXML;
@@ -41,6 +42,10 @@ NewCateringOptionController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setWindowSize();
     }
+
+    /**
+     * Method to adjust window size according to screen size
+     */
     @FXML
     private void setWindowSize(){
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -50,6 +55,11 @@ NewCateringOptionController implements Initializable {
         newCateringNameTextField.setMaxWidth(VBox.getMinWidth()-30);
         pricePerPersonTextField.setMaxWidth(VBox.getMinWidth()-30);
     }
+
+    /**
+     * A validation method to make sure that the input can be parsed to a double
+     * @return
+     */
     @FXML
     private double convertStringPriceToDouble(){
         double pricePerPerson = 0;
@@ -62,6 +72,10 @@ NewCateringOptionController implements Initializable {
         }
         return pricePerPerson;
     }
+
+    /**
+     * Method to add a catering option to the database
+     */
     @FXML
     private void onAddButtonClick(){
         if(validateInputVariables()) {
@@ -72,11 +86,24 @@ NewCateringOptionController implements Initializable {
             pricePerPersonTextField.setText("");
         }
     }
+
+    /**
+     * A simple boolean method to validate that both inputs necessary for adding to the database is filled
+     * @return
+     */
     private boolean validateInputVariables(){
         if(!newCateringNameTextField.getText().isBlank()&&validatePriceLabel.getText().isBlank()){
             return true;
         }
         return false;
+    }
+
+    /**
+     * Closes the scene
+     */
+    @FXML
+    private void onCancelButtonClick(){
+        SceneManager.closeScene(VBox.getScene());
     }
 
 }

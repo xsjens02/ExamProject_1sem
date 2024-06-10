@@ -87,6 +87,11 @@ public class InfoScreenController implements Initializable, Subscriber {
         updateUI();
         searchDate.setValue(LocalDate.now());
     }
+
+    /**
+     * Method to adjust the window size according to the screen size
+     * @param primaryScreenBounds
+     */
     private void adjustWindowSize(Rectangle2D primaryScreenBounds){
         leftHBox.minWidthProperty().bind(mainHBox.widthProperty().divide(2));
         rightHBox.minWidthProperty().bind(mainHBox.widthProperty().divide(2));
@@ -214,18 +219,29 @@ public class InfoScreenController implements Initializable, Subscriber {
             SceneManager.openScene(Controller.NewBooking, "Ny booking");
         }
     }
+
+    /**
+     * Method for updating the search after input has changed
+     */
     @FXML
     private void onSearchInputChanged(){
         tableView.getColumns().clear();
         searchInputTextField.clear();
         tableViewService.searchBookings(tableView,Date.valueOf(searchDate.getValue()), Time.valueOf(timeComboBox.getValue()+":00"));
     }
+
+    /**
+     * Method for updating the search after a text input has changed
+     */
     @FXML
     private void onSearchTextChanged(){
         tableView.getColumns().clear();
         tableViewService.searchBookingsByText(tableView, searchInputTextField.getText(),Date.valueOf(searchDate.getValue()));
     }
 
+    /**
+     * This method creates the different time slots available in the time combobox
+     */
     private void populateTimeComboBox(){
         double inputTime = tableViewService.tempHour;
         timeComboBox.setValue(FormattingService.formatTime(inputTime));

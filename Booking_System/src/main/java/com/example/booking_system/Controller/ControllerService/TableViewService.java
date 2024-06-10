@@ -27,9 +27,13 @@ public class TableViewService {
     public LocalDate localDate = LocalDate.now();
     public LocalTime localTime = LocalTime.now();
     public int tempHour = localTime.getHour();
-    public double tempMinute = localTime.getMinute();
     public Time tempTime = Time.valueOf(localTime);
 
+    /**
+     * Method for creating and populating the tableview with the correct elements
+     * @param tableView - this is the tableview from the infoscreen
+     * @return the tableview with populated data
+     */
     public TableView populateTableView(TableView tableView) {
 
         tableView.getColumns().clear();
@@ -38,6 +42,11 @@ public class TableViewService {
         return tableView;
     }
 
+    /**
+     * Method for creating all the various columns in the tableview and creating the color validation on the column availability
+     * @param tableView
+     * @return
+     */
     public TableView createTableColumns(TableView tableView) {
         TableColumn<MeetingRoomBooking, String> roomName = new TableColumn<>("Mødelokale");
         roomName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRoomName()));
@@ -95,6 +104,11 @@ public class TableViewService {
         return tableView;
     }
 
+    /**
+     * Method for creating the ObservableList with MeetingRoomBooking objects displayed on the tableview
+     * @param institutionID
+     * @return an ObservableList with all the institutions meetingrooms and their next booking
+     */
     public ObservableList<MeetingRoomBooking> getAllMeetingRoomsAndBookings(int institutionID) {
         ObservableList<MeetingRoomBooking> allMeetingRoomAndBookings = FXCollections.observableArrayList();
         for (int i = 0; i < institution.getMeetingRoomList().size(); i++) {
@@ -126,6 +140,12 @@ public class TableViewService {
         return allMeetingRoomAndBookings;
     }
 
+    /**
+     * Selects the next booking from a list of bookings based on a specific time
+     * @param bookingList
+     * @param tempTime
+     * @return
+     */
     private Booking getNextBooking(List<Booking> bookingList, Time tempTime) {
         bookingList.sort(Comparator.comparing(Booking::getStartTime));
 
@@ -139,6 +159,14 @@ public class TableViewService {
         }
         return null;
     }
+
+    /**
+     * Method for creating a MeetingRoomBooking object based on the three parameters
+     * @param meetingRoom
+     * @param booking
+     * @param timeInput
+     * @return
+     */
     private MeetingRoomBooking addMeetingRoomBooking (MeetingRoom meetingRoom, Booking booking, Time timeInput){
         return new MeetingRoomBooking(
                 meetingRoom.getRoomName(),
@@ -150,6 +178,13 @@ public class TableViewService {
                 booking.getResponsible(),
                 determineUnresolvedError(meetingRoom));
     }
+
+    /**
+     * Method for determining the availability of a meetingroom at the specific time
+     * @param booking
+     * @param tempTime
+     * @return
+     */
     private String determineAvailability(Booking booking, Time tempTime){
         if(booking.getDate().before(Date.valueOf(localDate)) || booking.getDate().equals(Date.valueOf(localDate)) && booking.getEndTime().before(tempTime)){
             return "";
@@ -159,6 +194,13 @@ public class TableViewService {
         }
         return "Optaget";
     }
+
+    /**
+     * Method for determining if the displayed booking is already done, if it is next or currently running
+     * @param booking
+     * @param tempTime
+     * @return
+     */
     private String determineNextCurrent(Booking booking, Time tempTime){
         if(booking.getDate().before(Date.valueOf(localDate)) || booking.getDate().equals(Date.valueOf(localDate)) && booking.getEndTime().before(tempTime)){
             return "Afholdt";
@@ -171,6 +213,12 @@ public class TableViewService {
         }
         return "Kommende: ";
     }
+
+    /**
+     * Method for creating a noBooking, used for displaying the meetingroom in the tableview when no more bookings are present for the day
+     * @param meetingRoom
+     * @return
+     */
     private MeetingRoomBooking noBookings(MeetingRoom meetingRoom){
         return new MeetingRoomBooking(
                 meetingRoom.getRoomName(),
@@ -183,24 +231,53 @@ public class TableViewService {
                 determineUnresolvedError(meetingRoom)
         );
     }
+
+    /**
+     * Determines if the meetingroom has an unresolvedErrorReport
+     * @param meetingRoom
+     * @return
+     */
     private String determineUnresolvedError(MeetingRoom meetingRoom){
         if(meetingRoom.getUnresolvedReports() != null && !meetingRoom.getUnresolvedReports().isEmpty()){
             return "!";
         }
         return "";
     }
+
+    /**
+     * Search method used when searching specific dates and/or times
+     * @param tableView
+     * @param dateInput
+     * @param timeInput
+     * @return
+     */
     public TableView searchBookings(TableView tableView, Date dateInput, Time timeInput){
         createTableColumns(tableView);
         tableView.setItems(getAllMeetingRoomBookingSearchResults(dateInput, timeInput));
 
         return tableView;
     }
+
+    /**
+     * Search method when searching the booking titles and returning a list of bookings on the day where the keyword is contained in the booking title
+     * @param tableView
+     * @param textInput
+     * @param dateInput
+     * @return
+     */
     public TableView searchBookingsByText(TableView tableView, String textInput, Date dateInput){
         createTableColumns(tableView);
         tableView.setItems(searchMeetingRoomBookingsByText(textInput,dateInput));
 
         return tableView;
     }
+
+    /**
+     * Creating an ObservableList with the meeting rooms and bookings when searching by date and/or time
+     * @param dateInput
+     * @param timeInput
+     * @return
+     */
     public ObservableList<MeetingRoomBooking> getAllMeetingRoomBookingSearchResults(Date dateInput, Time timeInput){
         ObservableList<MeetingRoomBooking> allMeetingRoomBookingSearchResults = FXCollections.observableArrayList();
         for (int i = 0; i < institution.getMeetingRoomList().size(); i++) {
@@ -221,6 +298,13 @@ public class TableViewService {
         }
         return allMeetingRoomBookingSearchResults;
     }
+
+    /**
+     * Creating an ObservableList with the meeting rooms and bookings when searching by keyword
+     * @param textInput
+     * @param dateInput
+     * @return
+     */
     public ObservableList<MeetingRoomBooking> searchMeetingRoomBookingsByText(String textInput,Date dateInput){
         ObservableList<MeetingRoomBooking> allMeetingRoomBookingsByText = FXCollections.observableArrayList();
         for (int i = 0; i < institution.getMeetingRoomList().size(); i++) {
