@@ -282,5 +282,6 @@ public class InfoScreenController implements Initializable, Subscriber {
     public void onUpdate() {
         tableViewService = new TableViewService();
         tableViewService.populateTableView(tableView);
+        populateTimeComboBox();
     }
 }

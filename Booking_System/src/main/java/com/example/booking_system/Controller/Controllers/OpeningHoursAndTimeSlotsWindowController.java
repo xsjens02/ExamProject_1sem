@@ -47,6 +47,7 @@ public class OpeningHoursAndTimeSlotsWindowController implements Subscriber {
 
             SystemManager.getInstance().getInstitution().setOpenTime(openTime);
             SystemManager.getInstance().getInstitution().setCloseTime(closeTime);
+            SystemManager.getInstance().getInstitution().setBookingTimeInterval(Integer.parseInt(interval));
 
             // If valid, show success alert
             boolean result = institutionDAO.update(SystemManager.getInstance().getInstitution());

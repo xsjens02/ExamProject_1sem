@@ -38,7 +38,7 @@ import java.util.*;
 public class NewBookingController implements Initializable, Subscriber {
     //region FXML annotation
     @FXML
-    private VBox VBoxMain, VBoxMultipleDateOption;
+    private VBox VBoxMain, VBoxMultipleDateOption, VBoxCateringOption;
     @FXML
     private HBox HBoxDateOption;
     @FXML
@@ -130,7 +130,6 @@ public class NewBookingController implements Initializable, Subscriber {
             disableDate(true);
             checkMultiple.setVisible(false);
             displayMoreDateOption(false);
-            disableCatering();
         } else if (currentUser.getRole() == Role.TEACHER || currentUser.getRole() == Role.ADMIN) {
             disableAdhoc(false);
             disableDate(false);
@@ -186,7 +185,7 @@ public class NewBookingController implements Initializable, Subscriber {
                 }
             }
         } else {
-            disableCatering();
+            disableCatering(true);
         }
     }
 
@@ -203,9 +202,11 @@ public class NewBookingController implements Initializable, Subscriber {
             if (checkAdHoc.isSelected()) {
                 disableDate(true);
                 displayMoreDateOption(false);
+                disableCatering(true);
                 setupDateAndTimeListeners(true);
             } else {
                 disableDate(false);
+                disableCatering(false);
             }
         });
     }
@@ -385,11 +386,13 @@ public class NewBookingController implements Initializable, Subscriber {
     }
 
     /**
-     * disables catering options by clearing the catering combo boxes
+     * disables catering options
+     * @param disable true if disable, false if enable
      */
-    private void disableCatering() {
-        comboCatering.getItems().clear();
-        comboDepartment.getItems().clear();
+    private void disableCatering(boolean disable) {
+        comboCatering.setValue(null);
+        comboDepartment.setValue(null);
+        VBoxCateringOption.setVisible(!disable);
     }
 
     /**

@@ -123,10 +123,11 @@ public class InstitutionDAO_Impl implements DAO<Institution> {
     @Override
     public boolean update(Institution entity) {
         try {
-            CallableStatement cs = connection.prepareCall("{call update_institution(?, ?, ?)}");
+            CallableStatement cs = connection.prepareCall("{call update_institution(?, ?, ?, ?)}");
             cs.setInt(1, entity.getInstitutionID());
             cs.setTime(2, entity.getOpenTime());
             cs.setTime(3, entity.getCloseTime());
+            cs.setInt(4, entity.getBookingTimeInterval());
 
             int result = cs.executeUpdate();
             return result > 0;

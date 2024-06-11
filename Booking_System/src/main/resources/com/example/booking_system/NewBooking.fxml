@@ -70,7 +70,7 @@
       <Label text="Gæster:" />
       <TextField fx:id="txtAmountGuest" maxWidth="200.0" promptText="antal gæster" />
       <Label fx:id="lblErrorGuest" textFill="#d70505" />
-      <VBox alignment="CENTER_LEFT">
+      <VBox fx:id="VBoxCateringOption" alignment="CENTER_LEFT">
          <children>
             <Label text="Forplejning:" />
             <ComboBox fx:id="comboCatering" prefWidth="150.0" promptText="Forplejninger" />
