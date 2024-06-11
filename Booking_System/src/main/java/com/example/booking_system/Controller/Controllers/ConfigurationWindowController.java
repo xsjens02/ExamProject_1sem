@@ -50,7 +50,7 @@ public class ConfigurationWindowController implements Initializable {
 
     @FXML
     private void onNewMeetingRoomButtonClick(){
-        SceneManager.changeStage((Stage) VBox.getScene().getWindow(), Controller.NewMeetingRoom, "nyt mødelokale");
+        SceneManager.changeStage((Stage) VBox.getScene().getWindow(), Controller.NewMeetingRoom, "Nyt mødelokale");
     }
     @FXML
     private void onNewCateringOptionButtonClick(){

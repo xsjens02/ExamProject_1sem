@@ -144,7 +144,7 @@ public class InfoScreenController implements Initializable, Subscriber {
 
     @FXML
     private void onEditBookingClick() {
-        SceneManager.openScene(Controller.EditBooking, "rediger booking");
+        SceneManager.openScene(Controller.EditBooking, "Rediger booking");
     }
 
     /**
