@@ -28,7 +28,7 @@ public class Statistics {
         bookingList.clear();
 
         for(MeetingRoom mr : SystemManager.getInstance().getInstitution().getMeetingRoomList()){
-            List<Booking> bookings = bookingDAO.readAllBookingsInPeriod(mr.getInstitutionID(), startDate, endDate);
+            List<Booking> bookings = bookingDAO.readAllBookingsInPeriod(mr.getRoomID(), startDate, endDate);
             if(bookings != null){
                 for(Booking booking : bookings){
                     boolean alreadyExists = false;
@@ -44,7 +44,6 @@ public class Statistics {
                 }
             }
         }
-
     }
 
     /**
